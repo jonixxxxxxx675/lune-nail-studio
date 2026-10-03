@@ -182,115 +182,7 @@ body.is-locked { overflow: hidden; }
 .footer__icon,
 .bk__head-icon { color: var(--c-rose); }
 
-/* ============ INTRO ============ */
-.intro {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  background: var(--c-cream-2);
-  color: var(--c-text);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.9s var(--ease), visibility 0.9s;
-}
-.intro.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
-
-.intro__scene {
-  position: absolute;
-  inset: 0;
-  background: url("../assets/images/hero.jpg") center / cover no-repeat;
-  opacity: 0;
-  transform: scale(1.12);
-  transition: opacity 1.4s var(--ease), transform 2.4s var(--ease);
-}
-.intro__scene::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(19,13,11,0.15), rgba(19,13,11,0.7));
-}
-.intro.is-open .intro__scene { opacity: 1; transform: scale(1); }
-
-.intro__center {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  padding: 0 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-}
-.intro__logo {
-  display: inline-flex;
-  flex-direction: column;
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 1s var(--ease), transform 1s var(--ease), color 1s var(--ease);
-}
-.intro__logo .logo__word { font-size: clamp(56px, 9vw, 110px); }
-.intro__logo .logo__sub {
-  font-size: clamp(10px, 1.2vw, 14px);
-  letter-spacing: 0.5em;
-}
-.intro.is-logo .intro__logo { opacity: 1; transform: none; }
-.intro.is-open .intro__logo { color: #fff; }
-
-.intro__text {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 1s var(--ease), transform 1s var(--ease);
-  color: #fff;
-}
-.intro__text h2 {
-  font-family: var(--ff-head);
-  font-weight: 400;
-  font-size: clamp(34px, 5vw, 64px);
-  line-height: 1.05;
-  letter-spacing: 0.02em;
-}
-.intro__text p { margin-top: 14px; font-size: 15px; opacity: 0.9; }
-.intro.is-text .intro__text { opacity: 1; transform: none; }
-
-.intro__cta {
-  opacity: 0;
-  transform: translateY(16px);
-  pointer-events: none;
-  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease), background var(--t) var(--ease);
-}
-.intro.is-cta .intro__cta { opacity: 1; transform: none; pointer-events: auto; }
-
-.intro__loader {
-  position: absolute;
-  left: 50%;
-  bottom: 8vh;
-  transform: translateX(-50%);
-  width: min(220px, 60vw);
-  text-align: center;
-  transition: opacity 0.6s var(--ease);
-  z-index: 2;
-}
-.intro__loader small {
-  display: block;
-  margin-top: 12px;
-  font-size: 9px;
-  letter-spacing: 0.3em;
-  color: var(--c-muted);
-}
-.intro__bar {
-  height: 2px;
-  background: rgba(42, 31, 27, 0.12);
-  overflow: hidden;
-}
-.intro__bar span {
-  display: block;
-  height: 100%;
-  width: 0;
-  background: var(--c-rose);
-  transition: width 0.3s linear;
-}
-.intro.is-open .intro__loader { opacity: 0; }
+/* LUNE mobile intro is isolated in intro.js. */
 
 /* ============ HEADER ============ */
 .header {
@@ -1350,10 +1242,6 @@ body.is-locked { overflow: hidden; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .intro__scene,
-  .intro__logo,
-  .intro__text,
-  .intro__cta,
   .modal,
   .modal__dialog,
   .bk__step { transition: none !important; }
