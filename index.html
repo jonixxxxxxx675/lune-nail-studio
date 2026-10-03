@@ -2,161 +2,605 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LUNE Nail Studio — студія манікюру</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="LUNE Nail Studio — студія манікюру. Краса у деталях.">
+  <meta name="theme-color" content="#130d0b">
+  <title>LUNE Nail Studio</title>
 
   <script>
-  (function () {
-    try {
-      if (matchMedia('(max-width: 767px)').matches &&
-          !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.documentElement.classList.add('intro-on', 'intro-lock');
-      }
-    } catch (e) {}
-  })();
+    (function () {
+      try {
+        if (matchMedia('(max-width: 767px)').matches &&
+            !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          document.documentElement.classList.add('intro-on', 'intro-lock');
+        }
+      } catch (e) {}
+    })();
   </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261003-lune-mobile">
-  <script src="lune-ui.js?v=20261003-lune-final" defer></script>
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="intro" id="intro" aria-hidden="true">
-  <div class="lune-opening" id="luneOpening">
-    <img id="luneAmbient" class="lune-opening__ambient" alt="">
-    <img id="lunePhoto" class="lune-opening__photo" alt="LUNE Nail Studio">
-    <canvas id="luneCanvas" class="lune-opening__canvas" aria-label="Пелюстки LUNE"></canvas>
-  </div>
-</div>
-
-<header class="header" id="header">
-  <div class="header__inner">
-    <a class="logo" href="#hero" aria-label="LUNE Nail Studio — на головну">
-      <span class="logo__name">LUNE</span>
-      <span class="logo__sub">NAIL STUDIO</span>
-    </a>
-
-    <nav class="nav" id="nav" aria-label="Головна навігація">
-      <a class="nav__link is-active" href="#hero">Головна</a>
-      <a class="nav__link" href="#services">Послуги</a>
-      <a class="nav__link" href="#works">Роботи</a>
-      <a class="nav__link" href="#about">Про нас</a>
-      <a class="nav__link" href="#contacts">Контакти</a>
-    </nav>
-
-    <div class="header__actions">
-      <a class="btn btn--outline" href="#contacts">Записатися <span aria-hidden="true">→</span></a>
-      <button class="burger" id="burger" aria-label="Меню" aria-expanded="false" aria-controls="nav">
-        <span></span><span></span><span></span>
-      </button>
+  <!-- MOBILE LUNE OPENING -->
+  <div class="intro" id="intro" aria-hidden="true">
+    <div class="lune-opening" id="luneOpening">
+      <img id="luneAmbient" class="lune-opening__ambient" alt="">
+      <img id="lunePhoto" class="lune-opening__photo" alt="LUNE Nail Studio">
+      <canvas id="luneCanvas" class="lune-opening__canvas" aria-label="Пелюстки LUNE"></canvas>
     </div>
   </div>
-</header>
 
-<main>
-  <section class="hero" id="hero">
-    <div class="hero__media" id="heroMedia" aria-hidden="true">
-    </div>
-    <div class="hero__shade" aria-hidden="true"></div>
-
-    <div class="hero__rail" aria-hidden="true">
-      <ul><li class="is-active">01</li><li>02</li><li>03</li><li>04</li></ul>
-      <span class="hero__line"></span>
-      <span class="hero__scroll">↓</span>
-      <small>SCROLL</small>
-    </div>
-
-    <div class="hero__content">
-      <p class="eyebrow">СТУДІЯ МАНІКЮРУ</p>
-      <h1 class="hero__title">Краса<br>у деталях</h1>
-      <p class="hero__lead">Ідеальний манікюр, який підкреслює тебе кожного дня</p>
-      <a class="btn btn--cta" href="#contacts">
-        <span class="btn__circle" aria-hidden="true">→</span>
-        <span>Записатися онлайн</span>
+  <!-- HEADER -->
+  <header class="header" id="header">
+    <div class="header__inner">
+      <a href="#hero" class="logo" aria-label="LUNE Nail Studio">
+        <span class="logo__word">LUNE</span>
+        <span class="logo__sub">NAIL STUDIO</span>
       </a>
-    </div>
-  </section>
 
-  <section class="services" id="services">
-    <div class="services__head reveal">
-      <p class="eyebrow eyebrow--dark">НАШІ ПОСЛУГИ</p>
-      <h2 class="title">Більше<br>ніж манікюр</h2>
-      <p class="muted">Професійний догляд, сучасні техніки та індивідуальний підхід до кожної клієнтки.</p>
-      <a class="btn btn--outline-dark" href="#contacts">Переглянути всі послуги <span aria-hidden="true">→</span></a>
-    </div>
+      <nav class="nav" id="nav" aria-label="Основна навігація">
+        <a class="nav__link is-active" href="#hero">Головна</a>
+        <a class="nav__link" href="#services">Послуги</a>
+        <a class="nav__link" href="#works">Роботи</a>
+        <a class="nav__link" href="#about">Про нас</a>
+        <a class="nav__link" href="#contacts">Контакти</a>
+      </nav>
 
-    <ul class="services__list">
-      <li class="card ph reveal">
-        <img src="assets/images/service-1.jpg" alt="Класичний манікюр" loading="lazy">
-        <div class="card__body"><span class="card__num">01</span><h3>Класичний<br>манікюр</h3><span class="card__arrow" aria-hidden="true">→</span></div>
-      </li>
-      <li class="card ph reveal">
-        <img src="assets/images/service-2.jpg" alt="Дизайн нігтів" loading="lazy">
-        <div class="card__body"><span class="card__num">02</span><h3>Дизайн<br>нігтів</h3><span class="card__arrow" aria-hidden="true">→</span></div>
-      </li>
-      <li class="card ph reveal">
-        <img src="assets/images/service-3.jpg" alt="Покриття гель-лаком" loading="lazy">
-        <div class="card__body"><span class="card__num">03</span><h3>Покриття<br>гель-лаком</h3><span class="card__arrow" aria-hidden="true">→</span></div>
-      </li>
-      <li class="card ph reveal">
-        <img src="assets/images/service-4.jpg" alt="Зміцнення та догляд" loading="lazy">
-        <div class="card__body"><span class="card__num">04</span><h3>Зміцнення<br>та догляд</h3><span class="card__arrow" aria-hidden="true">→</span></div>
-      </li>
-    </ul>
-  </section>
+      <div class="header__actions">
+        <button class="btn btn--outline" type="button" data-open-booking>
+          <span>Записатися</span>
+          <span aria-hidden="true">→</span>
+        </button>
 
-  <section class="about ph" id="about">
-    <img class="about__img" src="assets/images/about.jpg" alt="Інтер'єр студії LUNE" loading="lazy">
-    <div class="about__shade" aria-hidden="true"></div>
-    <div class="about__text reveal">
-      <p class="eyebrow">ПРО НАС</p>
-      <h2 class="title title--light">Атмосфера,<br>в яку хочеться повертатись</h2>
-      <p>LUNE — це простір, де краса поєднується з комфортом, а кожна деталь створена для тебе.</p>
-      <a class="btn btn--outline" href="#contacts">Дізнатися більше <span aria-hidden="true">→</span></a>
-    </div>
-  </section>
-
-  <section class="works" id="works">
-    <div class="works__head reveal">
-      <p class="eyebrow eyebrow--dark">НАШІ РОБОТИ</p>
-      <h2 class="title">Натхнення<br>у кожному образі</h2>
-    </div>
-    <div class="works__carousel">
-      <button class="round" id="worksPrev" aria-label="Попередні роботи">‹</button>
-      <ul class="works__track" id="worksTrack">
-        <li class="ph"><img src="assets/images/work-1.jpg" alt="Робота 1" loading="lazy"></li>
-        <li class="ph"><img src="assets/images/work-2.jpg" alt="Робота 2" loading="lazy"></li>
-        <li class="ph"><img src="assets/images/work-3.jpg" alt="Робота 3" loading="lazy"></li>
-        <li class="ph"><img src="assets/images/work-4.jpg" alt="Робота 4" loading="lazy"></li>
-        <li class="ph"><img src="assets/images/work-5.jpg" alt="Робота 5" loading="lazy"></li>
-        <li class="ph"><img src="assets/images/work-6.jpg" alt="Робота 6" loading="lazy"></li>
-      </ul>
-      <button class="round" id="worksNext" aria-label="Наступні роботи">›</button>
-    </div>
-  </section>
-
-  <section class="contacts" id="contacts">
-    <div class="contacts__inner reveal">
-      <div>
-        <div class="logo logo--big"><span class="logo__name">LUNE</span><span class="logo__sub">NAIL STUDIO</span></div>
-        <p class="muted-light">Запис: зателефонуйте або напишіть нам. Онлайн-бронювання поки не підключене.</p>
+        <button class="burger" id="burger" type="button"
+                aria-label="Меню" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span><span></span>
+        </button>
       </div>
-      <ul class="contacts__list">
-        <li><span>Адреса</span><strong class="todo">[вкажіть адресу]</strong></li>
-        <li><span>Телефон</span><strong class="todo">[вкажіть телефон]</strong></li>
-        <li><span>Instagram</span><strong class="todo">[вкажіть @акаунт]</strong></li>
-      </ul>
     </div>
-  </section>
-</main>
+  </header>
 
-<footer class="footer">
-  <p>© <span id="year"></span> LUNE Nail Studio. Всі права захищені.</p>
-</footer>
+  <!-- MOBILE MENU -->
+  <div class="mmenu" id="mobileMenu" hidden>
+    <button class="mmenu__close" id="mmenuClose" type="button" aria-label="Закрити меню">×</button>
+    <nav class="mmenu__nav" aria-label="Мобільна навігація">
+      <a href="#hero">Головна</a>
+      <a href="#reviews">Відгуки</a>
+      <a href="#instagram">Наші роботи</a>
+      <a href="#contacts">Контакти</a>
+      <button type="button" data-open-booking>Запис онлайн</button>
+    </nav>
+  </div>
 
-<script src="lune-intro.js?v=20261003-lune-final" defer></script>
+  <main>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <div class="hero__bg">
+        <img src="assets/images/hero.jpg" alt="Манікюр LUNE Nail Studio" width="1920" height="1080">
+        <span class="hero__shade"></span>
+      </div>
+
+      <aside class="hero__rail only-desktop" aria-label="Слайди">
+        <ol class="hero__steps" id="heroSteps">
+          <li class="is-active"><button type="button" data-slide="0">01</button></li>
+          <li><button type="button" data-slide="1">02</button></li>
+          <li><button type="button" data-slide="2">03</button></li>
+          <li><button type="button" data-slide="3">04</button></li>
+        </ol>
+
+        <span class="hero__line" aria-hidden="true"></span>
+
+        <a href="#services" class="hero__scroll" aria-label="Прокрутити вниз">
+          <span class="hero__scroll-btn" aria-hidden="true">↓</span>
+          <small>SCROLL</small>
+        </a>
+      </aside>
+
+      <div class="hero__content">
+        <p class="eyebrow">СТУДІЯ МАНІКЮРУ</p>
+
+        <h1 class="hero__title">КРАСА<br>У ДЕТАЛЯХ</h1>
+
+        <p class="hero__lead">
+          Ідеальний манікюр, який підкреслює тебе<span class="only-desktop"> кожного дня.</span>
+        </p>
+
+        <button class="btn-pill only-desktop" type="button" data-open-booking>
+          <span class="btn-pill__circle" aria-hidden="true">→</span>
+          <span class="btn-pill__label">Записатися онлайн</span>
+        </button>
+
+        <button class="btn btn--rose btn--lg only-mobile" type="button" data-open-booking>
+          <span>Запис онлайн</span>
+          <span class="btn__circle" aria-hidden="true">→</span>
+        </button>
+
+        <div class="hero__proof only-desktop">
+          <div class="avatars" aria-hidden="true">
+            <img src="assets/images/avatar-1.jpg" alt="" width="48" height="48">
+            <img src="assets/images/avatar-2.jpg" alt="" width="48" height="48">
+            <img src="assets/images/avatar-3.jpg" alt="" width="48" height="48">
+          </div>
+          <p>
+            <strong>Більше 1000+</strong>
+            <span>задоволених клієнток</span>
+          </p>
+        </div>
+
+        <ul class="features only-mobile">
+          <li>
+            <span class="features__icon" data-icon="gem" aria-hidden="true"></span>
+            <span>Якісні<br>матеріали</span>
+          </li>
+          <li>
+            <span class="features__icon" data-icon="users" aria-hidden="true"></span>
+            <span>Досвідчені<br>майстри</span>
+          </li>
+          <li>
+            <span class="features__icon" data-icon="lotus" aria-hidden="true"></span>
+            <span>Затишна<br>атмосфера</span>
+          </li>
+        </ul>
+      </div>
+
+      <button class="hero__video only-desktop" type="button" data-open-video="hero">
+        <span class="hero__video-text">Дивитися<br>відео</span>
+        <span class="hero__video-btn" aria-hidden="true">▶</span>
+      </button>
+
+      <button class="video-pill only-mobile" type="button" data-open-video="hero">
+        <span class="video-pill__icon" aria-hidden="true">▶</span>
+        <span>Дивиться відео</span>
+      </button>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="services only-desktop" id="services">
+      <div class="services__head">
+        <p class="eyebrow eyebrow--dark">НАШІ ПОСЛУГИ</p>
+        <h2 class="title">БІЛЬШЕ<br>НІЖ МАНІКЮР</h2>
+        <p class="lead">
+          Професійний догляд, сучасні техніки<br>
+          та індивідуальний підхід до кожної клієнтки.
+        </p>
+
+        <button class="btn btn--outline-dark" type="button" data-open-booking>
+          <span>Переглянути всі послуги</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+
+      <ul class="services__list">
+        <li class="svc-card svc-card--1">
+          <button type="button" data-open-booking data-service="classic">
+            <img src="assets/classic-manicure.png" alt="" width="320" height="460" loading="lazy">
+            <span class="svc-card__shade"></span>
+            <span class="svc-card__num">01</span>
+            <span class="svc-card__name">Класичний<br>манікюр</span>
+            <span class="svc-card__arrow" aria-hidden="true">→</span>
+          </button>
+        </li>
+
+        <li class="svc-card svc-card--2">
+          <button type="button" data-open-booking data-service="design">
+            <img src="assets/nail-design.png" alt="" width="320" height="460" loading="lazy">
+            <span class="svc-card__shade"></span>
+            <span class="svc-card__num">02</span>
+            <span class="svc-card__name">Дизайн<br>нігтів</span>
+            <span class="svc-card__arrow" aria-hidden="true">→</span>
+          </button>
+        </li>
+
+        <li class="svc-card svc-card--3">
+          <button type="button" data-open-booking data-service="gel">
+            <img src="assets/gel-polish.png" alt="" width="320" height="460" loading="lazy">
+            <span class="svc-card__shade"></span>
+            <span class="svc-card__num">03</span>
+            <span class="svc-card__name">Покриття<br>гель-лаком</span>
+            <span class="svc-card__arrow" aria-hidden="true">→</span>
+          </button>
+        </li>
+
+        <li class="svc-card svc-card--4">
+          <button type="button" data-open-booking data-service="strengthening">
+            <img src="assets/nail-strengthening.png" alt="" width="320" height="460" loading="lazy">
+            <span class="svc-card__shade"></span>
+            <span class="svc-card__num">04</span>
+            <span class="svc-card__name">Зміцнення<br>та догляд</span>
+            <span class="svc-card__arrow" aria-hidden="true">→</span>
+          </button>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about only-desktop" id="about">
+      <div class="about__bg" aria-hidden="true">
+        <img src="assets/images/about.jpg" alt="" width="1920" height="620" loading="lazy">
+        <span class="about__shade"></span>
+      </div>
+
+      <div class="about__inner">
+        <div class="about__text">
+          <p class="eyebrow">ПРО НАС</p>
+          <h2 class="title title--light">АТМОСФЕРА,<br>В ЯКУ ХОЧЕТЬСЯ ПОВЕРТАТИСЬ</h2>
+          <p class="lead lead--light">
+            LUNE — це простір, де краса поєднується<br>
+            з комфортом, а кожна деталь створена для тебе.
+          </p>
+          <a href="#contacts" class="btn btn--outline-light">
+            <span>Дізнатися більше</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <img class="about__photo" src="assets/images/about-2.jpg" alt="Інтер'єр студії LUNE"
+             width="520" height="360" loading="lazy">
+
+        <button class="about__video" type="button" data-open-video="about"
+                aria-label="Дивитися відео про студію">
+          <span class="about__video-btn" aria-hidden="true">▶</span>
+          <span class="about__video-text">Дивитися<br>відео про студію</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- WORKS -->
+    <section class="works only-desktop" id="works">
+      <div class="works__head">
+        <p class="eyebrow eyebrow--dark">НАШІ РОБОТИ</p>
+        <h2 class="title">НАТХНЕННЯ<br>У КОЖНОМУ ОБРАЗІ</h2>
+      </div>
+
+      <div class="works__carousel">
+        <button class="round-btn" id="worksPrev" type="button" aria-label="Назад">‹</button>
+
+        <div class="works__viewport">
+          <ul class="works__track" id="worksTrack">
+            <li><img src="assets/images/gallery-1.jpg" alt="Робота 1" width="320" height="200" loading="lazy"></li>
+            <li><img src="assets/images/gallery-2.jpg" alt="Робота 2" width="320" height="200" loading="lazy"></li>
+            <li><img src="assets/images/gallery-3.jpg" alt="Робота 3" width="320" height="200" loading="lazy"></li>
+            <li><img src="assets/images/gallery-4.jpg" alt="Робота 4" width="320" height="200" loading="lazy"></li>
+            <li><img src="assets/images/gallery-5.jpg" alt="Робота 5" width="320" height="200" loading="lazy"></li>
+          </ul>
+        </div>
+
+        <button class="round-btn" id="worksNext" type="button" aria-label="Вперед">›</button>
+      </div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section class="reviews" id="reviews" aria-labelledby="reviewsTitle">
+      <header class="sec-head">
+        <div>
+          <p class="eyebrow eyebrow--dark">ВІДГУКИ</p>
+          <h2 class="sec-title" id="reviewsTitle">Наші клієнти</h2>
+        </div>
+
+        <div class="sec-head__nav">
+          <button class="round-btn only-desktop" id="revPrev" type="button" aria-label="Попередній відгук">‹</button>
+          <button class="round-btn" id="revNext" type="button" aria-label="Наступний відгук">→</button>
+        </div>
+      </header>
+
+      <div class="reviews__viewport">
+        <ul class="reviews__track" id="revTrack">
+          <li class="review">
+            <img class="review__avatar" src="assets/images/avatar-1.jpg" alt="Анастасія" width="96" height="96" loading="lazy">
+            <div class="review__body">
+              <h3>Анастасія</h3>
+              <div class="stars" role="img" aria-label="Оцінка 5 з 5">★★★★★</div>
+              <blockquote>“Дуже задоволена! Атмосфера неймовірна, майстер уважна і професійна. Результат перевершив всі очікування!”</blockquote>
+              <small class="review__date">2 тижні тому</small>
+            </div>
+          </li>
+
+          <li class="review">
+            <img class="review__avatar" src="assets/images/avatar-2.jpg" alt="Марія" width="96" height="96" loading="lazy">
+            <div class="review__body">
+              <h3>Марія</h3>
+              <div class="stars" role="img" aria-label="Оцінка 5 з 5">★★★★★</div>
+              <blockquote>“Найкращий манікюр у місті! Все стерильно, дуже комфортно і красиво. Обов'язково повернусь ще!”</blockquote>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="dots" id="revDots" aria-hidden="true"></div>
+    </section>
+
+    <!-- INSTAGRAM -->
+    <section class="insta" id="instagram" aria-labelledby="instaTitle">
+      <header class="sec-head">
+        <div>
+          <p class="eyebrow eyebrow--dark">INSTAGRAM</p>
+          <h2 class="sec-title" id="instaTitle">Наші роботи</h2>
+        </div>
+
+        <a class="round-btn" href="https://instagram.com/lune.nail.studio"
+           target="_blank" rel="noopener noreferrer" aria-label="Відкрити Instagram">→</a>
+      </header>
+
+      <ul class="insta__grid">
+        <li><img src="assets/images/gallery-1.jpg" alt="Робота 1" width="320" height="320" loading="lazy"></li>
+        <li><img src="assets/images/gallery-2.jpg" alt="Робота 2" width="320" height="320" loading="lazy"></li>
+        <li><img src="assets/images/gallery-3.jpg" alt="Робота 3" width="320" height="320" loading="lazy"></li>
+        <li><img src="assets/images/gallery-4.jpg" alt="Робота 4" width="320" height="320" loading="lazy"></li>
+        <li><img src="assets/images/gallery-5.jpg" alt="Робота 5" width="320" height="320" loading="lazy"></li>
+        <li><img src="assets/images/gallery-6.jpg" alt="Робота 6" width="320" height="320" loading="lazy"></li>
+        <li><img src="assets/images/gallery-7.jpg" alt="Робота 7" width="320" height="320" loading="lazy"></li>
+        <li><img src="assets/images/gallery-8.jpg" alt="Робота 8" width="320" height="320" loading="lazy"></li>
+        <li><img src="assets/images/gallery-9.jpg" alt="Робота 9" width="320" height="320" loading="lazy"></li>
+      </ul>
+
+      <a class="btn btn--soft btn--block"
+         href="https://instagram.com/lune.nail.studio"
+         target="_blank" rel="noopener noreferrer">
+        <span>Дивитися більше в Instagram</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" id="contacts">
+    <div class="footer__inner">
+      <a href="#hero" class="logo logo--lg" aria-label="LUNE Nail Studio">
+        <span class="logo__word">LUNE</span>
+        <span class="logo__sub">NAIL STUDIO</span>
+      </a>
+
+      <ul class="footer__contacts">
+        <li>
+          <span class="footer__icon" data-icon="pin" aria-hidden="true"></span>
+          <span>вул. Шевченка, 12<br>Львів</span>
+        </li>
+        <li>
+          <span class="footer__icon" data-icon="phone" aria-hidden="true"></span>
+          <a href="tel:+380981234567">+380 98 123 45 67</a>
+        </li>
+        <li>
+          <span class="footer__icon" data-icon="instagram" aria-hidden="true"></span>
+          <a href="https://instagram.com/lune.nail.studio"
+             target="_blank" rel="noopener noreferrer">@lune.nail.studio</a>
+        </li>
+      </ul>
+
+      <p class="footer__copy">© 2026 Lune Nail Studio.<br>Всі права захищені.</p>
+    </div>
+  </footer>
+
+  <!-- BOOKING MODAL -->
+  <div class="modal modal--booking" id="bookingModal" role="dialog" aria-modal="true"
+       aria-labelledby="bookingTitle" hidden>
+    <div class="modal__backdrop" data-close-modal></div>
+
+    <div class="modal__dialog bk" id="bk" data-step="1">
+      <button class="modal__close" type="button" data-close-modal aria-label="Закрити">×</button>
+
+      <header class="bk__head">
+        <span class="bk__head-icon" data-icon="calendar" aria-hidden="true"></span>
+        <div>
+          <h2 id="bookingTitle">Запис онлайн</h2>
+          <p>Обери послугу, майстра, дату та час</p>
+        </div>
+      </header>
+
+      <ol class="stepper" id="stepper" aria-label="Кроки запису">
+        <li class="stepper__item is-active" data-step-ind="1"><span class="stepper__dot">1</span><span class="stepper__label">Послуга</span></li>
+        <li class="stepper__item" data-step-ind="2"><span class="stepper__dot">2</span><span class="stepper__label">Майстер</span></li>
+        <li class="stepper__item" data-step-ind="3"><span class="stepper__dot">3</span><span class="stepper__label">Дата</span></li>
+        <li class="stepper__item" data-step-ind="4"><span class="stepper__dot">4</span><span class="stepper__label">Час</span></li>
+      </ol>
+
+      <form id="bookingForm" novalidate>
+        <!-- STEP 1 -->
+        <fieldset class="bk__step is-active" data-step="1">
+          <legend class="bk__title">Оберіть послугу</legend>
+          <ul class="options">
+            <li><label class="option">
+              <input type="radio" name="service" value="classic" data-name="Класичний манікюр" data-duration="60" data-price="500">
+              <img src="assets/classic-manicure.png" alt="" width="96" height="96">
+              <span class="option__body"><strong>Класичний<br>манікюр</strong><small>60 хв • 500 грн</small></span>
+              <span class="option__mark" aria-hidden="true"></span>
+            </label></li>
+
+            <li><label class="option">
+              <input type="radio" name="service" value="gel" data-name="Покриття гель-лаком" data-duration="90" data-price="800">
+              <img src="assets/gel-polish.png" alt="" width="96" height="96">
+              <span class="option__body"><strong>Покриття<br>гель-лаком</strong><small>90 хв • 800 грн</small></span>
+              <span class="option__mark" aria-hidden="true"></span>
+            </label></li>
+
+            <li><label class="option">
+              <input type="radio" name="service" value="design" data-name="Дизайн нігтів" data-duration="90" data-price="900">
+              <img src="assets/nail-design.png" alt="" width="96" height="96">
+              <span class="option__body"><strong>Дизайн нігтів</strong><small>90 хв • 900 грн</small></span>
+              <span class="option__mark" aria-hidden="true"></span>
+            </label></li>
+
+            <li><label class="option">
+              <input type="radio" name="service" value="french" data-name="Френч" data-duration="90" data-price="900">
+              <img src="assets/french.png" alt="" width="96" height="96">
+              <span class="option__body"><strong>Френч</strong><small>90 хв • 900 грн</small></span>
+              <span class="option__mark" aria-hidden="true"></span>
+            </label></li>
+
+            <li><label class="option">
+              <input type="radio" name="service" value="strengthening" data-name="Зміцнення нігтів" data-duration="60" data-price="600">
+              <img src="assets/nail-strengthening.png" alt="" width="96" height="96">
+              <span class="option__body"><strong>Зміцнення нігтів</strong><small>60 хв • 600 грн</small></span>
+              <span class="option__mark" aria-hidden="true"></span>
+            </label></li>
+          </ul>
+        </fieldset>
+
+        <!-- STEP 2 -->
+        <fieldset class="bk__step" data-step="2">
+          <legend class="bk__title">Оберіть майстра</legend>
+          <ul class="options">
+            <li><label class="option option--master">
+              <input type="radio" name="master" value="anastasiia" data-name="Анастасія" data-rating="5.0">
+              <img src="assets/images/master-1.jpg" alt="Анастасія" width="72" height="72" loading="lazy">
+              <span class="option__body"><strong>Анастасія</strong><span class="rating">★ 5.0</span><small>Вільна сьогодні</small></span>
+              <span class="option__mark" aria-hidden="true"></span>
+            </label></li>
+
+            <li><label class="option option--master">
+              <input type="radio" name="master" value="mariia" data-name="Марія" data-rating="4.9">
+              <img src="assets/images/master-2.jpg" alt="Марія" width="72" height="72" loading="lazy">
+              <span class="option__body"><strong>Марія</strong><span class="rating">★ 4.9</span><small>Вільна сьогодні</small></span>
+              <span class="option__mark" aria-hidden="true"></span>
+            </label></li>
+
+            <li><label class="option option--master">
+              <input type="radio" name="master" value="kateryna" data-name="Катерина" data-rating="4.8">
+              <img src="assets/images/master-3.jpg" alt="Катерина" width="72" height="72" loading="lazy">
+              <span class="option__body"><strong>Катерина</strong><span class="rating">★ 4.8</span><small>Вільна завтра</small></span>
+              <span class="option__mark" aria-hidden="true"></span>
+            </label></li>
+
+            <li><label class="option option--master">
+              <input type="radio" name="master" value="olha" data-name="Ольга" data-rating="4.8">
+              <img src="assets/images/master-4.jpg" alt="Ольга" width="72" height="72" loading="lazy">
+              <span class="option__body"><strong>Ольга</strong><span class="rating">★ 4.8</span><small>Вільна завтра</small></span>
+              <span class="option__mark" aria-hidden="true"></span>
+            </label></li>
+
+            <li><label class="option option--master">
+              <input type="radio" name="master" value="sofiia" data-name="Софія" data-rating="4.7">
+              <img src="assets/images/master-5.jpg" alt="Софія" width="72" height="72" loading="lazy">
+              <span class="option__body"><strong>Софія</strong><span class="rating">★ 4.7</span><small>Вільна сьогодні</small></span>
+              <span class="option__mark" aria-hidden="true"></span>
+            </label></li>
+          </ul>
+        </fieldset>
+
+        <!-- STEP 3 -->
+        <fieldset class="bk__step" data-step="3">
+          <legend class="bk__title">Оберіть дату</legend>
+
+          <div class="calendar">
+            <div class="calendar__head">
+              <button type="button" class="calendar__nav" id="calPrev" aria-label="Попередній місяць">‹</button>
+              <strong id="calTitle" aria-live="polite"></strong>
+              <button type="button" class="calendar__nav" id="calNext" aria-label="Наступний місяць">›</button>
+            </div>
+
+            <div class="calendar__weekdays" aria-hidden="true">
+              <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Нд</span>
+            </div>
+
+            <div class="calendar__grid" id="calGrid"></div>
+          </div>
+
+          <div class="quickdays">
+            <h3>Доступні дні</h3>
+            <div class="quickdays__list" id="quickDays"></div>
+          </div>
+
+          <input type="hidden" name="date" id="bkDate">
+        </fieldset>
+
+        <!-- STEP 4 -->
+        <fieldset class="bk__step" data-step="4">
+          <legend class="bk__title">Оберіть час</legend>
+          <p class="bk__date" id="bkDateLabel"></p>
+          <div class="slots" id="timeSlots" role="radiogroup" aria-label="Час"></div>
+          <input type="hidden" name="time" id="bkTime">
+        </fieldset>
+
+        <!-- STEP 5 -->
+        <fieldset class="bk__step" data-step="5">
+          <legend class="bk__title">Ваші дані</legend>
+
+          <div class="field">
+            <label for="bk-name">Ім'я</label>
+            <input id="bk-name" name="name" type="text" autocomplete="name"
+                   placeholder="Ваше ім'я" required>
+            <small class="field__error" data-error="name"></small>
+          </div>
+
+          <div class="field">
+            <label for="bk-phone">Телефон</label>
+            <input id="bk-phone" name="phone" type="tel" autocomplete="tel"
+                   inputmode="tel" placeholder="+380 __ ___ __ __" required>
+            <small class="field__error" data-error="phone"></small>
+          </div>
+
+          <div class="field field--hp" aria-hidden="true">
+            <label for="bk-website">Website</label>
+            <input id="bk-website" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+
+          <label class="check">
+            <input type="checkbox" name="consent" required>
+            <span>Погоджуюсь на обробку персональних даних</span>
+          </label>
+          <small class="field__error" data-error="consent"></small>
+        </fieldset>
+
+        <!-- STEP 6 -->
+        <fieldset class="bk__step" data-step="6">
+          <legend class="bk__title">Підтвердження запису</legend>
+
+          <dl class="summary">
+            <div><dt>Послуга</dt><dd data-sum="service"></dd></div>
+            <div><dt>Майстер</dt><dd data-sum="master"></dd></div>
+            <div><dt>Дата</dt><dd data-sum="date"></dd></div>
+            <div><dt>Час</dt><dd data-sum="time"></dd></div>
+            <div><dt>Ім'я</dt><dd data-sum="name"></dd></div>
+            <div><dt>Телефон</dt><dd data-sum="phone"></dd></div>
+            <div class="summary__total"><dt>Вартість</dt><dd data-sum="price"></dd></div>
+          </dl>
+        </fieldset>
+
+        <div class="bk__success" id="bkSuccess" hidden>
+          <span class="bk__success-icon" aria-hidden="true">✓</span>
+          <h3>Дякуємо! Запис підтверджено</h3>
+          <p id="bkSuccessText"></p>
+          <button type="button" class="btn btn--rose" id="bkReset">
+            <span>Новий запис</span>
+          </button>
+        </div>
+
+        <p class="bk__status" id="bkStatus" role="status" aria-live="polite"></p>
+
+        <div class="bk__actions" id="bkActions">
+          <button type="button" class="btn btn--ghost" id="bkBack" hidden>
+            <span aria-hidden="true">←</span><span>Назад</span>
+          </button>
+
+          <button type="button" class="btn btn--rose btn--block" id="bkNext" disabled>
+            <span id="bkNextLabel">Далі</span>
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- VIDEO MODAL -->
+  <div class="modal modal--video" id="videoModal" role="dialog" aria-modal="true"
+       aria-label="Відео" hidden>
+    <div class="modal__backdrop" data-close-modal></div>
+
+    <div class="modal__dialog modal__dialog--video">
+      <button class="modal__close" type="button" data-close-modal aria-label="Закрити відео">×</button>
+
+      <video id="modalVideo" controls playsinline preload="none" poster="assets/images/hero.jpg">
+        <source src="assets/video/lune.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+
+  <script src="js/main.js?v=20261003-mobile-clean" defer></script>
+  <script src="js/booking.js?v=20261003" defer></script>
+  <script src="intro.js?v=20261003-lune-v3" defer></script>
 </body>
 </html>
