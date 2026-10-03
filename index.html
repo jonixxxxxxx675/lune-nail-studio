@@ -16,7 +16,7 @@
         !sessionStorage.getItem('lune-intro-seen')
       ) {
         d.classList.add('intro-on', 'intro-lock');
-        setTimeout(function () { d.classList.remove('intro-on', 'intro-lock'); }, 9000);
+        setTimeout(function () { d.classList.remove('intro-on', 'intro-lock'); }, 10500);
       }
     } catch (e) {}
   })();
@@ -39,20 +39,13 @@
 <body>
 
 <div class="intro" id="intro" aria-hidden="true">
-  <button class="intro__skip" type="button" aria-label="Пропустити вступ">Пропустити</button>
-
   <div class="intro__scenes" id="introScenes">
-    <div class="intro__scene is-active" data-scene="1"><img src="assets/intro/scene-2.webp" alt="" decoding="async"></div>
-    <div class="intro__scene" data-scene="2"><img src="assets/intro/scene-1.webp" alt="" decoding="async"></div>
+    <div class="intro__scene is-active" data-scene="1"><img src="assets/intro/scene-1.webp" alt="" decoding="async"></div>
+    <div class="intro__scene" data-scene="2"><img src="assets/intro/scene-2.webp" alt="" decoding="async"></div>
     <div class="intro__scene intro__scene--final" data-scene="3"><img src="assets/intro/scene-4.webp" alt="" decoding="async"></div>
   </div>
-  <div class="intro__progress" aria-hidden="true"><span></span></div>
-  <div class="intro__loading-label">ЗАВАНТАЖЕННЯ...</div>
-
   <div class="intro__petals" id="introPetals" aria-hidden="true"></div>
   <div class="intro__vignette" aria-hidden="true"></div>
-
-
 </div>
 
 <header class="header" id="header">
