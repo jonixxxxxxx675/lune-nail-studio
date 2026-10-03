@@ -21,6 +21,11 @@
   var done = false;
   var timers = [];
   var dpr = 1;
+  var ending = false;
+  var revealStart = 0;
+  var INTRO_DURATION = 7600;
+  var EXIT_START = 6000;
+  var TARGET_PARTICLES = 0;
 
   if (!intro || !mobile || reduced || !canvas || !ctx) {
     if (intro) intro.remove();
@@ -38,18 +43,18 @@
   var style = document.createElement('style');
   style.textContent = `
     html.intro-lock,html.intro-lock body{overflow:hidden!important;height:100%!important;overscroll-behavior:none}
-    #intro{position:fixed!important;inset:0!important;z-index:99999!important;width:100%!important;height:100%!important;height:100svh!important;overflow:hidden!important;background:#f4ded9!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;isolation:isolate;transition:opacity 1.05s cubic-bezier(.16,1,.3,1),visibility 0s linear 1.05s}
+    #intro{position:fixed!important;inset:0!important;z-index:99999!important;width:100%!important;height:100%!important;height:100svh!important;overflow:hidden!important;background:#f4ded9!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;isolation:isolate;transition:opacity 1.55s cubic-bezier(.22,1,.36,1),visibility 0s linear 1.55s}
     #luneOpening{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at center,#fcf2ec,#f4ded9)}
-    body.intro-site-pending .lune-mobile-app{opacity:0!important;transform:translate3d(0,8px,0)!important;transition:opacity 1.05s cubic-bezier(.16,1,.3,1),transform 1.05s cubic-bezier(.16,1,.3,1)!important}
+    body.intro-site-pending .lune-mobile-app{opacity:0!important;transform:translate3d(0,8px,0)!important;transition:opacity 1.55s cubic-bezier(.22,1,.36,1),transform 1.55s cubic-bezier(.22,1,.36,1)!important}
     body.intro-site-ready .lune-mobile-app{opacity:1!important;transform:none!important}
     .lune-opening__ambient,.lune-opening__photo,.lune-opening__canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-    .lune-opening__ambient{object-fit:cover;filter:blur(38px);opacity:0;transform:scale(1.08);transition:opacity 1.6s cubic-bezier(.22,.61,.36,1)}
-    .lune-opening__photo{object-fit:contain;opacity:0;transform:scale(1.025);transition:opacity 2.8s cubic-bezier(.22,.61,.36,1),transform 4.6s cubic-bezier(.16,1,.3,1)}
-    .lune-opening__canvas{pointer-events:none;opacity:0;transition:opacity 1.4s cubic-bezier(.22,.61,.36,1)}
-    #intro.is-running .lune-opening__ambient{opacity:.62}
+    .lune-opening__ambient{object-fit:cover;filter:blur(30px);opacity:0;transform:scale(1.06);transition:opacity 2.4s cubic-bezier(.22,1,.36,1),transform 3.8s cubic-bezier(.16,1,.3,1)}
+    .lune-opening__photo{object-fit:contain;opacity:0;transform:scale(1.035);transition:opacity 3.8s cubic-bezier(.22,1,.36,1),transform 5.8s cubic-bezier(.16,1,.3,1)}
+    .lune-opening__canvas{pointer-events:none;opacity:0;transition:opacity 2.2s cubic-bezier(.22,1,.36,1)}
+    #intro.is-running .lune-opening__ambient{opacity:.58;transform:scale(1)}
     #intro.is-running .lune-opening__photo{opacity:1;transform:scale(1)}
-    #intro.is-running .lune-opening__canvas{opacity:1}
-    #intro.is-out{opacity:0;visibility:hidden;pointer-events:none}
+    #intro.is-running .lune-opening__canvas{opacity:1;transition-delay:.55s}
+    #intro.is-out{opacity:0;visibility:hidden;pointer-events:none;transition-duration:1.55s}
     @media (prefers-reduced-motion:reduce){#intro{display:none!important}}
   `;
   document.head.appendChild(style);
@@ -109,7 +114,7 @@
   function addWave() {
     if (!sprites.length) return;
     var cluster = { x: random(w * .08, w * .88), drift: random(12, 35) };
-    var count = Math.min(w < 600 ? 26 : 36, 110 - particles.length);
+    var count = Math.min(w < 600 ? 18 : 24, TARGET_PARTICLES - particles.length);
     for (var i = 0; i < count; i++) {
       particles.push(makePetal(false, cluster, true));
     }
@@ -119,9 +124,19 @@
   function draw(dt) {
     clock += dt;
     ctx.clearRect(0, 0, w, h);
-    if (clock >= nextWave) addWave();
+    if (!ending) {
+      var rampTarget = TARGET_PARTICLES;
+      var ramp = Math.min(1, Math.max(0, clock / 2.4));
+      ramp = ramp * ramp * (3 - 2 * ramp);
+      var desired = Math.max(24, Math.floor(rampTarget * ramp));
+      while (particles.length < desired) particles.push(makePetal(true, null, false));
+      if (clock >= nextWave) addWave();
+    }
 
     var wind = Math.sin(clock * .38) * 13 + Math.sin(clock * .17) * 7;
+    var reveal = Math.min(1, Math.max(0, clock / 1.9));
+    reveal = reveal * reveal * (3 - 2 * reveal);
+    var exitFade = ending ? Math.max(0, 1 - (clock - EXIT_START) / 1.6) : 1;
     var fit = photo.naturalWidth
       ? Math.min(w / photo.naturalWidth, h / photo.naturalHeight)
       : 1;
@@ -156,7 +171,7 @@
       ctx.translate(x, p.y);
       ctx.rotate(p.angle + Math.sin(p.phase) * .18);
       ctx.scale(p.mirror * (.28 + .72 * Math.abs(Math.cos(p.phase))), 1);
-      ctx.globalAlpha = p.alpha * entry * exit * clearLogo;
+      ctx.globalAlpha = p.alpha * entry * exit * clearLogo * reveal * exitFade;
       var drawSprite = p.near && p.blurSprite ? p.blurSprite : p.sprite;
       ctx.filter = 'none';
       ctx.drawImage(drawSprite, -p.size / 2, -p.size * ratio / 2, p.size, p.size * ratio);
@@ -216,54 +231,72 @@
   function startMobileSite() {
     document.body.classList.add('intro-site-pending');
     return Promise.all([
-      load('mobile.css?v=20261003-mobile-smooth2', 'link'),
-      load('mobile.js?v=20261003-mobile-smooth2', 'script')
+      load('mobile.css?v=20261003-mobile-smooth3', 'link'),
+      load('mobile.js?v=20261003-mobile-smooth3', 'script')
     ]).then(waitForMobileImages);
   }
 
   function finish() {
     if (done) return;
     done = true;
-    cancelAnimationFrame(frame);
+    ending = true;
     timers.forEach(clearTimeout);
     root.classList.remove('intro-lock', 'intro-on');
+    document.body.classList.remove('intro-site-pending');
+    document.body.classList.add('intro-site-ready');
     requestAnimationFrame(function () {
-      document.body.classList.remove('intro-site-pending');
-      document.body.classList.add('intro-site-ready');
-      intro.classList.add('is-out');
+      requestAnimationFrame(function () {
+        intro.classList.add('is-out');
+      });
     });
     setTimeout(function () {
+      cancelAnimationFrame(frame);
       if (intro.parentNode) intro.remove();
       if (style.parentNode) style.remove();
       document.body.classList.remove('intro-site-ready');
-    }, 1150);
+    }, 1750);
   }
 
   function start() {
     resize();
     clock = 0;
-    nextWave = 1.6;
-    particles = Array.from({ length: w < 600 ? 76 : 96 }, function () {
+    ending = false;
+    revealStart = performance.now();
+    nextWave = 1.8;
+    TARGET_PARTICLES = w < 600 ? 76 : 96;
+    particles = Array.from({ length: w < 600 ? 24 : 30 }, function () {
       return makePetal(true, null, false);
     });
     intro.classList.add('is-running');
     last = 0;
     frame = requestAnimationFrame(tick);
-    timers.push(setTimeout(finish, 5400));
+    timers.push(setTimeout(function () {
+      ending = true;
+      setTimeout(finish, 1600);
+    }, EXIT_START));
+  }
+
+  function decodeImage(img) {
+    if (img.decode) return img.decode().catch(function () {});
+    return Promise.resolve();
   }
 
   var petalLoads = PETALS.map(function (src) {
     return new Promise(function (resolve) {
       var img = new Image();
       img.decoding = 'async';
-      img.onload = function () { sprites.push(img); resolve(); };
+      img.onload = function () {
+        decodeImage(img).then(function () { sprites.push(img); resolve(); });
+      };
       img.onerror = resolve;
       img.src = src;
     });
   });
 
   var photoReady = new Promise(function (resolve) {
-    photo.onload = resolve;
+    photo.onload = function () {
+      decodeImage(photo).then(resolve);
+    };
     photo.onerror = resolve;
     photo.src = BACKGROUND_URL;
     ambient.src = BACKGROUND_URL;
