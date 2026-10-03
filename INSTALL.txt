@@ -1,0 +1,21 @@
+LUNE mobile update
+
+1. Upload mobile-enhancements.css and mobile-enhancements.js to the repository root.
+2. In index.html, immediately after:
+   <script src="intro.js" defer></script>
+   add:
+   <script src="mobile-enhancements.js" defer></script>
+
+Only mobile behavior is affected: the new stylesheet is wrapped in @media (max-width:767px), and the JS exits on desktop.
+
+The update adds:
+- rounded top corners on the mobile hero;
+- smoother intro scene transitions and one global loading bar;
+- no blue tap highlight;
+- premium 3D press states;
+- working account registration gate before booking;
+- My Account / My Bookings / My QR tabs;
+- local demo booking history until Supabase is connected;
+- QR generation via QRCode.js CDN;
+- upgraded mobile footer shortcuts;
+- menu shortcuts for account, bookings and QR.
