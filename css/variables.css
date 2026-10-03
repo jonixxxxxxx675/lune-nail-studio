@@ -1,1 +1,33 @@
-:root { --lune-placeholder: 1; }
+:root {
+  /* Кольори */
+  --c-dark: #130d0b;
+  --c-dark-2: #1d1512;
+  --c-cream: #f3e9e0;
+  --c-cream-2: #faf4ee;
+  --c-card: #fffaf6;
+  --c-rose: #b97f76;
+  --c-rose-dark: #a46c63;
+  --c-rose-soft: #ecd5cd;
+  --c-text: #2a1f1b;
+  --c-muted: #7d6a62;
+  --c-light: #ffffff;
+  --c-line: rgba(42, 31, 27, 0.14);
+  --c-error: #b3261e;
+  --c-ok: #2e7d4f;
+
+  /* Шрифти */
+  --ff-head: "Cormorant Garamond", "Playfair Display", Georgia, "Times New Roman", serif;
+  --ff-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Розміри */
+  --header-h: 84px;
+  --pad-x: clamp(20px, 5vw, 80px);
+  --radius: 16px;
+  --radius-lg: 28px;
+  --shadow: 0 10px 30px rgba(42, 31, 27, 0.08);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.35);
+
+  /* Анімації */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --t: 0.35s;
+}
