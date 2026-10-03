@@ -17,7 +17,6 @@
           <div class="lm-kicker">СТУДІЯ МАНІКЮРУ</div>
           <h1 class="lm-title">КРАСА<br>У ДЕТАЛЯХ</h1>
           <p class="lm-lead">Ідеальний манікюр,<br>який підкреслює тебе</p>
-          <button class="lm-cta js-open-book">Запис онлайн <i>→</i></button>
         </div>
       </div>
       <div class="lm-features">
@@ -87,6 +86,14 @@
     </section>
 
     <div class="lm-menu-panel" aria-hidden="true"><button class="lm-menu-close" type="button">×</button><a href="#home">Головна</a><a href="#booking">Запис онлайн</a><a href="#works">Наші роботи</a><a href="#contacts">Контакти</a></div>
+    <div class="lm-confirm" aria-hidden="true">
+      <div class="lm-confirm-card" role="dialog" aria-modal="true" aria-labelledby="lmConfirmTitle">
+        <div class="lm-confirm-mark" aria-hidden="true">✓</div>
+        <h2 class="lm-confirm-title" id="lmConfirmTitle">Запис підтверджено</h2>
+        <p class="lm-confirm-text">Дякуємо! Ваш запис успішно підтверджено.</p>
+        <button class="lm-confirm-ok" type="button">Окей <span aria-hidden="true">→</span></button>
+      </div>
+    </div>
     <div class="lm-toast"></div>`;
 
   document.body.appendChild(app);
@@ -101,7 +108,7 @@
     if(addHistory!==false && current!==n) history.push(n);
     current=n;
     screens.forEach(s=>s.classList.toggle('is-active',s.dataset.screen===n));
-    window.scrollTo({top:0,behavior:'smooth'});
+    window.scrollTo({top:0,behavior:'auto'});
   }
   function back(){
     if(history.length>1){history.pop();show(history[history.length-1],false)}else show('home',false);
@@ -132,7 +139,22 @@
   app.querySelectorAll('.lm-pill').forEach(b=>b.addEventListener('click',()=>{app.querySelectorAll('.lm-pill').forEach(x=>x.classList.remove('active'));b.classList.add('active')}));
   app.querySelector('[data-month="prev"]').addEventListener('click',()=>{monthDate.setMonth(monthDate.getMonth()-1);renderCalendar()});
   app.querySelector('[data-month="next"]').addEventListener('click',()=>{monthDate.setMonth(monthDate.getMonth()+1);renderCalendar()});
-  app.querySelector('[data-confirm]').addEventListener('click',()=>msg('Запис обрано. Дякуємо!'));
+  var confirmModal=app.querySelector('.lm-confirm');
+  var confirmOk=app.querySelector('.lm-confirm-ok');
+  function openConfirm(){
+    confirmModal.classList.add('is-open');
+    confirmModal.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+  }
+  function closeConfirmToHome(){
+    confirmModal.classList.remove('is-open');
+    confirmModal.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+    history=['home'];
+    show('home',false);
+  }
+  app.querySelector('[data-confirm]').addEventListener('click',openConfirm);
+  confirmOk.addEventListener('click',closeConfirmToHome);
 
   var menu=app.querySelector('.lm-menu-panel');
   app.querySelector('.lm-menu').addEventListener('click',()=>{menu.classList.add('is-open');menu.setAttribute('aria-hidden','false')});
