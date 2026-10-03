@@ -13,7 +13,7 @@
   var w = 0;
   var h = 0;
   var particles = [];
-  var sprite = null;
+  var sprites = [];
   var ready = false;
 
   if (!intro || !mq.matches || reduced) {
@@ -28,7 +28,11 @@
   var ctx = canvas.getContext('2d');
 
   var BACKGROUND_URL = './assets/intro/lune-background.png';
-  var PETAL_URL = './assets/intro/petal.png';
+  var PETAL_URLS = [
+    './assets/intro/petal-1.webp',
+    './assets/intro/petal-2.webp',
+    './assets/intro/petal-3.webp'
+  ];
 
   var style = document.createElement('style');
   style.textContent = `
@@ -180,7 +184,7 @@
   function draw(dt) {
     clock += dt;
     ctx.clearRect(0, 0, w, h);
-    if (!sprite) return;
+    if (!sprites.length) return;
     if (clock >= nextWave) addWave();
 
     var wind = Math.sin(clock * .38) * 13 + Math.sin(clock * .17) * 7;
@@ -210,6 +214,8 @@
       var clearLogo = .06 + .94 * Math.min(1, Math.max(0, (distance - .65) / .6));
       var entry = Math.min(1, Math.max(0, (p.y + 65) / 100));
       var exit = Math.min(1, Math.max(0, (h + 65 - p.y) / 110));
+      var sprite = p.sprite;
+      if (!sprite) continue;
       var ratio = sprite.naturalHeight / sprite.naturalWidth;
 
       ctx.save();
@@ -257,13 +263,26 @@
     }, 5400);
   }
 
-  var petalImage = new Image();
-  petalImage.onload = function () {
-    sprite = petalImage;
-    ready = true;
-    if (photo.complete && photo.naturalWidth) start();
-  };
-  petalImage.src = PETAL_URL;
+  var petalLoaded = 0;
+  PETAL_URLS.forEach(function (url) {
+    var image = new Image();
+    image.onload = function () {
+      sprites.push(image);
+      petalLoaded += 1;
+      if (petalLoaded === PETAL_URLS.length) {
+        ready = true;
+        if (photo.complete && photo.naturalWidth) start();
+      }
+    };
+    image.onerror = function () {
+      petalLoaded += 1;
+      if (petalLoaded === PETAL_URLS.length) {
+        ready = sprites.length > 0;
+        if (ready && photo.complete && photo.naturalWidth) start();
+      }
+    };
+    image.src = url;
+  });
 
   photo.onload = function () {
     ambient.src = photo.src;
