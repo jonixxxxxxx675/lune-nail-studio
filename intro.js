@@ -15,8 +15,6 @@
   var particles = [];
   var sprite = null;
   var ready = false;
-  var photoReady = false;
-  var started = false;
 
   if (!intro || !mq.matches || reduced) {
     if (intro) intro.remove();
@@ -30,7 +28,7 @@
   var ctx = canvas.getContext('2d');
 
   var BACKGROUND_URL = './assets/intro/lune-background.png';
-  var PETAL_URL = './assets/intro/petal-1.webp';
+  var PETAL_URL = './assets/intro/petal.png';
 
   var style = document.createElement('style');
   style.textContent = `
@@ -245,8 +243,7 @@
   }
 
   function start() {
-    if (done || started || !photoReady) return;
-    started = true;
+    if (done) return;
     resize();
     clock = 0;
     nextWave = 2;
@@ -264,14 +261,13 @@
   petalImage.onload = function () {
     sprite = petalImage;
     ready = true;
-    if (photoReady) start();
+    if (photo.complete && photo.naturalWidth) start();
   };
   petalImage.src = PETAL_URL;
 
   photo.onload = function () {
     ambient.src = photo.src;
-    photoReady = true;
-    start();
+    if (ready) start();
   };
 
   photo.onerror = function () {
