@@ -17,6 +17,7 @@
   var h = 0;
   var particles = [];
   var sprites = [];
+  var blurredSprites = [];
   var done = false;
   var timers = [];
   var dpr = 1;
@@ -39,6 +40,8 @@
     html.intro-lock,html.intro-lock body{overflow:hidden!important;height:100%!important;overscroll-behavior:none}
     #intro{position:fixed!important;inset:0!important;z-index:99999!important;width:100%!important;height:100%!important;height:100svh!important;overflow:hidden!important;background:#f4ded9!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;isolation:isolate;transition:opacity 1.05s cubic-bezier(.16,1,.3,1),visibility 0s linear 1.05s}
     #luneOpening{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at center,#fcf2ec,#f4ded9)}
+    body.intro-site-pending .lune-mobile-app{opacity:0!important;transform:translate3d(0,8px,0)!important;transition:opacity 1.05s cubic-bezier(.16,1,.3,1),transform 1.05s cubic-bezier(.16,1,.3,1)!important}
+    body.intro-site-ready .lune-mobile-app{opacity:1!important;transform:none!important}
     .lune-opening__ambient,.lune-opening__photo,.lune-opening__canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
     .lune-opening__ambient{object-fit:cover;filter:blur(38px);opacity:0;transform:scale(1.08);transition:opacity 1.6s cubic-bezier(.22,.61,.36,1)}
     .lune-opening__photo{object-fit:contain;opacity:0;transform:scale(1.025);transition:opacity 2.8s cubic-bezier(.22,.61,.36,1),transform 4.6s cubic-bezier(.16,1,.3,1)}
@@ -98,7 +101,8 @@
       near: near,
       extra: !!extra,
       mirror: Math.random() < .5 ? -1 : 1,
-      sprite: sprite
+      sprite: sprite,
+      blurSprite: blurredSprites[sprites.indexOf(sprite)] || sprite
     };
   }
 
@@ -153,8 +157,9 @@
       ctx.rotate(p.angle + Math.sin(p.phase) * .18);
       ctx.scale(p.mirror * (.28 + .72 * Math.abs(Math.cos(p.phase))), 1);
       ctx.globalAlpha = p.alpha * entry * exit * clearLogo;
-      ctx.filter = p.near ? 'blur(1.4px)' : 'none';
-      ctx.drawImage(p.sprite, -p.size / 2, -p.size * ratio / 2, p.size, p.size * ratio);
+      var drawSprite = p.near && p.blurSprite ? p.blurSprite : p.sprite;
+      ctx.filter = 'none';
+      ctx.drawImage(drawSprite, -p.size / 2, -p.size * ratio / 2, p.size, p.size * ratio);
       ctx.restore();
     }
   }
@@ -170,8 +175,14 @@
   function load(path, tag) {
     return new Promise(function (resolve) {
       var el = document.createElement(tag);
-      el.onload = resolve;
-      el.onerror = resolve;
+      var settled = false;
+      var doneLoad = function () {
+        if (settled) return;
+        settled = true;
+        resolve(el);
+      };
+      el.onload = doneLoad;
+      el.onerror = doneLoad;
       if (tag === 'link') {
         el.rel = 'stylesheet';
         el.href = path;
@@ -183,9 +194,31 @@
     });
   }
 
+  function waitForMobileImages() {
+    var app = document.querySelector('.lune-mobile-app');
+    if (!app) return Promise.resolve();
+    var images = Array.prototype.slice.call(app.querySelectorAll('.lm-hero img,.lm-service img,.lm-avatar'));
+    return Promise.all(images.map(function (img) {
+      if (img.complete && img.naturalWidth) {
+        return img.decode ? img.decode().catch(function () {}) : Promise.resolve();
+      }
+      return new Promise(function (resolve) {
+        var done = function () {
+          if (img.decode) img.decode().catch(function () {}).finally(resolve);
+          else resolve();
+        };
+        img.addEventListener('load', done, { once: true });
+        img.addEventListener('error', done, { once: true });
+      });
+    }));
+  }
+
   function startMobileSite() {
-    load('mobile.css?v=20261003-mobile', 'link');
-    load('mobile.js?v=20261003-mobile', 'script');
+    document.body.classList.add('intro-site-pending');
+    return Promise.all([
+      load('mobile.css?v=20261003-mobile-smooth2', 'link'),
+      load('mobile.js?v=20261003-mobile-smooth2', 'script')
+    ]).then(waitForMobileImages);
   }
 
   function finish() {
@@ -194,11 +227,16 @@
     cancelAnimationFrame(frame);
     timers.forEach(clearTimeout);
     root.classList.remove('intro-lock', 'intro-on');
-    intro.classList.add('is-out');
+    requestAnimationFrame(function () {
+      document.body.classList.remove('intro-site-pending');
+      document.body.classList.add('intro-site-ready');
+      intro.classList.add('is-out');
+    });
     setTimeout(function () {
       if (intro.parentNode) intro.remove();
       if (style.parentNode) style.remove();
-    }, 1100);
+      document.body.classList.remove('intro-site-ready');
+    }, 1150);
   }
 
   function start() {
@@ -232,13 +270,23 @@
   });
 
   resize();
-  startMobileSite();
-
-  Promise.all([photoReady, Promise.all(petalLoads)]).then(function () {
+  Promise.all([photoReady, Promise.all(petalLoads), startMobileSite()]).then(function () {
     if (!sprites.length || !photo.naturalWidth) {
       finish();
       return;
     }
+
+    blurredSprites = sprites.map(function (img) {
+      var c = document.createElement('canvas');
+      var scale = Math.min(1, 220 / Math.max(img.naturalWidth, img.naturalHeight));
+      c.width = Math.max(1, Math.round(img.naturalWidth * scale));
+      c.height = Math.max(1, Math.round(img.naturalHeight * scale));
+      var cctx = c.getContext('2d');
+      cctx.filter = 'blur(1.4px)';
+      cctx.drawImage(img, 0, 0, c.width, c.height);
+      return c;
+    });
+
     start();
   });
 

@@ -46,8 +46,8 @@
       </div>
       <div class="lm-section-title"><small>ВІДГУКИ</small><h2>Наші клієнти</h2></div>
       <div class="lm-reviews">
-        <article class="lm-review"><div class="lm-review-top"><img class="lm-avatar" src="assets/intro/scene-4.webp"><div><b>Анастасія</b><div class="lm-stars">★★★★★</div></div></div><p>“Дуже задоволена! Атмосфера неймовірна, майстер уважна і професійна.”</p></article>
-        <article class="lm-review"><div class="lm-review-top"><img class="lm-avatar" src="assets/intro/scene-4.webp"><div><b>Марія</b><div class="lm-stars">★★★★★</div></div></div><p>“Найкращий манікюр у місті! Все стерильно, комфортно і красиво.”</p></article>
+        <article class="lm-review"><div class="lm-review-top"><img class="lm-avatar" src="assets/images/avatar-1.jpg" alt="Анастасія"><div><b>Анастасія</b><div class="lm-stars">★★★★★</div></div></div><p>“Дуже задоволена! Атмосфера неймовірна, майстер уважна і професійна.”</p></article>
+        <article class="lm-review"><div class="lm-review-top"><img class="lm-avatar" src="assets/images/avatar-2.jpg" alt="Марія"><div><b>Марія</b><div class="lm-stars">★★★★★</div></div></div><p>“Найкращий манікюр у місті! Все стерильно, комфортно і красиво.”</p></article>
       </div>
       <div class="lm-section-title"><small>INSTAGRAM</small><h2>Наші роботи</h2></div>
       <div class="lm-gallery">${Array.from({length:9},(_,i)=>`<img src="assets/intro/scene-4.webp" alt="Робота ${i+1}">`).join('')}</div>
