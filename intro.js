@@ -22,9 +22,11 @@
   var timers = [];
   var dpr = 1;
   var ending = false;
+  var endingAt = 0;
+  var siteReadyPromise = Promise.resolve();
   var revealStart = 0;
-  var INTRO_DURATION = 7600;
-  var EXIT_START = 6000;
+  var INTRO_DURATION = 8200;
+  var EXIT_START = 6200;
   var TARGET_PARTICLES = 0;
 
   if (!intro || !mobile || reduced || !canvas || !ctx) {
@@ -43,18 +45,21 @@
   var style = document.createElement('style');
   style.textContent = `
     html.intro-lock,html.intro-lock body{overflow:hidden!important;height:100%!important;overscroll-behavior:none}
-    #intro{position:fixed!important;inset:0!important;z-index:99999!important;width:100%!important;height:100%!important;height:100svh!important;overflow:hidden!important;background:#f4ded9!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;isolation:isolate;transition:opacity 1.55s cubic-bezier(.22,1,.36,1),visibility 0s linear 1.55s}
+    #intro{position:fixed!important;inset:0!important;z-index:99999!important;width:100%!important;height:100%!important;height:100svh!important;overflow:hidden!important;background:#f4ded9!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;isolation:isolate;transition:opacity 2.2s cubic-bezier(.22,1,.36,1),visibility 0s linear 2.2s}
     #luneOpening{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at center,#fcf2ec,#f4ded9)}
     body.intro-site-pending .lune-mobile-app{opacity:0!important;transform:translate3d(0,8px,0)!important;transition:opacity 1.55s cubic-bezier(.22,1,.36,1),transform 1.55s cubic-bezier(.22,1,.36,1)!important}
     body.intro-site-ready .lune-mobile-app{opacity:1!important;transform:none!important}
     .lune-opening__ambient,.lune-opening__photo,.lune-opening__canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-    .lune-opening__ambient{object-fit:cover;filter:blur(30px);opacity:0;transform:scale(1.06);transition:opacity 2.4s cubic-bezier(.22,1,.36,1),transform 3.8s cubic-bezier(.16,1,.3,1)}
-    .lune-opening__photo{object-fit:contain;opacity:0;transform:scale(1.035);transition:opacity 3.8s cubic-bezier(.22,1,.36,1),transform 5.8s cubic-bezier(.16,1,.3,1)}
-    .lune-opening__canvas{pointer-events:none;opacity:0;transition:opacity 2.2s cubic-bezier(.22,1,.36,1)}
+    .lune-opening__ambient{object-fit:cover;filter:blur(30px);opacity:0;transform:scale(1.045);filter:blur(18px);will-change:opacity,transform;transition:opacity 2.8s cubic-bezier(.22,1,.36,1),transform 4.6s cubic-bezier(.16,1,.3,1)}
+    .lune-opening__photo{object-fit:contain;opacity:0;transform:scale(1.028);will-change:opacity,transform;transition:opacity 4.4s cubic-bezier(.22,1,.36,1),transform 6.2s cubic-bezier(.16,1,.3,1)}
+    .lune-opening__canvas{pointer-events:none;opacity:0;will-change:opacity;transition:opacity 2.8s cubic-bezier(.22,1,.36,1)}
     #intro.is-running .lune-opening__ambient{opacity:.58;transform:scale(1)}
     #intro.is-running .lune-opening__photo{opacity:1;transform:scale(1)}
-    #intro.is-running .lune-opening__canvas{opacity:1;transition-delay:.55s}
-    #intro.is-out{opacity:0;visibility:hidden;pointer-events:none;transition-duration:1.55s}
+    #intro.is-running .lune-opening__canvas{opacity:1;transition-delay:.75s}
+    #intro.is-out{opacity:0;visibility:hidden;pointer-events:none;transition-duration:2.2s}
+    #intro.is-out .lune-opening__ambient{opacity:.12;transform:scale(1.02)}
+    #intro.is-out .lune-opening__photo{opacity:.08;transform:scale(1.01)}
+    #intro.is-out .lune-opening__canvas{opacity:0}
     @media (prefers-reduced-motion:reduce){#intro{display:none!important}}
   `;
   document.head.appendChild(style);
@@ -136,7 +141,9 @@
     var wind = Math.sin(clock * .38) * 13 + Math.sin(clock * .17) * 7;
     var reveal = Math.min(1, Math.max(0, clock / 1.9));
     reveal = reveal * reveal * (3 - 2 * reveal);
-    var exitFade = ending ? Math.max(0, 1 - (clock - EXIT_START) / 1.6) : 1;
+    var exitProgress = ending ? Math.min(1, Math.max(0, (clock - endingAt) / 2.2)) : 0;
+    var exitEase = 1 - (exitProgress * exitProgress * (3 - 2 * exitProgress));
+    var exitFade = ending ? exitEase : 1;
     var fit = photo.naturalWidth
       ? Math.min(w / photo.naturalWidth, h / photo.naturalHeight)
       : 1;
@@ -230,31 +237,36 @@
 
   function startMobileSite() {
     document.body.classList.add('intro-site-pending');
-    return Promise.all([
-      load('mobile.css?v=20261003-mobile-smooth3', 'link'),
-      load('mobile.js?v=20261003-mobile-smooth3', 'script')
-    ]).then(waitForMobileImages);
+    return load('mobile.css?v=20261003-mobile-smooth4', 'link')
+      .then(function () {
+        return load('mobile.js?v=20261003-mobile-smooth4', 'script');
+      })
+      .then(waitForMobileImages);
   }
 
-  function finish() {
-    if (done) return;
-    done = true;
+  function beginExit() {
+    if (ending || done) return;
     ending = true;
-    timers.forEach(clearTimeout);
-    root.classList.remove('intro-lock', 'intro-on');
-    document.body.classList.remove('intro-site-pending');
-    document.body.classList.add('intro-site-ready');
-    requestAnimationFrame(function () {
+    endingAt = clock;
+
+    // Keep the intro running while both layers crossfade.
+    siteReadyPromise.then(function () {
+      if (done) return;
+      document.body.classList.remove('intro-site-pending');
+      document.body.classList.add('intro-site-ready');
       requestAnimationFrame(function () {
         intro.classList.add('is-out');
       });
     });
-    setTimeout(function () {
+
+    timers.push(setTimeout(function () {
+      done = true;
       cancelAnimationFrame(frame);
+      root.classList.remove('intro-lock', 'intro-on');
       if (intro.parentNode) intro.remove();
       if (style.parentNode) style.remove();
       document.body.classList.remove('intro-site-ready');
-    }, 1750);
+    }, 2350));
   }
 
   function start() {
@@ -270,10 +282,12 @@
     intro.classList.add('is-running');
     last = 0;
     frame = requestAnimationFrame(tick);
+    // Start loading the real mobile site after the first visual frames,
+    // so its DOM work cannot block the first intro frames.
     timers.push(setTimeout(function () {
-      ending = true;
-      setTimeout(finish, 1600);
-    }, EXIT_START));
+      siteReadyPromise = startMobileSite();
+    }, 420));
+    timers.push(setTimeout(beginExit, EXIT_START));
   }
 
   function decodeImage(img) {
@@ -303,9 +317,8 @@
   });
 
   resize();
-  Promise.all([photoReady, Promise.all(petalLoads), startMobileSite()]).then(function () {
+  Promise.all([photoReady, Promise.all(petalLoads)]).then(function () {
     if (!sprites.length || !photo.naturalWidth) {
-      finish();
       return;
     }
 
