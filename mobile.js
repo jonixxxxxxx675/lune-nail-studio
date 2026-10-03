@@ -35,19 +35,19 @@
         <h3>Оберіть послугу</h3>
         <div class="lm-service-list">
           ${[
-            ['Класичний','манікюр','60 хв','500 грн','assets/classic-manicure.png'],
-            ['Покриття','гель-лаком','90 хв','800 грн','assets/gel-polish.png'],
-            ['Дизайн нігтів','','90 хв','900 грн','assets/nail-design.png'],
-            ['Френч','','90 хв','900 грн','assets/french.png'],
-            ['Зміцнення нігтів','','60 хв','600 грн','assets/nail-strengthening.png']
+            ['Класичний','манікюр','60 хв','500 грн','assets/intro/scene-4.webp'],
+            ['Покриття','гель-лаком','90 хв','800 грн','assets/intro/scene-4.webp'],
+            ['Дизайн нігтів','','90 хв','900 грн','assets/intro/scene-4.webp'],
+            ['Френч','','90 хв','900 грн','assets/intro/scene-4.webp'],
+            ['Зміцнення нігтів','','60 хв','600 грн','assets/intro/scene-4.webp']
           ].map((x,i)=>`<button class="lm-service lm-3d-card ${i===0?'is-selected':''}" data-service="${i}" type="button"><img src="${x[4]}" alt=""><span class="lm-service-main"><strong>${x[0]}${x[1]?'<br>'+x[1]:''}</strong><small>${x[2]} • ${x[3]}</small></span><span class="lm-radio"></span></button>`).join('')}
         </div>
         <button class="lm-next lm-3d" data-book-start type="button">Далі <span>→</span></button>
       </div>
       <div class="lm-section-title"><small>ВІДГУКИ</small><h2>Наші клієнти</h2></div>
       <div class="lm-reviews">
-        <article class="lm-review"><div class="lm-review-top"><img class="lm-avatar" src="assets/intro/scene-4.webp"><div><b>Анастасія</b><div class="lm-stars">★★★★★</div></div></div><p>“Дуже задоволена! Атмосфера неймовірна, майстер уважна і професійна.”</p></article>
-        <article class="lm-review"><div class="lm-review-top"><img class="lm-avatar" src="assets/intro/scene-4.webp"><div><b>Марія</b><div class="lm-stars">★★★★★</div></div></div><p>“Найкращий манікюр у місті! Все стерильно, комфортно і красиво.”</p></article>
+        <article class="lm-review"><div class="lm-review-top"><img class="lm-avatar" src="assets/avatar-1.jpg"><div><b>Анастасія</b><div class="lm-stars">★★★★★</div></div></div><p>“Дуже задоволена! Атмосфера неймовірна, майстер уважна і професійна.”</p></article>
+        <article class="lm-review"><div class="lm-review-top"><img class="lm-avatar" src="assets/avatar-2.jpg"><div><b>Марія</b><div class="lm-stars">★★★★★</div></div></div><p>“Найкращий манікюр у місті! Все стерильно, комфортно і красиво.”</p></article>
       </div>
       <div class="lm-section-title"><small>INSTAGRAM</small><h2>Наші роботи</h2></div>
       <div class="lm-gallery">${Array.from({length:9},(_,i)=>`<img src="assets/intro/scene-4.webp" alt="Робота ${i+1}">`).join('')}</div>
