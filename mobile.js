@@ -127,7 +127,20 @@
   var bookings=JSON.parse(localStorage.getItem('lune-bookings')||'[]');
 
   function msg(t){toast.textContent=t;toast.classList.add('show');clearTimeout(msg.timer);msg.timer=setTimeout(()=>toast.classList.remove('show'),2200)}
-  function show(n,addHistory){if(addHistory!==false&&current!==n)history.push(n);current=n;screens.forEach(s=>s.classList.toggle('is-active',s.dataset.screen===n));window.scrollTo({top:0,behavior:'smooth'})}
+  function setScreen(n){
+    current=n;
+    screens.forEach(function(s){s.classList.toggle('is-active',s.dataset.screen===n)});
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function show(n,addHistory){
+    if(addHistory!==false&&current!==n)history.push(n);
+    if(current===n)return;
+    if(document.startViewTransition){
+      document.startViewTransition(function(){setScreen(n)});
+    }else{
+      setScreen(n);
+    }
+  }
   function back(){if(history.length>1){history.pop();show(history[history.length-1],false)}else show('home',false)}
   function openModal(name){var m=app.querySelector('[data-modal="'+name+'"]');if(m){m.classList.add('is-open');m.setAttribute('aria-hidden','false')}}
   function closeModals(){app.querySelectorAll('.lm-modal.is-open').forEach(m=>{m.classList.remove('is-open');m.setAttribute('aria-hidden','true')})}
@@ -141,7 +154,16 @@
   renderCalendar();updateAccount();renderBookings();
   app.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',back));
   app.querySelectorAll('[data-next]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.next)));
-  app.querySelectorAll('.lm-service').forEach(b=>b.addEventListener('click',()=>{app.querySelectorAll('.lm-service').forEach(x=>x.classList.remove('is-selected'));b.classList.add('is-selected');serviceSelected=Number(b.dataset.service);msg('Послугу обрано')}));
+  app.querySelectorAll('.lm-service').forEach(b=>b.addEventListener('click',()=>{
+    app.querySelectorAll('.lm-service').forEach(x=>x.classList.remove('is-selected'));
+    b.classList.add('is-selected');
+    serviceSelected=Number(b.dataset.service);
+    msg('Послугу обрано');
+    setTimeout(function(){
+      var next=app.querySelector('[data-book-start]');
+      if(next)next.scrollIntoView({behavior:'smooth',block:'center'});
+    },180);
+  }));
   app.querySelectorAll('.lm-master').forEach(b=>b.addEventListener('click',()=>{app.querySelectorAll('.lm-master').forEach(x=>x.classList.remove('is-selected'));b.classList.add('is-selected');msg('Майстра обрано')}));
   app.querySelectorAll('.lm-time').forEach(b=>b.addEventListener('click',()=>{app.querySelectorAll('.lm-time').forEach(x=>x.classList.remove('is-selected'));b.classList.add('is-selected');selectedTime=b.textContent.trim();msg('Час обрано')}));
   app.querySelectorAll('.lm-pill').forEach(b=>b.addEventListener('click',()=>{app.querySelectorAll('.lm-pill').forEach(x=>x.classList.remove('active'));b.classList.add('active')}));
