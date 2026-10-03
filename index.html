@@ -9,14 +9,9 @@
   <script>
   (function () {
     try {
-      var d = document.documentElement;
-      if (
-        matchMedia('(max-width: 767px)').matches &&
-        !matchMedia('(prefers-reduced-motion: reduce)').matches &&
-        !sessionStorage.getItem('lune-intro-seen')
-      ) {
-        d.classList.add('intro-on', 'intro-lock');
-        setTimeout(function () { d.classList.remove('intro-on', 'intro-lock'); }, 10500);
+      if (matchMedia('(max-width: 767px)').matches &&
+          !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('intro-on', 'intro-lock');
       }
     } catch (e) {}
   })();
@@ -39,13 +34,11 @@
 <body>
 
 <div class="intro" id="intro" aria-hidden="true">
-  <div class="intro__scenes" id="introScenes">
-    <div class="intro__scene is-active" data-scene="1"><img src="assets/intro/scene-1.webp" alt="" decoding="async"></div>
-    <div class="intro__scene" data-scene="2"><img src="assets/intro/scene-2.webp" alt="" decoding="async"></div>
-    <div class="intro__scene intro__scene--final" data-scene="3"><img src="assets/intro/scene-4.webp" alt="" decoding="async"></div>
+  <div class="lune-opening" id="luneOpening">
+    <img id="luneAmbient" class="lune-opening__ambient" alt="">
+    <img id="lunePhoto" class="lune-opening__photo" alt="LUNE Nail Studio">
+    <canvas id="luneCanvas" class="lune-opening__canvas" aria-label="Пелюстки LUNE"></canvas>
   </div>
-  <div class="intro__petals" id="introPetals" aria-hidden="true"></div>
-  <div class="intro__vignette" aria-hidden="true"></div>
 </div>
 
 <header class="header" id="header">
