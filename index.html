@@ -5,6 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LUNE Nail Studio — студія манікюру</title>
   <meta name="description" content="LUNE Nail Studio — студія манікюру. Краса у деталях.">
+
+  <script>
+  (function () {
+    try {
+      var d = document.documentElement;
+      if (
+        matchMedia('(max-width: 767px)').matches &&
+        !matchMedia('(prefers-reduced-motion: reduce)').matches &&
+        !sessionStorage.getItem('lune-intro-seen')
+      ) {
+        d.classList.add('intro-on', 'intro-lock');
+        setTimeout(function () { d.classList.remove('intro-on', 'intro-lock'); }, 9000);
+      }
+    } catch (e) {}
+  })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -21,6 +37,27 @@
   <script type="module" src="script.js"></script>
 </head>
 <body>
+
+<div class="intro" id="intro" aria-hidden="true">
+  <button class="intro__skip" type="button" aria-label="Пропустити вступ">Пропустити</button>
+
+  <div class="intro__scenes" id="introScenes">
+    <div class="intro__scene is-active" data-scene="1"><img src="assets/intro/scene-1.webp" alt="" decoding="async"></div>
+    <div class="intro__scene" data-scene="2"><img src="assets/intro/scene-2.webp" alt="" decoding="async"></div>
+    <div class="intro__scene" data-scene="3"><img src="assets/intro/scene-3.webp" alt="" decoding="async"></div>
+    <div class="intro__scene" data-scene="4"><img src="assets/intro/scene-4.webp" alt="" decoding="async"></div>
+    <div class="intro__scene intro__scene--final" data-scene="5"><img src="assets/intro/scene-4.webp" alt="" decoding="async"></div>
+  </div>
+
+  <div class="intro__petals" id="introPetals" aria-hidden="true"></div>
+  <div class="intro__vignette" aria-hidden="true"></div>
+
+  <div class="intro__button-wrap" aria-hidden="true">
+    <a class="intro__3d-btn" href="#contacts" tabindex="-1">
+      <span>Запис онлайн</span><b>→</b>
+    </a>
+  </div>
+</div>
 
 <header class="header" id="header">
   <div class="header__inner">
@@ -148,5 +185,6 @@
   <p>© <span id="year"></span> LUNE Nail Studio. Всі права захищені.</p>
 </footer>
 
+<script src="intro.js" defer></script>
 </body>
 </html>
