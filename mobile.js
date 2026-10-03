@@ -35,11 +35,11 @@
         <h3>Оберіть послугу</h3>
         <div class="lm-service-list">
           ${[
-            ['Класичний','манікюр','60 хв','500 грн','assets/intro/scene-4.webp'],
-            ['Покриття','гель-лаком','90 хв','800 грн','assets/intro/scene-4.webp'],
-            ['Дизайн нігтів','','90 хв','900 грн','assets/intro/scene-4.webp'],
-            ['Френч','','90 хв','900 грн','assets/intro/scene-4.webp'],
-            ['Зміцнення нігтів','','60 хв','600 грн','assets/intro/scene-4.webp']
+            ['Класичний','манікюр','60 хв','500 грн','assets/classic-manicure.png'],
+            ['Покриття','гель-лаком','90 хв','800 грн','assets/gel-polish.png'],
+            ['Дизайн нігтів','','90 хв','900 грн','assets/nail-design.png'],
+            ['Френч','','90 хв','900 грн','assets/french.png'],
+            ['Зміцнення нігтів','','60 хв','600 грн','assets/nail-strengthening.png']
           ].map((x,i)=>`<button class="lm-service lm-3d-card ${i===0?'is-selected':''}" data-service="${i}" type="button"><img src="${x[4]}" alt=""><span class="lm-service-main"><strong>${x[0]}${x[1]?'<br>'+x[1]:''}</strong><small>${x[2]} • ${x[3]}</small></span><span class="lm-radio"></span></button>`).join('')}
         </div>
         <button class="lm-next lm-3d" data-book-start type="button">Далі <span>→</span></button>
