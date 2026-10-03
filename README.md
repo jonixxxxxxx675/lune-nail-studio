@@ -1,10 +1,19 @@
-# Lune Nail Studio
+# LUNE Nail Studio
 
-Повна адаптивна версія сайту студії манікюру на HTML5, CSS3 та Vanilla JS.
+Static HTML/CSS/Vanilla JS frontend.
 
-## Структура
-`index.html`, `css/`, `js/`, `assets/images/`.
+## Structure
+- `index.html` — complete page structure and booking modal
+- `css/reset.css` — base reset and `[hidden]` fix
+- `css/variables.css` — design tokens
+- `css/style.css` — responsive Desktop/Mobile styles
+- `js/main.js` — intro, header, menu, icons, modal, carousels
+- `js/booking.js` — 6-step booking flow, calendar and 30-minute slots
+- `assets/images/` — real project images
+- `assets/video/` — video asset
 
-Фото покласти в `assets/images/`: `hero.jpg`, `about.jpg`, `about-2.jpg`, `gallery-1.jpg` … `gallery-8.jpg`.
+## Booking
+Current booking is demo/local only and uses `localStorage`. Replace storage logic with Supabase for production.
 
-Запис зараз демонстраційний і зберігається у `localStorage`. Для production можна підключити Supabase.
+## Important
+Desktop and Mobile use separate responsive rules. The mobile layout is not a scaled copy of Desktop.
