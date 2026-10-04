@@ -256,6 +256,9 @@
       .then(function () {
         return load('mobile.js?v=20261003-mobile-smooth4', 'script');
       })
+      .then(function () {
+        return load('mobile-enhancements.js?v=20261004-mobile-account-v7', 'script');
+      })
       .then(waitForMobileImages);
   }
 

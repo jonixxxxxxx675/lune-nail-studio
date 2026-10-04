@@ -38,6 +38,10 @@
     if (app.dataset.enhanced === '1') return;
     app.dataset.enhanced = '1';
 
+    // The legacy profile modal is replaced by the dedicated mobile account page.
+    var legacyProfile = app.querySelector('.lm-modal[data-modal=\"profile\"]');
+    if (legacyProfile) legacyProfile.remove();
+
     var menu = app.querySelector('.lm-menu-panel');
     var accountOverlay = document.createElement('div');
     accountOverlay.className = 'lm-account-overlay';
