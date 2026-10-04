@@ -86,7 +86,7 @@
       <div class="lm-book-body">
         <div class="lm-steps"><div class="lm-step is-active"><span class="lm-step-dot">✓</span><i class="lm-step-line"></i></div><div class="lm-step is-active"><span class="lm-step-dot">✓</span><i class="lm-step-line"></i></div><div class="lm-step is-active"><span class="lm-step-dot">✓</span><i class="lm-step-line"></i></div><div class="lm-step is-active"><span class="lm-step-dot">4</span></div></div>
         <h2 class="lm-book-title">Оберіть час</h2><p class="lm-date-label">▣ &nbsp; Сб, 17 жовтня 2026</p>
-        <div class="lm-times">${['10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','16:00'].map((t,i)=>`<button class="lm-time lm-3d-card ${i===3?'is-selected':''}" type="button">${t}</button>`).join('')}</div>
+        <div class="lm-times">${Array.from({length:21},(_,i)=>{var h=10+Math.floor(i/2),m=i%2?'30':'00',t=String(h).padStart(2,'0')+':'+m;return `<button class="lm-time lm-3d-card ${t===selectedTime?'is-selected':''}" data-time="${t}" type="button">${t}</button>`}).join('')}</div>
         <button class="lm-next lm-3d" data-confirm type="button">Підтвердити запис <span>→</span></button>
       </div>
     </section>
@@ -95,10 +95,7 @@
       <div class="lm-top"><button class="lm-back lm-3d" data-back type="button">‹</button><a class="lm-logo"><b>LUNE</b><small>NAIL STUDIO</small></a><span></span></div>
       <div class="lm-account-wrap">
         <div class="lm-account-card">
-          <div class="lm-account-avatar" data-main-avatar>
-            <span data-main-avatar-letter>L</span>
-            <img data-main-avatar-img alt="" hidden>
-          </div><small class="lm-eyebrow">ОСОБИСТИЙ ПРОСТІР</small><h2>Мій аккаунт</h2><p data-account-state>Зареєструйся, щоб зберігати бронювання та свій QR-код.</p>
+          <div class="lm-account-avatar" data-account-avatar aria-label="Фото профілю">L</div><small class="lm-eyebrow">ОСОБИСТИЙ ПРОСТІР</small><h2>Мій аккаунт</h2><p data-account-state>Зареєструйся, щоб зберігати бронювання та свій QR-код.</p>
           <button class="lm-next lm-3d" data-register type="button">Зареєструватися <span>→</span></button>
         </div>
         <div class="lm-account-links">
@@ -108,130 +105,175 @@
       </div>
     </section>
 
-    <div class="lm-menu-panel" aria-hidden="true">
-      <button class="lm-menu-close lm-3d" type="button">×</button>
-      <small>МЕНЮ</small>
-      <a href="#booking">Запис онлайн</a><a href="#account">Мій аккаунт</a><a href="#support">Служба підтримки</a><a href="#branches">Наші відділення</a>
-      <div class="lm-menu-language" aria-label="Language">
-        <span class="lm-language-globe" aria-hidden="true"><i></i><b></b></span>
-        <div class="lm-menu-language__options">
-          <button type="button" class="is-active" data-lang="uk" aria-label="Українська">UA</button>
-          <span class="lm-language-arrow" aria-hidden="true">→</span>
-          <button type="button" data-lang="en" aria-label="English">EN</button>
+    <section class="lm-screen" data-screen="profile">
+      <div class="lm-top"><button class="lm-back lm-3d" data-back type="button" aria-label="Назад">‹</button><a class="lm-logo"><b>LUNE</b><small>NAIL STUDIO</small></a><span></span></div>
+      <div class="lm-profile-wrap">
+        <div class="lm-profile-card">
+          <small class="lm-eyebrow">ОСОБИСТІ ДАНІ</small>
+          <h2>Мій профіль</h2>
+          <button class="lm-profile-photo lm-3d-card" data-profile-photo type="button">
+            <span class="lm-profile-photo-image" data-profile-photo-image>L</span>
+            <span><b>Змінити фото</b><small>Вибрати фото з телефону</small></span>
+            <i>→</i>
+          </button>
+          <input class="lm-visually-hidden" data-profile-photo-input type="file" accept="image/*">
+          <div class="lm-profile-fields">
+            <label>Ім'я<input data-profile-name type="text" autocomplete="name"></label>
+            <label>Телефон<input data-profile-phone type="tel" autocomplete="tel"></label>
+            <label>Email<input data-profile-email type="email" autocomplete="email"></label>
+          </div>
+          <div class="lm-email-status" data-email-status></div>
+          <button class="lm-next lm-3d" data-email-confirm type="button">Підтвердити e-mail <span>→</span></button>
+          <button class="lm-next lm-3d lm-next--light" data-profile-save type="button">Зберегти дані</button>
         </div>
       </div>
+    </section>
+
+    <section class="lm-screen" data-screen="support">
+      <div class="lm-top"><button class="lm-back lm-3d" data-back type="button" aria-label="Назад">‹</button><a class="lm-logo"><b>LUNE</b><small>NAIL STUDIO</small></a><span></span></div>
+      <div class="lm-info-wrap">
+        <small class="lm-eyebrow">МИ ПОРУЧ</small><h2>Служба підтримки</h2><p>Потрібна допомога з бронюванням, профілем або оплатою? Напиши нам.</p>
+        <a class="lm-info-card lm-3d-card" href="mailto:support@lune-studio.ua"><b>Email</b><span>support@lune-studio.ua</span><i>→</i></a>
+        <a class="lm-info-card lm-3d-card" href="tel:+380981234567"><b>Телефон</b><span>+380 98 123 45 67</span><i>→</i></a>
+        <div class="lm-support-hours"><b>Графік підтримки</b><span>Щодня · 09:00–20:00</span></div>
+      </div>
+    </section>
+
+    <section class="lm-screen" data-screen="branches">
+      <div class="lm-top"><button class="lm-back lm-3d" data-back type="button" aria-label="Назад">‹</button><a class="lm-logo"><b>LUNE</b><small>NAIL STUDIO</small></a><span></span></div>
+      <div class="lm-info-wrap">
+        <small class="lm-eyebrow">LUNE У ЛЬВОВІ</small><h2>Наші відділення</h2><p>Обери зручну студію та відкрий її на карті.</p>
+        <div class="lm-map-card"><iframe title="Карта відділень LUNE у Львові" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=23.98%2C49.82%2C24.08%2C49.87&layer=mapnik&marker=49.8419%2C24.0316"></iframe></div>
+        <a class="lm-info-card lm-3d-card" href="https://www.google.com/maps/search/?api=1&query=вул.+Князя+Романа,+12,+Львів" target="_blank" rel="noopener"><b>Львів · Князя Романа, 12</b><span>Центр</span><i>↗</i></a>
+        <a class="lm-info-card lm-3d-card" href="https://www.google.com/maps/search/?api=1&query=вул.+Лесі+Українки,+18,+Львів" target="_blank" rel="noopener"><b>Львів · Лесі Українки, 18</b><span>Історичний центр</span><i>↗</i></a>
+        <a class="lm-info-card lm-3d-card" href="https://www.google.com/maps/search/?api=1&query=вул.+Стрийська,+45,+Львів" target="_blank" rel="noopener"><b>Львів · Стрийська, 45</b><span>Стрийський район</span><i>↗</i></a>
+      </div>
+    </section>
+
+    <div class="lm-menu-panel" aria-hidden="true">
+      <button class="lm-menu-back lm-3d" type="button" aria-label="Назад">‹</button>
+      <small>МЕНЮ</small>
+      <a href="#account">Мій аккаунт</a><a href="#support">Служба підтримки</a><a href="#branches">Наші відділення</a>
+      <button class="lm-language lm-3d-card" type="button" data-language-open><span>Мова</span><b data-language-label>Українська</b><i>→</i></button>
     </div>
     <div class="lm-modal" data-modal="register" aria-hidden="true"><div class="lm-modal-box"><button class="lm-modal-close lm-3d" data-modal-close type="button">×</button><small>ПЕРШИЙ КРОК</small><h3>Створи свій аккаунт</h3><p>Реєстрація потрібна перед першим бронюванням.</p><form data-register-form><label>Ім'я<input name="name" required autocomplete="name" placeholder="Твоє ім'я"></label><label>Телефон<input name="phone" required autocomplete="tel" inputmode="tel" placeholder="+380 ..."></label><label>Email<input name="email" type="email" required autocomplete="email" placeholder="you@email.com"></label><button class="lm-next lm-3d" type="submit">Створити аккаунт <span>→</span></button></form></div></div>
     <div class="lm-modal" data-modal="auth-gate" aria-hidden="true"><div class="lm-modal-box lm-modal-center"><div class="lm-modal-icon">L</div><small>ЗАПИС ОНЛАЙН</small><h3>Спочатку зареєструйся</h3><p>Твій аккаунт потрібен, щоб зберегти бронювання та QR-код клієнта.</p><button class="lm-next lm-3d" data-gate-register type="button">Мій аккаунт <span>→</span></button></div></div>
     <div class="lm-modal" data-modal="confirm" aria-hidden="true"><div class="lm-modal-box lm-modal-center"><div class="lm-success">✓</div><small>ГОТОВО</small><h3>Бронювання підтверджено</h3><p>Запис збережено у твоєму аккаунті.</p><button class="lm-next lm-3d" data-confirm-ok type="button">Окей <span>→</span></button></div></div>
     <div class="lm-modal" data-modal="qr" aria-hidden="true"><div class="lm-modal-box lm-modal-center"><button class="lm-modal-close lm-3d" data-modal-close type="button">×</button><small>ТВІЙ QR-КОД</small><h3>Код клієнта LUNE</h3><div class="lm-qr" data-qr></div><p data-qr-label>LUNE CLIENT</p><button class="lm-next lm-3d" data-modal-close type="button">Закрити</button></div></div>
     <div class="lm-modal" data-modal="bookings" aria-hidden="true"><div class="lm-modal-box"><button class="lm-modal-close lm-3d" data-modal-close type="button">×</button><small>ІСТОРІЯ</small><h3>Мої бронювання</h3><div data-bookings-list class="lm-bookings-list"></div></div></div>
-    <div class="lm-modal" data-modal="profile" aria-hidden="true"><div class="lm-modal-box"><button class="lm-modal-close lm-3d" data-modal-close type="button">×</button><small>ОСОБИСТИЙ ПРОСТІР</small><h3>Ваш профіль</h3><form data-profile-form><label>Ім'я<input name="name" required autocomplete="name"></label><label>Телефон<input name="phone" required autocomplete="tel"></label><label>Email<input name="email" type="email" required autocomplete="email"></label><label class="lm-avatar-upload">Додати аватарку<input name="avatar" type="file" accept="image/*"></label><button class="lm-next lm-3d" type="submit">Зберегти зміни <span>→</span></button></form></div></div>
+    <div class="lm-modal" data-modal="language" aria-hidden="true"><div class="lm-modal-box lm-modal-center"><button class="lm-modal-close lm-3d" data-modal-close type="button">×</button><small>НАЛАШТУВАННЯ</small><h3>Вибір мови</h3><div class="lm-language-list"><button class="lm-language-option lm-3d-card" data-language="uk" type="button"><span>Українська</span><b>UA</b></button><button class="lm-language-option lm-3d-card" data-language="en" type="button"><span>English</span><b>EN</b></button></div></div></div>
     <div class="lm-toast" aria-live="polite"></div>`;
 
   document.body.appendChild(app);
   document.body.classList.add('lune-mobile-active');
 
-  app.querySelectorAll('.lm-hero img').forEach(function(img){
-    var hero=img.closest('.lm-hero');
-    var reveal=function(){if(hero) hero.classList.add('is-media-ready');};
-    var hide=function(){if(hero) hero.classList.remove('is-media-ready');};
-    img.addEventListener('load',reveal,{once:true});
-    img.addEventListener('error',hide,{once:true});
-    if(img.complete && img.naturalWidth) reveal();
-  });
-
   var screens=[...app.querySelectorAll('.lm-screen')],toast=app.querySelector('.lm-toast');
   var current='home',history=['home'],serviceSelected=0,selectedDate=17,selectedTime='11:30';
+  var language=localStorage.getItem('lune-language')||'uk';
   var monthDate=new Date(2026,9,1);
   var account=JSON.parse(localStorage.getItem('lune-account')||'null');
   var bookings=JSON.parse(localStorage.getItem('lune-bookings')||'[]');
 
-  var currentLanguage=(function(){try{return localStorage.getItem('lune-language')||'uk'}catch(e){return 'uk'}})();
-  var LUNE_I18N={"МЕНЮ": "MENU", "Запис онлайн": "Online booking", "Мій аккаунт": "My account", "Служба підтримки": "Support", "Наші відділення": "Our locations", "Мова": "Language", "Українська": "Ukrainian", "English": "English", "СТУДІЯ МАНІКЮРУ": "NAIL STUDIO", "КРАСА": "BEAUTY", "У ДЕТАЛЯХ": "IN THE DETAILS", "Ідеальний манікюр,": "Perfect manicure,", "який підкреслює тебе": "that highlights you", "Якісні": "Quality", "матеріали": "materials", "Досвідчені": "Experienced", "майстри": "masters", "Затишна": "Cozy", "атмосфера": "atmosphere", "Обери послугу, майстра, дату та час": "Choose a service, master, date and time", "Оберіть послугу": "Choose a service", "Далі": "Next", "ВІДГУКИ": "REVIEWS", "Наші клієнти": "Our clients", "Наші роботи": "Our work", "Дуже задоволена! Атмосфера неймовірна, майстер уважна і професійна.": "Very satisfied! The atmosphere is amazing, and the master is attentive and professional.", "Найкращий манікюр у місті! Все стерильно, комфортно і красиво.": "The best manicure in the city! Everything is sterile, comfortable and beautiful.", "Робота": "Work", "Дивитися більше в Instagram →": "See more on Instagram →", "Краса у деталях. Простір для твого нового образу.": "Beauty in the details. A space for your new look.", "вул. Шевченка, 12, Львів": "12 Shevchenka St, Lviv", "Всі права захищені": "All rights reserved", "Оберіть майстра": "Choose a master", "Вільна": "Available", "сьогодні": "today", "завтра": "tomorrow", "Оберіть дату": "Choose a date", "Сьогодні": "Today", "Завтра": "Tomorrow", "Оберіть час": "Choose a time", "Підтвердити запис": "Confirm booking", "Підтвердити запис ": "Confirm booking ", "ОСОБИСТИЙ ПРОСТІР": "PERSONAL SPACE", "Зареєструйся, щоб зберігати бронювання та свій QR-код.": "Register to save your bookings and your QR code.", "Зареєструватися": "Register", "Мої бронювання": "My bookings", "Переглянути записи": "View bookings", "Мій QR-код": "My QR code", "Код клієнта LUNE": "LUNE client code", "ПЕРШИЙ КРОК": "FIRST STEP", "Створи свій аккаунт": "Create your account", "Реєстрація потрібна перед першим бронюванням.": "Registration is required before your first booking.", "Твоє ім'я": "Your name", "Твій телефон": "Your phone", "Електронна пошта": "Email", "ЗАПИС ОНЛАЙН": "ONLINE BOOKING", "Спочатку зареєструйся": "Register first", "Твій аккаунт потрібен, щоб зберегти бронювання та QR-код клієнта.": "Your account is required to save your booking and client QR code.", "Продовжити": "Continue", "ГОТОВО": "DONE", "Бронювання підтверджено": "Booking confirmed", "Запис збережено у твоєму аккаунті.": "Your booking has been saved to your account.", "Окей": "Okay", "ТВІЙ QR-КОД": "YOUR QR CODE", "ІСТОРІЯ": "HISTORY", "Поки що немає бронювань.": "No bookings yet.", "Твій аккаунт активний. Тут зберігатимуться бронювання та QR-код.": "Your account is active. Your bookings and QR code will be stored here.", "Відкрити профіль →": "Open profile →", "Профіль уже активний": "Profile is already active", "Ваш профіль": "Your profile", "Ім'я": "Name", "Телефон": "Phone", "Email": "Email", "Зберегти зміни": "Save changes", "Додати аватарку": "Add avatar", "Скасувати бронювання": "Cancel booking", "Бронювання скасоване": "Booking cancelled", "Зміни збережено": "Changes saved", "Аккаунт створено": "Account created", "Послугу обрано": "Service selected", "Майстра обрано": "Master selected", "Час обрано": "Time selected", "Дата обрана": "Date selected", "Класичний манікюр": "Classic manicure", "Покриття гель-лаком": "Gel polish", "Дизайн нігтів": "Nail design", "Френч": "French", "Зміцнення нігтів": "Nail strengthening", "Класичний": "Classic", "манікюр": "manicure", "Покриття": "Gel polish", "гель-лаком": "gel polish", "ПЕРЕДЗАПИС": "PRE-BOOKING", "Січень": "January", "Лютий": "February", "Березень": "March", "Квітень": "April", "Травень": "May", "Червень": "June", "Липень": "July", "Серпень": "August", "Вересень": "September", "Жовтень": "October", "Листопад": "November", "Грудень": "December", "Пн": "Mon", "Вт": "Tue", "Ср": "Wed", "Чт": "Thu", "Пт": "Fri", "Сб": "Sat", "Нд": "Sun", "17 жовтня 2026": "October 17, 2026", "▣   Сб, 17 жовтня 2026": "▣   Sat, October 17, 2026", "Ім'я": "Name", "Телефон": "Phone", "Email": "Email", "Створити аккаунт": "Create account", "Закрити": "Close", "LUNE CLIENT": "LUNE CLIENT"};
-  LUNE_I18N['Розділ доступний на головній сторінці']='This section is available on the home page';
-  function translateText(text){
-    var value=text.trim();
-    if(!value)return text;
-    if(currentLanguage==='uk') {
-      for(var k in LUNE_I18N) if(LUNE_I18N[k]===value) return text.slice(0,text.indexOf(value))+k+text.slice(text.indexOf(value)+value.length);
-      value=value.replace(/\b(January|February|March|April|May|June|July|August|September|October|November|December)\b/g,function(m){var i=['January','February','March','April','May','June','July','August','September','October','November','December'].indexOf(m);return i>=0?['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'][i]:m;});
-      value=value.replace(/\b(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\b/g,function(m){return {Mon:'Пн',Tue:'Вт',Wed:'Ср',Thu:'Чт',Fri:'Пт',Sat:'Сб',Sun:'Нд'}[m]||m;});
-      return value;
-    }
-    if(Object.prototype.hasOwnProperty.call(LUNE_I18N,value)) return text.replace(value,LUNE_I18N[value]);
-    value=value.replace(/\b(Січень|Лютий|Березень|Квітень|Травень|Червень|Липень|Серпень|Вересень|Жовтень|Листопад|Грудень)\b/g,function(m){return LUNE_I18N[m]||m;});
-    value=value.replace(/\b(Пн|Вт|Ср|Чт|Пт|Сб|Нд)\b/g,function(m){return LUNE_I18N[m]||m;});
-    return value;
-  }
-  function applyLanguage(){
-    var walker=document.createTreeWalker(app,NodeFilter.SHOW_TEXT);
-    var node;
-    while(node=walker.nextNode()){
-      var parent=node.parentElement;
-      if(!parent || ['SCRIPT','STYLE'].indexOf(parent.tagName)>=0) continue;
-      var original=node.nodeValue;
-      var translated=translateText(original);
-      if(translated!==original) node.nodeValue=translated;
-    }
-    app.querySelectorAll('[placeholder],[aria-label]').forEach(function(el){
-      ['placeholder','aria-label'].forEach(function(attr){
-        if(el.hasAttribute(attr)){
-          var v=el.getAttribute(attr),t=translateText(v);
-          if(t!==v) el.setAttribute(attr,t);
-        }
-      });
-    });
-    var langMenu=app.querySelector('.lm-menu-panel');
-    if(langMenu) langMenu.querySelectorAll('[data-lang]').forEach(function(x){x.classList.toggle('is-active',x.dataset.lang===currentLanguage)});
-    document.documentElement.lang=currentLanguage==='en'?'en':'uk';
-  }
-  function msg(t){t=translateText(t);toast.textContent=t;toast.classList.add('show');clearTimeout(msg.timer);msg.timer=setTimeout(()=>toast.classList.remove('show'),2200)}
-  function show(n,addHistory){if(addHistory!==false&&current!==n)history.push(n);current=n;screens.forEach(s=>s.classList.toggle('is-active',s.dataset.screen===n));window.scrollTo({top:0,behavior:'smooth'})}
+  function msg(t){toast.textContent=t;toast.classList.add('show');clearTimeout(msg.timer);msg.timer=setTimeout(()=>toast.classList.remove('show'),2200)}
+  function show(n,addHistory){if(addHistory!==false&&current!==n)history.push(n);current=n;screens.forEach(s=>s.classList.toggle('is-active',s.dataset.screen===n));window.scrollTo({top:0,behavior:'auto'})}
   function back(){if(history.length>1){history.pop();show(history[history.length-1],false)}else show('home',false)}
   function openModal(name){var m=app.querySelector('[data-modal="'+name+'"]');if(m){m.classList.add('is-open');m.setAttribute('aria-hidden','false')}}
   function closeModals(){app.querySelectorAll('.lm-modal.is-open').forEach(m=>{m.classList.remove('is-open');m.setAttribute('aria-hidden','true')})}
   function requireAccount(){if(account)return true;openModal('auth-gate');return false}
-  function updateAccount(){var state=app.querySelector('[data-account-state]'),btn=app.querySelector('[data-register]');if(account){state.textContent='Твій аккаунт активний. Тут зберігатимуться бронювання та QR-код.';btn.textContent='Відкрити профіль →';}else{state.textContent='Зареєструйся, щоб зберігати бронювання та свій QR-код.';btn.innerHTML='Зареєструватися <span>→</span>'}}
-  function syncMainAvatar(){var box=app.querySelector('[data-main-avatar]'),letter=app.querySelector('[data-main-avatar-letter]'),img=app.querySelector('[data-main-avatar-img]');if(!box||!letter||!img)return;if(account&&account.avatar){img.src=account.avatar;img.hidden=false;letter.hidden=true;}else{img.removeAttribute('src');img.hidden=true;letter.hidden=false;letter.textContent=account&&account.name?account.name.slice(0,1).toUpperCase():'L';}}
-  function openProfile(){if(!account){openModal('register');return}closeModals();var f=app.querySelector('[data-profile-form]');if(f){f.elements.name.value=account.name||'';f.elements.phone.value=account.phone||'';f.elements.email.value=account.email||'';f.elements.avatar.value='';}openModal('profile');syncMainAvatar();}
-  function renderBookings(){try{bookings=JSON.parse(localStorage.getItem('lune-bookings')||'[]')}catch(e){}bookings=bookings.map(function(b,i){if(b.id)return b;var copy=Object.assign({},b,{id:'LUNE-B-'+Date.now().toString(36).toUpperCase()+'-'+i});return copy});localStorage.setItem('lune-bookings',JSON.stringify(bookings));var box=app.querySelector('[data-bookings-list]');if(!box)return;if(!bookings.length){box.innerHTML='<div class="lm-empty">Поки що немає бронювань.</div>';return}box.innerHTML=bookings.map(b=>`<div class="lm-booking" data-booking-id="${b.id}"><b>${b.service}</b><span>${b.date} • ${b.time}</span><small>${b.master}</small><button type="button" class="lm-booking-cancel" data-cancel-booking="${b.id}">Скасувати бронювання</button></div>`).join('');box.querySelectorAll('[data-cancel-booking]').forEach(function(btn){btn.addEventListener('click',function(){var id=btn.getAttribute('data-cancel-booking');bookings=bookings.filter(function(b){return String(b.id)!==String(id)});localStorage.setItem('lune-bookings',JSON.stringify(bookings));renderBookings();msg('Бронювання скасоване');});});}
+  function updateAccount(){var state=app.querySelector('[data-account-state]'),btn=app.querySelector('[data-register]'),avatar=app.querySelector('[data-account-avatar]'),photo=account&&account.photo;if(account){state.textContent='Твій аккаунт активний. Тут зберігатимуться бронювання та QR-код.';btn.innerHTML='Відкрити профіль <span>→</span>';avatar.classList.toggle('has-photo',!!photo);avatar.style.backgroundImage=photo?`url(${photo})`:'';avatar.textContent=photo?'':'L';fillProfile();}else{state.textContent='Зареєструйся, щоб зберігати бронювання та свій QR-код.';btn.innerHTML='Зареєструватися <span>→</span>';avatar.classList.remove('has-photo');avatar.style.backgroundImage='';avatar.textContent='L'}}
+  function fillProfile(){if(!account)return;app.querySelector('[data-profile-name]').value=account.name||'';app.querySelector('[data-profile-phone]').value=account.phone||'';app.querySelector('[data-profile-email]').value=account.email||'';var image=app.querySelector('[data-profile-photo-image]');image.classList.toggle('has-photo',!!account.photo);image.style.backgroundImage=account.photo?`url(${account.photo})`:'';image.textContent=account.photo?'':'L';var status=app.querySelector('[data-email-status]');status.className='lm-email-status '+(account.emailConfirmed?'is-confirmed':'');status.textContent=account.emailConfirmed?'✓ E-mail підтверджено':'E-mail не підтверджено';}
+  function renderBookings(){var box=app.querySelector('[data-bookings-list]');if(!bookings.length){box.innerHTML='<div class="lm-empty">Поки що немає бронювань.</div>';return}box.innerHTML=bookings.map((b,i)=>`<div class="lm-booking"><div><b>${b.service}</b><span>${b.date} • ${b.time}</span><small>${b.master}</small></div><button class="lm-cancel-booking lm-3d" type="button" data-cancel-booking="${i}">Скасувати</button></div>`).join('');box.querySelectorAll('[data-cancel-booking]').forEach(btn=>btn.addEventListener('click',()=>{var i=Number(btn.dataset.cancelBooking);bookings.splice(i,1);localStorage.setItem('lune-bookings',JSON.stringify(bookings));renderBookings();renderCalendar();renderTimes();msg('Бронювання скасовано')}))}
   function qrSvg(value){var seed=0;for(var i=0;i<value.length;i++)seed=(seed*31+value.charCodeAt(i))>>>0;var cells=21,cell=7,size=cells*cell,rects='';for(var y=0;y<cells;y++)for(var x=0;x<cells;x++){var corner=(x<7&&y<7)||(x>=14&&y<7)||(x<7&&y>=14);var on;if(corner){var ox=x<7?0:14,oy=y<7?0:14,dx=x-ox,dy=y-oy;on=dx===0||dx===6||dy===0||dy===6||(dx>=2&&dx<=4&&dy>=2&&dy<=4)}else{seed=(seed*1664525+1013904223)>>>0;on=(seed&1)===1}if(on)rects+=`<rect x="${x*cell}" y="${y*cell}" width="${cell}" height="${cell}"/>`}return `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="QR-код"><rect width="100%" height="100%" fill="#fff"/>${rects}</svg>`}
 
-  function renderCalendar(){var grid=app.querySelector('[data-calendar]'),label=app.querySelector('[data-month-label]'),names=['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];label.textContent=names[monthDate.getMonth()]+' '+monthDate.getFullYear();var first=(monthDate.getDay()+6)%7,days=new Date(monthDate.getFullYear(),monthDate.getMonth()+1,0).getDate(),html=['Пн','Вт','Ср','Чт','Пт','Сб','Нд'].map(d=>`<span class="cal-week">${d}</span>`).join('');for(var i=0;i<first;i++)html+='<span class="cal-empty"></span>';for(var d=1;d<=days;d++)html+=`<button type="button" class="cal-day lm-3d ${d===selectedDate?'selected':''}">${d}</button>`;grid.innerHTML=html;grid.querySelectorAll('.cal-day').forEach(b=>b.addEventListener('click',()=>{grid.querySelectorAll('.cal-day').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');selectedDate=Number(b.textContent);msg('Дата обрана')}))}
+  function pad2(n){return String(n).padStart(2,'0')}
+  function dateKey(y,m,d){return y+'-'+pad2(m+1)+'-'+pad2(d)}
+  function bookingDateKey(b){
+    if(b&&b.dateKey)return b.dateKey;
+    var match=String(b&&b.date||'').match(/(\d{1,2})\s+([^\s]+)\s+(\d{4})/);
+    if(!match)return '';
+    var names=['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];
+    var m=names.indexOf(match[2]);
+    return m<0?'':dateKey(Number(match[3]),m,Number(match[1]));
+  }
+  function isDateBooked(d){return bookings.some(function(b){return bookingDateKey(b)===dateKey(monthDate.getFullYear(),monthDate.getMonth(),d)})}
+  function isTimeBooked(t){
+    var key=dateKey(monthDate.getFullYear(),monthDate.getMonth(),selectedDate);
+    return bookings.some(function(b){return bookingDateKey(b)===key && String(b.time||'')===t})
+  }
+  function renderCalendar(){
+    var grid=app.querySelector('[data-calendar]'),label=app.querySelector('[data-month-label]'),names=['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];
+    label.textContent=names[monthDate.getMonth()]+' '+monthDate.getFullYear();
+    var first=(monthDate.getDay()+6)%7,days=new Date(monthDate.getFullYear(),monthDate.getMonth()+1,0).getDate();
+    var html=['Пн','Вт','Ср','Чт','Пт','Сб','Нд'].map(d=>`<span class="cal-week">${d}</span>`).join('');
+    for(var i=0;i<first;i++)html+='<span class="cal-empty"></span>';
+    for(var d=1;d<=days;d++){
+      var booked=isDateBooked(d);
+      var selected=d===selectedDate&&!booked;
+      html+=`<button type="button" class="cal-day lm-3d ${selected?'selected ':''}${booked?'booked':''}" ${booked?'disabled aria-disabled="true"':''}>${d}</button>`;
+    }
+    grid.innerHTML=html;
+    grid.querySelectorAll('.cal-day:not(.booked)').forEach(b=>b.addEventListener('click',()=>{
+      grid.querySelectorAll('.cal-day').forEach(x=>x.classList.remove('selected'));
+      b.classList.add('selected');
+      selectedDate=Number(b.textContent);
+      renderTimes();
+      msg('Дата обрана')
+    }));
+    renderTimes();
+  }
+  function renderTimes(){
+    app.querySelectorAll('.lm-time').forEach(function(b){
+      var t=b.dataset.time||b.textContent.trim();
+      var booked=isTimeBooked(t);
+      b.classList.toggle('booked',booked);
+      b.disabled=booked;
+      b.setAttribute('aria-disabled',booked?'true':'false');
+      b.classList.toggle('is-selected',!booked&&t===selectedTime);
+    });
+  }
 
-  renderCalendar();updateAccount();renderBookings();applyLanguage();
+  renderCalendar();updateAccount();renderBookings();
   app.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',back));
   app.querySelectorAll('[data-next]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.next)));
   app.querySelectorAll('.lm-service').forEach(b=>b.addEventListener('click',()=>{app.querySelectorAll('.lm-service').forEach(x=>x.classList.remove('is-selected'));b.classList.add('is-selected');serviceSelected=Number(b.dataset.service);msg('Послугу обрано')}));
   app.querySelectorAll('.lm-master').forEach(b=>b.addEventListener('click',()=>{app.querySelectorAll('.lm-master').forEach(x=>x.classList.remove('is-selected'));b.classList.add('is-selected');msg('Майстра обрано')}));
-  app.querySelectorAll('.lm-time').forEach(b=>b.addEventListener('click',()=>{app.querySelectorAll('.lm-time').forEach(x=>x.classList.remove('is-selected'));b.classList.add('is-selected');selectedTime=b.textContent.trim();msg('Час обрано')}));
+  app.querySelectorAll('.lm-time').forEach(b=>b.addEventListener('click',()=>{if(b.disabled)return;app.querySelectorAll('.lm-time').forEach(x=>x.classList.remove('is-selected'));b.classList.add('is-selected');selectedTime=b.dataset.time||b.textContent.trim();msg('Час обрано')}));
   app.querySelectorAll('.lm-pill').forEach(b=>b.addEventListener('click',()=>{app.querySelectorAll('.lm-pill').forEach(x=>x.classList.remove('active'));b.classList.add('active')}));
-  app.querySelector('[data-month="prev"]').addEventListener('click',()=>{monthDate.setMonth(monthDate.getMonth()-1);renderCalendar()});
-  app.querySelector('[data-month="next"]').addEventListener('click',()=>{monthDate.setMonth(monthDate.getMonth()+1);renderCalendar()});
+  app.querySelector('[data-month="prev"]').addEventListener('click',()=>{monthDate.setMonth(monthDate.getMonth()-1);selectedDate=1;renderCalendar()});
+  app.querySelector('[data-month="next"]').addEventListener('click',()=>{monthDate.setMonth(monthDate.getMonth()+1);selectedDate=1;renderCalendar()});
   app.querySelector('[data-book-start]').addEventListener('click',()=>{if(requireAccount())show('master')});
-  app.querySelector('[data-confirm]').addEventListener('click',()=>{if(!requireAccount())return;var names=['Класичний манікюр','Покриття гель-лаком','Дизайн нігтів','Френч','Зміцнення нігтів'];var masters=app.querySelector('.lm-master.is-selected strong');bookings.unshift({id:'LUNE-B-'+Date.now().toString(36).toUpperCase(),service:names[serviceSelected]||names[0],master:masters?masters.textContent:'Анастасія',date:'17 жовтня 2026',time:selectedTime});localStorage.setItem('lune-bookings',JSON.stringify(bookings));renderBookings();openModal('confirm')});
+  app.querySelector('[data-confirm]').addEventListener('click',()=>{
+    if(!requireAccount())return;
+    if(isTimeBooked(selectedTime)){msg('Цей час уже заброньований');renderTimes();return}
+    var names=['Класичний манікюр','Покриття гель-лаком','Дизайн нігтів','Френч','Зміцнення нігтів'];
+    var masters=app.querySelector('.lm-master.is-selected strong');
+    var monthNames=['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];
+    var dateLabel=selectedDate+' '+monthNames[monthDate.getMonth()]+' '+monthDate.getFullYear();
+    bookings.unshift({service:names[serviceSelected]||names[0],master:masters?masters.textContent:'Анастасія',date:dateLabel,dateKey:dateKey(monthDate.getFullYear(),monthDate.getMonth(),selectedDate),time:selectedTime});
+    localStorage.setItem('lune-bookings',JSON.stringify(bookings));
+    renderBookings();renderCalendar();renderTimes();openModal('confirm')
+  });
   app.querySelector('[data-confirm-ok]').addEventListener('click',()=>{closeModals();history=['home'];show('home',false)});
   app.querySelectorAll('[data-modal-close]').forEach(b=>b.addEventListener('click',closeModals));
   app.querySelector('[data-gate-register]').addEventListener('click',()=>{closeModals();openModal('register')});
-  app.querySelector('[data-register]').addEventListener('click',openProfile);
-  app.querySelector('[data-register-form]').addEventListener('submit',function(e){e.preventDefault();var fd=new FormData(e.target);account={name:fd.get('name'),phone:fd.get('phone'),email:fd.get('email'),id:'LUNE-'+Math.random().toString(36).slice(2,8).toUpperCase()};localStorage.setItem('lune-account',JSON.stringify(account));try{localStorage.setItem('lune-account-v1',JSON.stringify(account))}catch(e){}updateAccount();syncMainAvatar();app.querySelector('[data-qr]').innerHTML=qrSvg(account.id);app.querySelector('[data-qr-label]').textContent=account.id;closeModals();show('account');msg('Аккаунт створено')});
-  app.querySelector('[data-profile-form]').addEventListener('submit',function(e){e.preventDefault();if(!account)return;var form=e.currentTarget,fd=new FormData(form),file=fd.get('avatar');function save(avatar){account.name=String(fd.get('name')||account.name).trim();account.phone=String(fd.get('phone')||account.phone).trim();account.email=String(fd.get('email')||account.email).trim();if(avatar)account.avatar=avatar;localStorage.setItem('lune-account',JSON.stringify(account));try{localStorage.setItem('lune-account-v1',JSON.stringify(account))}catch(e){}updateAccount();syncMainAvatar();closeModals();msg('Зміни збережено')}if(file&&file.size){var reader=new FileReader();reader.onload=function(){save(reader.result)};reader.readAsDataURL(file)}else save(account.avatar||'')});
-  app.querySelector('[data-profile-form]').addEventListener('reset',function(){});
+  app.querySelector('[data-register]').addEventListener('click',()=>account?show('profile'):openModal('register'));
+  app.querySelector('[data-register-form]').addEventListener('submit',function(e){e.preventDefault();var fd=new FormData(e.target);account={name:fd.get('name'),phone:fd.get('phone'),email:fd.get('email'),emailConfirmed:false,id:'LUNE-'+Math.random().toString(36).slice(2,8).toUpperCase()};localStorage.setItem('lune-account',JSON.stringify(account));updateAccount();app.querySelector('[data-qr]').innerHTML=qrSvg(account.id);app.querySelector('[data-qr-label]').textContent=account.id;closeModals();show('account');msg('Аккаунт створено')});
   app.querySelector('[data-my-qr]').addEventListener('click',()=>{if(!requireAccount())return;app.querySelector('[data-qr]').innerHTML=qrSvg(account.id);app.querySelector('[data-qr-label]').textContent=account.id;openModal('qr')});
   app.querySelector('[data-my-bookings]').addEventListener('click',()=>{if(!requireAccount())return;renderBookings();openModal('bookings')});
   app.querySelectorAll('[data-account-open]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();show('account')}));
+  app.querySelector('[data-profile-photo]').addEventListener('click',()=>{if(requireAccount())app.querySelector('[data-profile-photo-input]').click()});
+  app.querySelector('[data-profile-photo-input]').addEventListener('change',e=>{var file=e.target.files&&e.target.files[0];if(!file||!account)return;var reader=new FileReader();reader.onload=ev=>{var img=new Image();img.onload=()=>{var max=512,scale=Math.min(1,max/Math.max(img.width,img.height)),canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);account.photo=canvas.toDataURL('image/jpeg',.82);localStorage.setItem('lune-account',JSON.stringify(account));updateAccount();msg('Фото профілю оновлено')};img.src=ev.target.result};reader.readAsDataURL(file);e.target.value=''});
+  app.querySelector('[data-profile-save]').addEventListener('click',()=>{if(!requireAccount())return;account.name=app.querySelector('[data-profile-name]').value.trim();account.phone=app.querySelector('[data-profile-phone]').value.trim();account.email=app.querySelector('[data-profile-email]').value.trim();localStorage.setItem('lune-account',JSON.stringify(account));updateAccount();msg('Дані збережено')});
+  app.querySelector('[data-email-confirm]').addEventListener('click',()=>{if(!requireAccount())return;account.emailConfirmed=true;localStorage.setItem('lune-account',JSON.stringify(account));fillProfile();msg('E-mail підтверджено')});
 
   var menu=app.querySelector('.lm-menu-panel');
+  function closeMenu(){menu.classList.remove('is-open');menu.setAttribute('aria-hidden','true')}
   app.querySelector('.lm-menu').addEventListener('click',()=>{menu.classList.add('is-open');menu.setAttribute('aria-hidden','false')});
-  app.querySelector('.lm-menu-close').addEventListener('click',()=>{menu.classList.remove('is-open');menu.setAttribute('aria-hidden','true')});
-  menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();menu.classList.remove('is-open');menu.setAttribute('aria-hidden','true');var target=a.getAttribute('href');if(target==='#booking'){if(requireAccount())show('master')}else if(target==='#account'){show('account')}else msg('Розділ доступний на головній сторінці')}));
-  menu.querySelectorAll('[data-lang]').forEach(function(btn){btn.addEventListener('click',function(){
-    currentLanguage=btn.dataset.lang;
-    try{localStorage.setItem('lune-language',currentLanguage)}catch(e){}
-    applyLanguage();
-    msg(currentLanguage==='en'?'English':'Українська');
-  })});
+  app.querySelector('.lm-menu-back').addEventListener('click',closeMenu);
+  menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();closeMenu();var target=a.getAttribute('href');if(target==='#account')show('account');else if(target==='#support')show('support');else if(target==='#branches')show('branches')}));
+  app.querySelector('[data-language-open]').addEventListener('click',()=>openModal('language'));
+  app.querySelectorAll('[data-language]').forEach(b=>b.addEventListener('click',()=>{language=b.dataset.language;localStorage.setItem('lune-language',language);app.querySelector('[data-language-label]').textContent=language==='en'?'English':'Українська';closeModals();msg(language==='en'?'Language: English':'Мова: українська')}));
+  app.querySelector('[data-language-label]').textContent=language==='en'?'English':'Українська';
 
   app.querySelectorAll('button,a').forEach(el=>el.addEventListener('pointerdown',()=>el.classList.add('is-pressing')));
   document.addEventListener('pointerup',()=>app.querySelectorAll('.is-pressing').forEach(el=>el.classList.remove('is-pressing')),{passive:true});

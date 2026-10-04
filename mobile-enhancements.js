@@ -8,24 +8,22 @@
   document.head.appendChild(styleLink);
 
   var ACCOUNT_KEY = 'lune-account-v1';
-  var ACCOUNT_KEY_MAIN = 'lune-account';
   var BOOKINGS_KEY = 'lune-bookings-v1';
-  var BOOKINGS_KEY_MAIN = 'lune-bookings';
 
   function getAccount() {
-    try { return JSON.parse(localStorage.getItem(ACCOUNT_KEY_MAIN) || localStorage.getItem(ACCOUNT_KEY) || 'null'); } catch (e) { return null; }
+    try { return JSON.parse(localStorage.getItem(ACCOUNT_KEY) || 'null'); } catch (e) { return null; }
   }
 
   function setAccount(account) {
-    try { localStorage.setItem(ACCOUNT_KEY, JSON.stringify(account)); localStorage.setItem(ACCOUNT_KEY_MAIN, JSON.stringify(account)); } catch (e) {}
+    try { localStorage.setItem(ACCOUNT_KEY, JSON.stringify(account)); } catch (e) {}
   }
 
   function getBookings() {
-    try { var a=JSON.parse(localStorage.getItem(BOOKINGS_KEY_MAIN) || 'null'); if(Array.isArray(a)&&a.length)return a; return JSON.parse(localStorage.getItem(BOOKINGS_KEY) || '[]'); } catch (e) { return []; }
+    try { return JSON.parse(localStorage.getItem(BOOKINGS_KEY) || '[]'); } catch (e) { return []; }
   }
 
   function setBookings(bookings) {
-    try { localStorage.setItem(BOOKINGS_KEY, JSON.stringify(bookings)); localStorage.setItem(BOOKINGS_KEY_MAIN, JSON.stringify(bookings)); } catch (e) {}
+    try { localStorage.setItem(BOOKINGS_KEY, JSON.stringify(bookings)); } catch (e) {}
   }
 
   function waitForApp() {
@@ -38,10 +36,6 @@
     if (app.dataset.enhanced === '1') return;
     app.dataset.enhanced = '1';
 
-    // The legacy profile modal is replaced by the dedicated mobile account page.
-    var legacyProfile = app.querySelector('.lm-modal[data-modal=\"profile\"]');
-    if (legacyProfile) legacyProfile.remove();
-
     var menu = app.querySelector('.lm-menu-panel');
     var accountOverlay = document.createElement('div');
     accountOverlay.className = 'lm-account-overlay';
@@ -49,12 +43,11 @@
     accountOverlay.innerHTML = `
       <div class="lm-account-shell">
         <div class="lm-account-head">
-          <button class="lm-account-close" type="button" aria-label="Назад">‹</button>
-          <div class="lm-account-head-title">
-            <p>LUNE</p>
+          <div>
+            <p style="font-size:9px;letter-spacing:.32em;color:#a16c63;text-transform:uppercase;margin:0 0 5px">LUNE</p>
             <h2>Мій аккаунт</h2>
           </div>
-          <span class="lm-account-head-spacer" aria-hidden="true"></span>
+          <button class="lm-account-close" type="button" aria-label="Закрити">×</button>
         </div>
         <div class="lm-account-card" data-account-root></div>
       </div>`;
@@ -87,43 +80,20 @@
       document.body.style.overflow = 'hidden';
     }
 
-    function showNotice(text) {
-      var n = document.querySelector('.lm-mobile-notice');
-      if (!n) { n = document.createElement('div'); n.className = 'lm-mobile-notice'; document.body.appendChild(n); }
-      n.textContent = text; n.classList.add('is-visible'); clearTimeout(n._timer); n._timer = setTimeout(function () { n.classList.remove('is-visible'); }, 2200);
-    }
-
-    function syncMainAvatar() {
-      var box = app.querySelector('[data-main-avatar]');
-      var letter = app.querySelector('[data-main-avatar-letter]');
-      var img = app.querySelector('[data-main-avatar-img]');
-      var account = getAccount();
-      if (!box || !letter || !img) return;
-      if (account && account.avatar) { img.src = account.avatar; img.hidden = false; letter.hidden = true; }
-      else { img.removeAttribute('src'); img.hidden = true; letter.hidden = false; letter.textContent = account && account.name ? account.name.slice(0,1).toUpperCase() : 'L'; }
-    }
-
     function renderAccount(tab) {
       var root = accountOverlay.querySelector('[data-account-root]');
       var account = getAccount();
       if (!account) {
         root.innerHTML = `
-          <div class="lm-profile-intro">
-            <div class="lm-avatar-picker lm-avatar-picker--empty" data-register-avatar>
-              <span>+</span>
-              <small>Фото</small>
-              <input name="avatar" type="file" accept="image/*" data-avatar-input>
-            </div>
-            <div>
-              <span class="lm-profile-kicker">ОСОБИСТИЙ ПРОСТІР</span>
-              <h3>Створіть аккаунт</h3>
-              <p>Ваші дані, бронювання та QR-код будуть збережені у профілі LUNE.</p>
-            </div>
-          </div>
+          <h3>Вітаємо в LUNE</h3>
+          <p>Створіть аккаунт один раз — після цього зможете бронювати візити, бачити свої записи та мати персональний QR-код.</p>
           <form class="lm-account-form" data-register-form>
-            <label>Ваше ім’я<input name="name" type="text" autocomplete="name" placeholder="Наприклад, Анна" required></label>
-            <label>Телефон<input name="phone" type="tel" autocomplete="tel" placeholder="+380 ..." required></label>
-            <label>Email<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+            <label>Ваше ім’я</label>
+            <input name="name" type="text" autocomplete="name" placeholder="Наприклад, Анна" required>
+            <label>Телефон</label>
+            <input name="phone" type="tel" autocomplete="tel" placeholder="+380 ..." required>
+            <label>Email</label>
+            <input name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
             <button class="lm-account-submit" type="submit">Створити аккаунт →</button>
           </form>`;
 
@@ -133,30 +103,18 @@
           var name = String(fd.get('name') || '').trim();
           var phone = String(fd.get('phone') || '').trim();
           var email = String(fd.get('email') || '').trim();
-          var file = fd.get('avatar');
           if (!name || !phone || !email) return;
-          var accountData = { id: 'LUNE-' + Date.now().toString(36).toUpperCase(), name: name, phone: phone, email: email, createdAt: new Date().toISOString() };
-          function finish(avatar) { if (avatar) accountData.avatar = avatar; setAccount(accountData); renderAccount('profile'); syncMainAvatar(); }
-          if (file && file.size) { var reader = new FileReader(); reader.onload = function () { finish(reader.result); }; reader.readAsDataURL(file); } else finish('');
+          setAccount({ id: 'LUNE-' + Date.now().toString(36).toUpperCase(), name: name, phone: phone, email: email, createdAt: new Date().toISOString() });
           renderAccount('profile');
-          syncMainAvatar();
         });
         return;
       }
 
       var initial = tab || 'profile';
       root.innerHTML = `
-        <div class="lm-profile-hero">
-          <label class="lm-avatar-picker" title="Змінити аватарку">
-            ${account.avatar ? `<img src="${escapeHtml(account.avatar)}" alt="">` : `<span>${escapeHtml(account.name.slice(0, 1).toUpperCase())}</span>`}
-            <i aria-hidden="true">+</i>
-            <input name="avatar" type="file" accept="image/*" data-avatar-input>
-          </label>
-          <div class="lm-profile-main">
-            <span class="lm-profile-kicker">ОСОБИСТИЙ ПРОСТІР</span>
-            <strong>${escapeHtml(account.name)}</strong>
-            <small>${escapeHtml(account.email)}</small>
-          </div>
+        <div class="lm-profile-row">
+          <div class="lm-profile-avatar">${escapeHtml(account.name.slice(0, 1).toUpperCase())}</div>
+          <div class="lm-profile-main"><strong>${escapeHtml(account.name)}</strong><small>${escapeHtml(account.phone)} · ${escapeHtml(account.email)}</small></div>
         </div>
         <div class="lm-account-tabs">
           <button class="lm-account-tab ${initial === 'profile' ? 'is-active' : ''}" data-tab="profile" type="button">Профіль</button>
@@ -164,14 +122,8 @@
           <button class="lm-account-tab ${initial === 'qr' ? 'is-active' : ''}" data-tab="qr" type="button">Мій QR</button>
         </div>
         <section class="lm-account-pane ${initial === 'profile' ? 'is-active' : ''}" data-pane="profile">
-          <div class="lm-data-heading"><span>ПЕРСОНАЛЬНІ ДАНІ</span><p>Усі дані профілю зібрані в одному місці.</p></div>
-          <form class="lm-account-form" data-profile-form>
-            <label>Ім'я<input name="name" type="text" value="${escapeHtml(account.name)}" required></label>
-            <label>Телефон<input name="phone" type="tel" value="${escapeHtml(account.phone)}" required></label>
-            <label>Email<input name="email" type="email" value="${escapeHtml(account.email)}" required></label>
-            <input name="avatar" type="file" accept="image/*" data-avatar-form-input hidden>
-            <button class="lm-account-submit" type="submit">Зберегти зміни →</button>
-          </form>
+          <h3>Ваш профіль</h3>
+          <p>Аккаунт готовий. Тепер бронювання можна підтверджувати без повторної реєстрації.</p>
           <button class="lm-account-link" data-account-book type="button">Створити нове бронювання</button>
           <button class="lm-account-link" data-account-logout type="button">Вийти з аккаунта</button>
         </section>
@@ -199,35 +151,6 @@
         openBooking();
       });
 
-      function bindAvatarPicker() {
-        var picker = root.querySelector('[data-avatar-input]');
-        if (!picker || picker.dataset.bound === '1') return;
-        picker.dataset.bound = '1';
-        picker.addEventListener('change', function () {
-          var file = picker.files && picker.files[0];
-          if (!file) return;
-          var reader = new FileReader();
-          reader.onload = function () {
-            var hero = root.querySelector('.lm-avatar-picker');
-            if (!hero) return;
-            hero.innerHTML = '<img src="' + escapeHtml(reader.result) + '" alt=""><i aria-hidden="true">+</i><input name="avatar" type="file" accept="image/*" data-avatar-input>';
-            bindAvatarPicker();
-          };
-          reader.readAsDataURL(file);
-        });
-      }
-      bindAvatarPicker();
-
-      var profileForm = root.querySelector('[data-profile-form]');
-      if (profileForm) profileForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var fd = new FormData(profileForm), file = fd.get('avatar');
-        var picker = root.querySelector('[data-avatar-input]');
-        if ((!file || !file.size) && picker && picker.files && picker.files[0]) file = picker.files[0];
-        function save(avatar) { var next = { id: account.id, name: String(fd.get('name')||account.name).trim(), phone: String(fd.get('phone')||account.phone).trim(), email: String(fd.get('email')||account.email).trim(), createdAt: account.createdAt }; if (avatar) next.avatar = avatar; else if (account.avatar) next.avatar = account.avatar; setAccount(next); renderAccount('profile'); syncMainAvatar(); showNotice('Зміни збережено'); }
-        if (file && file.size) { var reader = new FileReader(); reader.onload = function () { save(reader.result); }; reader.readAsDataURL(file); } else save('');
-      });
-
       var logout = root.querySelector('[data-account-logout]');
       if (logout) logout.addEventListener('click', function () {
         try { localStorage.removeItem(ACCOUNT_KEY); } catch (e) {}
@@ -235,13 +158,6 @@
       });
 
       if (initial === 'qr') renderQr();
-      var mainProfile = app.querySelector('[data-register]');
-      if (mainProfile) {
-        var freshProfile = mainProfile.cloneNode(true);
-        mainProfile.replaceWith(freshProfile);
-        freshProfile.addEventListener('click', function () { openAccount('profile'); });
-      }
-      syncMainAvatar();
     }
 
     function renderBookings(list) {
@@ -251,17 +167,8 @@
         return;
       }
       list.innerHTML = bookings.slice().reverse().map(function (b) {
-        return `<article class="lm-booking-item"><strong>${escapeHtml(b.service)}</strong><span>${escapeHtml(b.master)} · ${escapeHtml(b.date)} · ${escapeHtml(b.time)}</span><button type="button" class="lm-booking-cancel" data-cancel-booking="${escapeHtml(b.id || '')}">Скасувати бронювання</button></article>`;
+        return `<article class="lm-booking-item"><strong>${escapeHtml(b.service)}</strong><span>${escapeHtml(b.master)} · ${escapeHtml(b.date)} · ${escapeHtml(b.time)}</span></article>`;
       }).join('');
-      list.querySelectorAll('[data-cancel-booking]').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var id = btn.getAttribute('data-cancel-booking');
-          var next = getBookings().filter(function (b) { return String(b.id) !== String(id); });
-          setBookings(next);
-          renderBookings(list);
-          showNotice('Бронювання скасоване');
-        });
-      });
     }
 
     function renderQr() {

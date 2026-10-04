@@ -119,10 +119,11 @@
     }
 
     #intro.is-out {
-      opacity: 0 !important;
+      opacity: 1 !important;
       visibility: hidden !important;
       pointer-events: none !important;
-      transition: opacity 1.05s cubic-bezier(.16,1,.3,1), visibility 0s linear 1.05s;
+      transform: translate3d(0,100%,0) !important;
+      transition: transform 1.25s cubic-bezier(.76,0,.24,1), visibility 0s linear 1.25s;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -245,7 +246,7 @@
     setTimeout(function () {
       if (intro.parentNode) intro.remove();
       if (style.parentNode) style.remove();
-    }, 1100);
+    }, 1350);
   }
 
   function start() {
@@ -260,7 +261,7 @@
 
     setTimeout(function () {
       finish();
-    }, 5400);
+    }, 5000);
   }
 
   var petalLoaded = 0;

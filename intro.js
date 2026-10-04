@@ -25,10 +25,8 @@
   var endingAt = 0;
   var siteReadyPromise = Promise.resolve();
   var revealStart = 0;
-  var photoWidth = 0;
-  var photoHeight = 0;
-  var INTRO_DURATION = 9000;
-  var EXIT_START = 7800;
+  var INTRO_DURATION = 8200;
+  var EXIT_START = 6200;
   var TARGET_PARTICLES = 0;
 
   if (!intro || !mobile || reduced || !canvas || !ctx) {
@@ -47,35 +45,21 @@
   var style = document.createElement('style');
   style.textContent = `
     html.intro-lock,html.intro-lock body{overflow:hidden!important;height:100%!important;overscroll-behavior:none}
-    #intro{position:fixed!important;inset:0!important;z-index:99999!important;width:100%!important;height:100%!important;height:100svh!important;overflow:hidden!important;background:#f4ded9!important;opacity:0!important;visibility:visible!important;pointer-events:auto!important;isolation:isolate;will-change:opacity;transition:opacity 1.35s cubic-bezier(.22,1,.36,1)}
-    #intro.is-running{opacity:1!important}
-    #luneOpening{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at center,#fcf2ec 0%,#f4ded9 72%,#efd5cd 100%);transform:scale(1.012);will-change:transform,filter;transition:transform 1.45s cubic-bezier(.16,1,.3,1),filter 1.25s cubic-bezier(.16,1,.3,1)}
-    #intro.is-running #luneOpening{transform:scale(1);filter:blur(0)}
-    body.intro-site-pending .lune-mobile-app{opacity:0!important;transform:translate3d(0,10px,0) scale(.988)!important;filter:blur(5px)!important;transition:opacity 2.7s cubic-bezier(.22,1,.36,1),transform 2.9s cubic-bezier(.16,1,.3,1),filter 2.35s cubic-bezier(.16,1,.3,1)!important;will-change:opacity,transform,filter}
-    body.intro-site-ready .lune-mobile-app{opacity:1!important;transform:translate3d(0,0,0) scale(1)!important;filter:blur(0)!important}
-    #intro::before,#intro::after{content:"";position:absolute;inset:-12%;pointer-events:none;z-index:20;opacity:0;transform:scale(1.08);will-change:opacity,transform,filter}
-    #intro::before{background:radial-gradient(circle at 50% 48%,rgba(255,250,247,.98) 0%,rgba(255,245,241,.72) 24%,rgba(244,222,217,0) 62%);filter:blur(10px)}
-    #intro::after{background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.38) 0%,rgba(244,222,217,0) 58%);mix-blend-mode:screen}
-    #intro.is-running::before{animation:luneEntryVeil 1.45s cubic-bezier(.16,1,.3,1) both}
-    #intro.is-running::after{animation:luneEntryGlow 1.75s cubic-bezier(.16,1,.3,1) .05s both}
-    #intro.is-out::before{opacity:1;transform:scale(1);filter:blur(0);animation:luneExitVeil 2.55s cubic-bezier(.16,1,.3,1) both}
-    #intro.is-out::after{opacity:.55;transform:scale(1);animation:luneExitGlow 2.65s cubic-bezier(.16,1,.3,1) both}
-    @keyframes luneEntryVeil{0%{opacity:1;transform:scale(1.16);filter:blur(18px)}45%{opacity:.78;transform:scale(1.03);filter:blur(7px)}100%{opacity:0;transform:scale(1);filter:blur(0)}}
-    @keyframes luneEntryGlow{0%{opacity:.9;transform:scale(1.14)}55%{opacity:.28;transform:scale(1.02)}100%{opacity:0;transform:scale(1)}}
-    @keyframes luneExitVeil{0%{opacity:0;transform:scale(1.08);filter:blur(12px)}34%{opacity:.78;transform:scale(1.015);filter:blur(4px)}68%{opacity:.42;transform:scale(1);filter:blur(0)}100%{opacity:0;transform:scale(.98);filter:blur(0)}}
-    @keyframes luneExitGlow{0%{opacity:0;transform:scale(1.05)}42%{opacity:.5;transform:scale(1.01)}100%{opacity:0;transform:scale(1)}}
+    #intro{position:fixed!important;inset:0!important;z-index:99999!important;width:100%!important;height:100%!important;height:100svh!important;overflow:hidden!important;background:#f4ded9!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;isolation:isolate;transform:translate3d(0,0,0);will-change:transform,opacity;transition:transform 1.5s cubic-bezier(.76,0,.24,1),opacity 1.5s cubic-bezier(.76,0,.24,1),visibility 0s linear 1.5s}
+    #luneOpening{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at center,#fcf2ec,#f4ded9)}
+    body.intro-site-pending .lune-mobile-app{opacity:0!important;transform:translate3d(0,14px,0) scale(.999)!important;transition:opacity 1.45s cubic-bezier(.22,1,.36,1),transform 1.45s cubic-bezier(.22,1,.36,1)!important}
+    body.intro-site-ready .lune-mobile-app{opacity:1!important;transform:translate3d(0,0,0) scale(1)!important}
     .lune-opening__ambient,.lune-opening__photo,.lune-opening__canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-    .lune-opening__ambient{background-position:center;background-size:cover;background-repeat:no-repeat;filter:blur(18px);opacity:0;transform:scale(1.045);will-change:opacity,transform,filter;transition:opacity 3.1s cubic-bezier(.22,1,.36,1),transform 5.2s cubic-bezier(.16,1,.3,1),filter 3.1s cubic-bezier(.22,1,.36,1)}
-    .lune-opening__photo{background-position:center;background-size:contain;background-repeat:no-repeat;opacity:0;visibility:hidden;transform:scale(1.035);will-change:opacity,transform,filter;filter:blur(3px);transition:opacity 4.9s cubic-bezier(.22,1,.36,1),transform 6.4s cubic-bezier(.16,1,.3,1),filter 3.4s cubic-bezier(.16,1,.3,1)}
+    .lune-opening__ambient{object-fit:cover;filter:blur(30px);opacity:0;transform:scale(1.045);filter:blur(18px);will-change:opacity,transform;transition:opacity 2.8s cubic-bezier(.22,1,.36,1),transform 4.6s cubic-bezier(.16,1,.3,1)}
+    .lune-opening__photo{object-fit:contain;opacity:0;transform:scale(1.028);will-change:opacity,transform;transition:opacity 4.4s cubic-bezier(.22,1,.36,1),transform 6.2s cubic-bezier(.16,1,.3,1)}
     .lune-opening__canvas{pointer-events:none;opacity:0;will-change:opacity;transition:opacity 2.8s cubic-bezier(.22,1,.36,1)}
     #intro.is-running .lune-opening__ambient{opacity:.58;transform:scale(1)}
-    #intro.is-running .lune-opening__photo{opacity:1;visibility:visible;transform:scale(1);filter:blur(0)}
-    #intro.is-running .lune-opening__canvas{opacity:1;transition-delay:1.05s}
-    #intro.is-out{opacity:0;visibility:hidden;pointer-events:none;transition:opacity 2.85s cubic-bezier(.22,1,.36,1),visibility 0s linear 2.85s}
-    #intro.is-out .lune-opening{transform:scale(1.018);filter:blur(1.4px);transition:transform 2.85s cubic-bezier(.16,1,.3,1),filter 2.35s cubic-bezier(.16,1,.3,1)}
-    #intro.is-out .lune-opening__ambient{opacity:.12;transform:scale(1.025);filter:blur(12px);transition:opacity 2.6s cubic-bezier(.16,1,.3,1),transform 2.85s cubic-bezier(.16,1,.3,1),filter 2.6s cubic-bezier(.16,1,.3,1)}
-    #intro.is-out .lune-opening__photo{opacity:.38;visibility:visible;transform:scale(1.012);filter:blur(1.4px);transition:opacity 2.55s cubic-bezier(.16,1,.3,1),transform 2.85s cubic-bezier(.16,1,.3,1),filter 2.35s cubic-bezier(.16,1,.3,1)}
-    #intro.is-out .lune-opening__canvas{opacity:0;transition:opacity 2.45s cubic-bezier(.16,1,.3,1)}
+    #intro.is-running .lune-opening__photo{opacity:1;transform:scale(1)}
+    #intro.is-running .lune-opening__canvas{opacity:1;transition-delay:.75s}
+    #intro.is-out{opacity:.98;transform:translate3d(0,100%,0);visibility:hidden;pointer-events:none;transition-duration:1.5s}
+    #intro.is-out .lune-opening__ambient{opacity:.12;transform:scale(1.02)}
+    #intro.is-out .lune-opening__photo{opacity:.08;transform:scale(1.01)}
+    #intro.is-out .lune-opening__canvas{opacity:0}
     @media (prefers-reduced-motion:reduce){#intro{display:none!important}}
   `;
   document.head.appendChild(style);
@@ -157,14 +141,14 @@
     var wind = Math.sin(clock * .38) * 13 + Math.sin(clock * .17) * 7;
     var reveal = Math.min(1, Math.max(0, clock / 1.9));
     reveal = reveal * reveal * (3 - 2 * reveal);
-    var exitProgress = ending ? Math.min(1, Math.max(0, (clock - endingAt) / 2.2)) : 0;
+    var exitProgress = ending ? Math.min(1, Math.max(0, (clock - endingAt) / 2.6)) : 0;
     var exitEase = 1 - (exitProgress * exitProgress * (3 - 2 * exitProgress));
     var exitFade = ending ? exitEase : 1;
-    var fit = photoWidth
-      ? Math.min(w / photoWidth, h / photoHeight)
+    var fit = photo.naturalWidth
+      ? Math.min(w / photo.naturalWidth, h / photo.naturalHeight)
       : 1;
-    var imageW = photoWidth * fit;
-    var imageH = photoHeight * fit;
+    var imageW = photo.naturalWidth * fit;
+    var imageH = photo.naturalHeight * fit;
 
     for (var i = particles.length - 1; i >= 0; i--) {
       var p = particles[i];
@@ -234,30 +218,28 @@
 
   function waitForMobileImages() {
     var app = document.querySelector('.lune-mobile-app');
-    if (!app) return new Promise(function(resolve){var started=Date.now();(function poll(){app=document.querySelector('.lune-mobile-app');if(app)return resolve(waitForMobileImages());if(Date.now()-started>5000)return resolve();setTimeout(poll,40)})();});
+    if (!app) return Promise.resolve();
     var images = Array.prototype.slice.call(app.querySelectorAll('.lm-hero img,.lm-service img,.lm-avatar'));
-    var hero = app.querySelector('.lm-hero img');
     return Promise.all(images.map(function (img) {
-      if (img.complete && img.naturalWidth) return img.decode ? img.decode().catch(function(){}) : Promise.resolve();
+      if (img.complete && img.naturalWidth) {
+        return img.decode ? img.decode().catch(function () {}) : Promise.resolve();
+      }
       return new Promise(function (resolve) {
-        var done = function () { if (img.decode) img.decode().catch(function(){}).finally(resolve); else resolve(); };
-        img.addEventListener('load', done, { once:true });
-        img.addEventListener('error', done, { once:true });
+        var done = function () {
+          if (img.decode) img.decode().catch(function () {}).finally(resolve);
+          else resolve();
+        };
+        img.addEventListener('load', done, { once: true });
+        img.addEventListener('error', done, { once: true });
       });
-    })).then(function(){
-      if (hero && hero.naturalWidth) { hero.closest('.lm-hero')?.classList.add('is-media-ready'); }
-      return true;
-    });
+    }));
   }
 
   function startMobileSite() {
     document.body.classList.add('intro-site-pending');
-    return load('mobile.css?v=20261003-mobile-smooth4', 'link')
+    return load('mobile.css?v=20261004-mobile-polish6', 'link')
       .then(function () {
-        return load('mobile.js?v=20261003-mobile-smooth4', 'script');
-      })
-      .then(function () {
-        return load('mobile-enhancements.js?v=20261004-mobile-account-v7', 'script');
+        return load('mobile.js?v=20261004-mobile-polish6', 'script');
       })
       .then(waitForMobileImages);
   }
@@ -284,7 +266,7 @@
       if (intro.parentNode) intro.remove();
       if (style.parentNode) style.remove();
       document.body.classList.remove('intro-site-ready');
-    }, 3050));
+    }, 3350));
   }
 
   function start() {
@@ -297,20 +279,14 @@
     particles = Array.from({ length: w < 600 ? 24 : 30 }, function () {
       return makePetal(true, null, false);
     });
-    // Let the fully prepared intro paint once before starting the reveal.
-    // This prevents a first-frame flash/jump on mobile browsers.
+    intro.classList.add('is-running');
     last = 0;
     frame = requestAnimationFrame(tick);
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        if (!done && !ending) intro.classList.add('is-running');
-      });
-    });
     // Start loading the real mobile site after the first visual frames,
     // so its DOM work cannot block the first intro frames.
     timers.push(setTimeout(function () {
       siteReadyPromise = startMobileSite();
-    }, 300));
+    }, 420));
     timers.push(setTimeout(beginExit, EXIT_START));
   }
 
@@ -332,26 +308,17 @@
   });
 
   var photoReady = new Promise(function (resolve) {
-    var preload = new Image();
-    preload.decoding = 'async';
-    preload.onload = function () {
-      decodeImage(preload).then(function () {
-        photoWidth = preload.naturalWidth;
-        photoHeight = preload.naturalHeight;
-        var imageUrl = 'url(\"' + BACKGROUND_URL + '\")';
-        photo.style.backgroundImage = imageUrl;
-        ambient.style.backgroundImage = imageUrl;
-        photo.style.visibility = 'visible';
-        resolve(true);
-      });
+    photo.onload = function () {
+      decodeImage(photo).then(resolve);
     };
-    preload.onerror = function () { resolve(false); };
-    preload.src = BACKGROUND_URL;
+    photo.onerror = resolve;
+    photo.src = BACKGROUND_URL;
+    ambient.src = BACKGROUND_URL;
   });
 
   resize();
   Promise.all([photoReady, Promise.all(petalLoads)]).then(function () {
-    if (!sprites.length || !photo.style.backgroundImage || !photoWidth || !photoHeight) {
+    if (!sprites.length || !photo.naturalWidth) {
       return;
     }
 
