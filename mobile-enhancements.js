@@ -8,22 +8,24 @@
   document.head.appendChild(styleLink);
 
   var ACCOUNT_KEY = 'lune-account-v1';
+  var ACCOUNT_KEY_MAIN = 'lune-account';
   var BOOKINGS_KEY = 'lune-bookings-v1';
+  var BOOKINGS_KEY_MAIN = 'lune-bookings';
 
   function getAccount() {
-    try { return JSON.parse(localStorage.getItem(ACCOUNT_KEY) || 'null'); } catch (e) { return null; }
+    try { return JSON.parse(localStorage.getItem(ACCOUNT_KEY_MAIN) || localStorage.getItem(ACCOUNT_KEY) || 'null'); } catch (e) { return null; }
   }
 
   function setAccount(account) {
-    try { localStorage.setItem(ACCOUNT_KEY, JSON.stringify(account)); } catch (e) {}
+    try { localStorage.setItem(ACCOUNT_KEY, JSON.stringify(account)); localStorage.setItem(ACCOUNT_KEY_MAIN, JSON.stringify(account)); } catch (e) {}
   }
 
   function getBookings() {
-    try { return JSON.parse(localStorage.getItem(BOOKINGS_KEY) || '[]'); } catch (e) { return []; }
+    try { var a=JSON.parse(localStorage.getItem(BOOKINGS_KEY_MAIN) || 'null'); if(Array.isArray(a)&&a.length)return a; return JSON.parse(localStorage.getItem(BOOKINGS_KEY) || '[]'); } catch (e) { return []; }
   }
 
   function setBookings(bookings) {
-    try { localStorage.setItem(BOOKINGS_KEY, JSON.stringify(bookings)); } catch (e) {}
+    try { localStorage.setItem(BOOKINGS_KEY, JSON.stringify(bookings)); localStorage.setItem(BOOKINGS_KEY_MAIN, JSON.stringify(bookings)); } catch (e) {}
   }
 
   function waitForApp() {
@@ -80,6 +82,22 @@
       document.body.style.overflow = 'hidden';
     }
 
+    function showNotice(text) {
+      var n = document.querySelector('.lm-mobile-notice');
+      if (!n) { n = document.createElement('div'); n.className = 'lm-mobile-notice'; document.body.appendChild(n); }
+      n.textContent = text; n.classList.add('is-visible'); clearTimeout(n._timer); n._timer = setTimeout(function () { n.classList.remove('is-visible'); }, 2200);
+    }
+
+    function syncMainAvatar() {
+      var box = app.querySelector('[data-main-avatar]');
+      var letter = app.querySelector('[data-main-avatar-letter]');
+      var img = app.querySelector('[data-main-avatar-img]');
+      var account = getAccount();
+      if (!box || !letter || !img) return;
+      if (account && account.avatar) { img.src = account.avatar; img.hidden = false; letter.hidden = true; }
+      else { img.removeAttribute('src'); img.hidden = true; letter.hidden = false; letter.textContent = account && account.name ? account.name.slice(0,1).toUpperCase() : 'L'; }
+    }
+
     function renderAccount(tab) {
       var root = accountOverlay.querySelector('[data-account-root]');
       var account = getAccount();
@@ -106,6 +124,7 @@
           if (!name || !phone || !email) return;
           setAccount({ id: 'LUNE-' + Date.now().toString(36).toUpperCase(), name: name, phone: phone, email: email, createdAt: new Date().toISOString() });
           renderAccount('profile');
+          syncMainAvatar();
         });
         return;
       }
@@ -113,7 +132,7 @@
       var initial = tab || 'profile';
       root.innerHTML = `
         <div class="lm-profile-row">
-          <div class="lm-profile-avatar">${escapeHtml(account.name.slice(0, 1).toUpperCase())}</div>
+          <div class="lm-profile-avatar">${account.avatar ? `<img src="${escapeHtml(account.avatar)}" alt="">` : escapeHtml(account.name.slice(0, 1).toUpperCase())}</div>
           <div class="lm-profile-main"><strong>${escapeHtml(account.name)}</strong><small>${escapeHtml(account.phone)} · ${escapeHtml(account.email)}</small></div>
         </div>
         <div class="lm-account-tabs">
@@ -123,7 +142,13 @@
         </div>
         <section class="lm-account-pane ${initial === 'profile' ? 'is-active' : ''}" data-pane="profile">
           <h3>Ваш профіль</h3>
-          <p>Аккаунт готовий. Тепер бронювання можна підтверджувати без повторної реєстрації.</p>
+          <form class="lm-account-form" data-profile-form>
+            <label>Ім'я</label><input name="name" type="text" value="${escapeHtml(account.name)}" required>
+            <label>Телефон</label><input name="phone" type="tel" value="${escapeHtml(account.phone)}" required>
+            <label>Email</label><input name="email" type="email" value="${escapeHtml(account.email)}" required>
+            <label>Аватарка</label><input name="avatar" type="file" accept="image/*">
+            <button class="lm-account-submit" type="submit">Зберегти зміни →</button>
+          </form>
           <button class="lm-account-link" data-account-book type="button">Створити нове бронювання</button>
           <button class="lm-account-link" data-account-logout type="button">Вийти з аккаунта</button>
         </section>
@@ -151,6 +176,14 @@
         openBooking();
       });
 
+      var profileForm = root.querySelector('[data-profile-form]');
+      if (profileForm) profileForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var fd = new FormData(profileForm), file = fd.get('avatar');
+        function save(avatar) { var next = { id: account.id, name: String(fd.get('name')||account.name).trim(), phone: String(fd.get('phone')||account.phone).trim(), email: String(fd.get('email')||account.email).trim(), createdAt: account.createdAt }; if (avatar) next.avatar = avatar; else if (account.avatar) next.avatar = account.avatar; setAccount(next); renderAccount('profile'); syncMainAvatar(); showNotice('Зміни збережено'); }
+        if (file && file.size) { var reader = new FileReader(); reader.onload = function () { save(reader.result); }; reader.readAsDataURL(file); } else save('');
+      });
+
       var logout = root.querySelector('[data-account-logout]');
       if (logout) logout.addEventListener('click', function () {
         try { localStorage.removeItem(ACCOUNT_KEY); } catch (e) {}
@@ -158,6 +191,13 @@
       });
 
       if (initial === 'qr') renderQr();
+      var mainProfile = app.querySelector('[data-register]');
+      if (mainProfile) {
+        var freshProfile = mainProfile.cloneNode(true);
+        mainProfile.replaceWith(freshProfile);
+        freshProfile.addEventListener('click', function () { openAccount('profile'); });
+      }
+      syncMainAvatar();
     }
 
     function renderBookings(list) {
@@ -167,8 +207,17 @@
         return;
       }
       list.innerHTML = bookings.slice().reverse().map(function (b) {
-        return `<article class="lm-booking-item"><strong>${escapeHtml(b.service)}</strong><span>${escapeHtml(b.master)} · ${escapeHtml(b.date)} · ${escapeHtml(b.time)}</span></article>`;
+        return `<article class="lm-booking-item"><strong>${escapeHtml(b.service)}</strong><span>${escapeHtml(b.master)} · ${escapeHtml(b.date)} · ${escapeHtml(b.time)}</span><button type="button" class="lm-booking-cancel" data-cancel-booking="${escapeHtml(b.id || '')}">Скасувати бронювання</button></article>`;
       }).join('');
+      list.querySelectorAll('[data-cancel-booking]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var id = btn.getAttribute('data-cancel-booking');
+          var next = getBookings().filter(function (b) { return String(b.id) !== String(id); });
+          setBookings(next);
+          renderBookings(list);
+          showNotice('Бронювання скасоване');
+        });
+      });
     }
 
     function renderQr() {
