@@ -127,13 +127,61 @@
   document.body.appendChild(app);
   document.body.classList.add('lune-mobile-active');
 
+  app.querySelectorAll('.lm-hero img').forEach(function(img){
+    var hero=img.closest('.lm-hero');
+    var reveal=function(){if(hero) hero.classList.add('is-media-ready');};
+    var hide=function(){if(hero) hero.classList.remove('is-media-ready');};
+    img.addEventListener('load',reveal,{once:true});
+    img.addEventListener('error',hide,{once:true});
+    if(img.complete && img.naturalWidth) reveal();
+  });
+
   var screens=[...app.querySelectorAll('.lm-screen')],toast=app.querySelector('.lm-toast');
   var current='home',history=['home'],serviceSelected=0,selectedDate=17,selectedTime='11:30';
   var monthDate=new Date(2026,9,1);
   var account=JSON.parse(localStorage.getItem('lune-account')||'null');
   var bookings=JSON.parse(localStorage.getItem('lune-bookings')||'[]');
 
-  function msg(t){toast.textContent=t;toast.classList.add('show');clearTimeout(msg.timer);msg.timer=setTimeout(()=>toast.classList.remove('show'),2200)}
+  var currentLanguage=(function(){try{return localStorage.getItem('lune-language')||'uk'}catch(e){return 'uk'}})();
+  var LUNE_I18N={"МЕНЮ": "MENU", "Запис онлайн": "Online booking", "Мій аккаунт": "My account", "Служба підтримки": "Support", "Наші відділення": "Our locations", "Мова": "Language", "Українська": "Ukrainian", "English": "English", "СТУДІЯ МАНІКЮРУ": "NAIL STUDIO", "КРАСА": "BEAUTY", "У ДЕТАЛЯХ": "IN THE DETAILS", "Ідеальний манікюр,": "Perfect manicure,", "який підкреслює тебе": "that highlights you", "Якісні": "Quality", "матеріали": "materials", "Досвідчені": "Experienced", "майстри": "masters", "Затишна": "Cozy", "атмосфера": "atmosphere", "Обери послугу, майстра, дату та час": "Choose a service, master, date and time", "Оберіть послугу": "Choose a service", "Далі": "Next", "ВІДГУКИ": "REVIEWS", "Наші клієнти": "Our clients", "Наші роботи": "Our work", "Дуже задоволена! Атмосфера неймовірна, майстер уважна і професійна.": "Very satisfied! The atmosphere is amazing, and the master is attentive and professional.", "Найкращий манікюр у місті! Все стерильно, комфортно і красиво.": "The best manicure in the city! Everything is sterile, comfortable and beautiful.", "Робота": "Work", "Дивитися більше в Instagram →": "See more on Instagram →", "Краса у деталях. Простір для твого нового образу.": "Beauty in the details. A space for your new look.", "вул. Шевченка, 12, Львів": "12 Shevchenka St, Lviv", "Всі права захищені": "All rights reserved", "Оберіть майстра": "Choose a master", "Вільна": "Available", "сьогодні": "today", "завтра": "tomorrow", "Оберіть дату": "Choose a date", "Сьогодні": "Today", "Завтра": "Tomorrow", "Оберіть час": "Choose a time", "Підтвердити запис": "Confirm booking", "Підтвердити запис ": "Confirm booking ", "ОСОБИСТИЙ ПРОСТІР": "PERSONAL SPACE", "Зареєструйся, щоб зберігати бронювання та свій QR-код.": "Register to save your bookings and your QR code.", "Зареєструватися": "Register", "Мої бронювання": "My bookings", "Переглянути записи": "View bookings", "Мій QR-код": "My QR code", "Код клієнта LUNE": "LUNE client code", "ПЕРШИЙ КРОК": "FIRST STEP", "Створи свій аккаунт": "Create your account", "Реєстрація потрібна перед першим бронюванням.": "Registration is required before your first booking.", "Твоє ім'я": "Your name", "Твій телефон": "Your phone", "Електронна пошта": "Email", "ЗАПИС ОНЛАЙН": "ONLINE BOOKING", "Спочатку зареєструйся": "Register first", "Твій аккаунт потрібен, щоб зберегти бронювання та QR-код клієнта.": "Your account is required to save your booking and client QR code.", "Продовжити": "Continue", "ГОТОВО": "DONE", "Бронювання підтверджено": "Booking confirmed", "Запис збережено у твоєму аккаунті.": "Your booking has been saved to your account.", "Окей": "Okay", "ТВІЙ QR-КОД": "YOUR QR CODE", "ІСТОРІЯ": "HISTORY", "Поки що немає бронювань.": "No bookings yet.", "Твій аккаунт активний. Тут зберігатимуться бронювання та QR-код.": "Your account is active. Your bookings and QR code will be stored here.", "Відкрити профіль →": "Open profile →", "Профіль уже активний": "Profile is already active", "Аккаунт створено": "Account created", "Послугу обрано": "Service selected", "Майстра обрано": "Master selected", "Час обрано": "Time selected", "Дата обрана": "Date selected", "Класичний манікюр": "Classic manicure", "Покриття гель-лаком": "Gel polish", "Дизайн нігтів": "Nail design", "Френч": "French", "Зміцнення нігтів": "Nail strengthening", "Класичний": "Classic", "манікюр": "manicure", "Покриття": "Gel polish", "гель-лаком": "gel polish", "ПЕРЕДЗАПИС": "PRE-BOOKING", "Січень": "January", "Лютий": "February", "Березень": "March", "Квітень": "April", "Травень": "May", "Червень": "June", "Липень": "July", "Серпень": "August", "Вересень": "September", "Жовтень": "October", "Листопад": "November", "Грудень": "December", "Пн": "Mon", "Вт": "Tue", "Ср": "Wed", "Чт": "Thu", "Пт": "Fri", "Сб": "Sat", "Нд": "Sun", "17 жовтня 2026": "October 17, 2026", "▣   Сб, 17 жовтня 2026": "▣   Sat, October 17, 2026", "Ім'я": "Name", "Телефон": "Phone", "Email": "Email", "Створити аккаунт": "Create account", "Закрити": "Close", "LUNE CLIENT": "LUNE CLIENT"};
+  LUNE_I18N['Розділ доступний на головній сторінці']='This section is available on the home page';
+  function translateText(text){
+    var value=text.trim();
+    if(!value)return text;
+    if(currentLanguage==='uk') {
+      for(var k in LUNE_I18N) if(LUNE_I18N[k]===value) return text.slice(0,text.indexOf(value))+k+text.slice(text.indexOf(value)+value.length);
+      value=value.replace(/\b(January|February|March|April|May|June|July|August|September|October|November|December)\b/g,function(m){var i=['January','February','March','April','May','June','July','August','September','October','November','December'].indexOf(m);return i>=0?['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'][i]:m;});
+      value=value.replace(/\b(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\b/g,function(m){return {Mon:'Пн',Tue:'Вт',Wed:'Ср',Thu:'Чт',Fri:'Пт',Sat:'Сб',Sun:'Нд'}[m]||m;});
+      return value;
+    }
+    if(Object.prototype.hasOwnProperty.call(LUNE_I18N,value)) return text.replace(value,LUNE_I18N[value]);
+    value=value.replace(/\b(Січень|Лютий|Березень|Квітень|Травень|Червень|Липень|Серпень|Вересень|Жовтень|Листопад|Грудень)\b/g,function(m){return LUNE_I18N[m]||m;});
+    value=value.replace(/\b(Пн|Вт|Ср|Чт|Пт|Сб|Нд)\b/g,function(m){return LUNE_I18N[m]||m;});
+    return value;
+  }
+  function applyLanguage(){
+    var walker=document.createTreeWalker(app,NodeFilter.SHOW_TEXT);
+    var node;
+    while(node=walker.nextNode()){
+      var parent=node.parentElement;
+      if(!parent || ['SCRIPT','STYLE'].indexOf(parent.tagName)>=0) continue;
+      var original=node.nodeValue;
+      var translated=translateText(original);
+      if(translated!==original) node.nodeValue=translated;
+    }
+    app.querySelectorAll('[placeholder],[aria-label]').forEach(function(el){
+      ['placeholder','aria-label'].forEach(function(attr){
+        if(el.hasAttribute(attr)){
+          var v=el.getAttribute(attr),t=translateText(v);
+          if(t!==v) el.setAttribute(attr,t);
+        }
+      });
+    });
+    var langMenu=app.querySelector('.lm-menu-panel');
+    if(langMenu) langMenu.querySelectorAll('[data-lang]').forEach(function(x){x.classList.toggle('is-active',x.dataset.lang===currentLanguage)});
+    document.documentElement.lang=currentLanguage==='en'?'en':'uk';
+  }
+  function msg(t){t=translateText(t);toast.textContent=t;toast.classList.add('show');clearTimeout(msg.timer);msg.timer=setTimeout(()=>toast.classList.remove('show'),2200)}
   function show(n,addHistory){if(addHistory!==false&&current!==n)history.push(n);current=n;screens.forEach(s=>s.classList.toggle('is-active',s.dataset.screen===n));window.scrollTo({top:0,behavior:'smooth'})}
   function back(){if(history.length>1){history.pop();show(history[history.length-1],false)}else show('home',false)}
   function openModal(name){var m=app.querySelector('[data-modal="'+name+'"]');if(m){m.classList.add('is-open');m.setAttribute('aria-hidden','false')}}
@@ -145,7 +193,7 @@
 
   function renderCalendar(){var grid=app.querySelector('[data-calendar]'),label=app.querySelector('[data-month-label]'),names=['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];label.textContent=names[monthDate.getMonth()]+' '+monthDate.getFullYear();var first=(monthDate.getDay()+6)%7,days=new Date(monthDate.getFullYear(),monthDate.getMonth()+1,0).getDate(),html=['Пн','Вт','Ср','Чт','Пт','Сб','Нд'].map(d=>`<span class="cal-week">${d}</span>`).join('');for(var i=0;i<first;i++)html+='<span class="cal-empty"></span>';for(var d=1;d<=days;d++)html+=`<button type="button" class="cal-day lm-3d ${d===selectedDate?'selected':''}">${d}</button>`;grid.innerHTML=html;grid.querySelectorAll('.cal-day').forEach(b=>b.addEventListener('click',()=>{grid.querySelectorAll('.cal-day').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');selectedDate=Number(b.textContent);msg('Дата обрана')}))}
 
-  renderCalendar();updateAccount();renderBookings();
+  renderCalendar();updateAccount();renderBookings();applyLanguage();
   app.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',back));
   app.querySelectorAll('[data-next]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.next)));
   app.querySelectorAll('.lm-service').forEach(b=>b.addEventListener('click',()=>{app.querySelectorAll('.lm-service').forEach(x=>x.classList.remove('is-selected'));b.classList.add('is-selected');serviceSelected=Number(b.dataset.service);msg('Послугу обрано')}));
@@ -169,7 +217,12 @@
   app.querySelector('.lm-menu').addEventListener('click',()=>{menu.classList.add('is-open');menu.setAttribute('aria-hidden','false')});
   app.querySelector('.lm-menu-close').addEventListener('click',()=>{menu.classList.remove('is-open');menu.setAttribute('aria-hidden','true')});
   menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();menu.classList.remove('is-open');menu.setAttribute('aria-hidden','true');var target=a.getAttribute('href');if(target==='#booking'){if(requireAccount())show('master')}else if(target==='#account'){show('account')}else msg('Розділ доступний на головній сторінці')}));
-  menu.querySelectorAll('[data-lang]').forEach(function(btn){btn.addEventListener('click',function(){menu.querySelectorAll('[data-lang]').forEach(function(x){x.classList.remove('is-active')});btn.classList.add('is-active');try{localStorage.setItem('lune-language',btn.dataset.lang)}catch(e){};document.documentElement.lang=btn.dataset.lang==='en'?'en':'uk';msg(btn.dataset.lang==='en'?'English':'Українська')})});
+  menu.querySelectorAll('[data-lang]').forEach(function(btn){btn.addEventListener('click',function(){
+    currentLanguage=btn.dataset.lang;
+    try{localStorage.setItem('lune-language',currentLanguage)}catch(e){}
+    applyLanguage();
+    msg(currentLanguage==='en'?'English':'Українська');
+  })});
 
   app.querySelectorAll('button,a').forEach(el=>el.addEventListener('pointerdown',()=>el.classList.add('is-pressing')));
   document.addEventListener('pointerup',()=>app.querySelectorAll('.is-pressing').forEach(el=>el.classList.remove('is-pressing')),{passive:true});

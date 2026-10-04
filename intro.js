@@ -279,9 +279,15 @@
     particles = Array.from({ length: w < 600 ? 24 : 30 }, function () {
       return makePetal(true, null, false);
     });
-    intro.classList.add('is-running');
+    // Let the fully prepared intro paint once before starting the reveal.
+    // This prevents a first-frame flash/jump on mobile browsers.
     last = 0;
     frame = requestAnimationFrame(tick);
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        if (!done && !ending) intro.classList.add('is-running');
+      });
+    });
     // Start loading the real mobile site after the first visual frames,
     // so its DOM work cannot block the first intro frames.
     timers.push(setTimeout(function () {
