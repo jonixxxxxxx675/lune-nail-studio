@@ -109,11 +109,12 @@
       <button class="lm-menu-close lm-3d" type="button">×</button>
       <small>МЕНЮ</small>
       <a href="#booking">Запис онлайн</a><a href="#account">Мій аккаунт</a><a href="#support">Служба підтримки</a><a href="#branches">Наші відділення</a>
-      <div class="lm-menu-language" aria-label="Мова">
-        <span>Мова</span>
+      <div class="lm-menu-language" aria-label="Language">
+        <span class="lm-language-globe" aria-hidden="true"><i></i><b></b></span>
         <div class="lm-menu-language__options">
-          <button type="button" class="is-active" data-lang="uk">Українська</button>
-          <button type="button" data-lang="en">English</button>
+          <button type="button" class="is-active" data-lang="uk" aria-label="Українська">UA</button>
+          <span class="lm-language-arrow" aria-hidden="true">→</span>
+          <button type="button" data-lang="en" aria-label="English">EN</button>
         </div>
       </div>
     </div>
