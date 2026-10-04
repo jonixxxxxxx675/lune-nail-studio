@@ -66,7 +66,7 @@
       <div class="lm-book-body">
         <div class="lm-steps"><div class="lm-step is-active"><span class="lm-step-dot">✓</span><i class="lm-step-line"></i></div><div class="lm-step is-active"><span class="lm-step-dot">2</span><i class="lm-step-line"></i></div><div class="lm-step"><span class="lm-step-dot">3</span><i class="lm-step-line"></i></div><div class="lm-step"><span class="lm-step-dot">4</span></div></div>
         <h2 class="lm-book-title">Оберіть майстра</h2>
-        <div class="lm-master-list">${['Анастасія','Марія','Катерина','Ольга','Софія'].map((n,i)=>`<button class="lm-master lm-3d-card ${i===0?'is-selected':''}" type="button"><img src="assets/intro/scene-4.webp"><span class="lm-master-main"><strong>${n}</strong><small>★ ${['5.0','4.9','4.8','4.8','4.7'][i]}<br>Вільна ${i<2?'сьогодні':'завтра'}</small></span><span class="lm-radio"></span></button>`).join('')}</div>
+        <div class="lm-master-list">${['Анастасія','Марія','Катерина','Ольга','Софія'].map((n,i)=>`<button class="lm-master lm-3d-card ${i===0?'is-selected':''}" type="button"><img src="assets/master-${i+1}.png" alt="${n}" loading="lazy"><span class="lm-master-main"><strong>${n}</strong><small>★ ${['5.0','4.9','4.8','4.8','4.7'][i]}<br>Вільна ${i<2?'сьогодні':'завтра'}</small></span><span class="lm-radio"></span></button>`).join('')}</div>
         <button class="lm-next lm-3d" data-next="date" type="button">Далі <span>→</span></button>
       </div>
     </section>
