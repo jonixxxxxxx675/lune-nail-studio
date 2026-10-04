@@ -27,8 +27,8 @@
   var revealStart = 0;
   var photoWidth = 0;
   var photoHeight = 0;
-  var INTRO_DURATION = 8200;
-  var EXIT_START = 7600;
+  var INTRO_DURATION = 9000;
+  var EXIT_START = 7800;
   var TARGET_PARTICLES = 0;
 
   if (!intro || !mobile || reduced || !canvas || !ctx) {
@@ -47,17 +47,19 @@
   var style = document.createElement('style');
   style.textContent = `
     html.intro-lock,html.intro-lock body{overflow:hidden!important;height:100%!important;overscroll-behavior:none}
-    #intro{position:fixed!important;inset:0!important;z-index:99999!important;width:100%!important;height:100%!important;height:100svh!important;overflow:hidden!important;background:#f4ded9!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;isolation:isolate;transition:opacity 3.2s cubic-bezier(.22,1,.36,1),visibility 0s linear 3.2s}
-    #luneOpening{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at center,#fcf2ec 0%,#f4ded9 72%,#efd5cd 100%)}
-    body.intro-site-pending .lune-mobile-app{opacity:0!important;transform:translate3d(0,26px,0) scale(.972)!important;filter:blur(12px)!important;transition:opacity 3.4s cubic-bezier(.16,1,.3,1),transform 3.8s cubic-bezier(.16,1,.3,1),filter 3.4s cubic-bezier(.16,1,.3,1)!important;will-change:opacity,transform,filter}
+    #intro{position:fixed!important;inset:0!important;z-index:99999!important;width:100%!important;height:100%!important;height:100svh!important;overflow:hidden!important;background:#f4ded9!important;opacity:0!important;visibility:visible!important;pointer-events:auto!important;isolation:isolate;will-change:opacity;transition:opacity 1.35s cubic-bezier(.22,1,.36,1)}
+    #intro.is-running{opacity:1!important}
+    #luneOpening{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at center,#fcf2ec 0%,#f4ded9 72%,#efd5cd 100%);transform:scale(1.012);will-change:transform,filter;transition:transform 1.45s cubic-bezier(.16,1,.3,1),filter 1.25s cubic-bezier(.16,1,.3,1)}
+    #intro.is-running #luneOpening{transform:scale(1);filter:blur(0)}
+    body.intro-site-pending .lune-mobile-app{opacity:0!important;transform:translate3d(0,10px,0) scale(.988)!important;filter:blur(5px)!important;transition:opacity 2.7s cubic-bezier(.22,1,.36,1),transform 2.9s cubic-bezier(.16,1,.3,1),filter 2.35s cubic-bezier(.16,1,.3,1)!important;will-change:opacity,transform,filter}
     body.intro-site-ready .lune-mobile-app{opacity:1!important;transform:translate3d(0,0,0) scale(1)!important;filter:blur(0)!important}
     #intro::before,#intro::after{content:"";position:absolute;inset:-12%;pointer-events:none;z-index:20;opacity:0;transform:scale(1.08);will-change:opacity,transform,filter}
     #intro::before{background:radial-gradient(circle at 50% 48%,rgba(255,250,247,.98) 0%,rgba(255,245,241,.72) 24%,rgba(244,222,217,0) 62%);filter:blur(10px)}
     #intro::after{background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.38) 0%,rgba(244,222,217,0) 58%);mix-blend-mode:screen}
-    #intro.is-running::before{animation:luneEntryVeil 1.75s cubic-bezier(.16,1,.3,1) both}
-    #intro.is-running::after{animation:luneEntryGlow 2.15s cubic-bezier(.16,1,.3,1) .08s both}
-    #intro.is-out::before{opacity:1;transform:scale(1);filter:blur(0);animation:luneExitVeil 2.25s cubic-bezier(.16,1,.3,1) both}
-    #intro.is-out::after{opacity:.55;transform:scale(1);animation:luneExitGlow 2.35s cubic-bezier(.16,1,.3,1) both}
+    #intro.is-running::before{animation:luneEntryVeil 1.45s cubic-bezier(.16,1,.3,1) both}
+    #intro.is-running::after{animation:luneEntryGlow 1.75s cubic-bezier(.16,1,.3,1) .05s both}
+    #intro.is-out::before{opacity:1;transform:scale(1);filter:blur(0);animation:luneExitVeil 2.55s cubic-bezier(.16,1,.3,1) both}
+    #intro.is-out::after{opacity:.55;transform:scale(1);animation:luneExitGlow 2.65s cubic-bezier(.16,1,.3,1) both}
     @keyframes luneEntryVeil{0%{opacity:1;transform:scale(1.16);filter:blur(18px)}45%{opacity:.78;transform:scale(1.03);filter:blur(7px)}100%{opacity:0;transform:scale(1);filter:blur(0)}}
     @keyframes luneEntryGlow{0%{opacity:.9;transform:scale(1.14)}55%{opacity:.28;transform:scale(1.02)}100%{opacity:0;transform:scale(1)}}
     @keyframes luneExitVeil{0%{opacity:0;transform:scale(1.08);filter:blur(12px)}34%{opacity:.78;transform:scale(1.015);filter:blur(4px)}68%{opacity:.42;transform:scale(1);filter:blur(0)}100%{opacity:0;transform:scale(.98);filter:blur(0)}}
@@ -69,11 +71,11 @@
     #intro.is-running .lune-opening__ambient{opacity:.58;transform:scale(1)}
     #intro.is-running .lune-opening__photo{opacity:1;visibility:visible;transform:scale(1);filter:blur(0)}
     #intro.is-running .lune-opening__canvas{opacity:1;transition-delay:1.05s}
-    #intro.is-out{opacity:0;visibility:hidden;pointer-events:none;transition:opacity 3.8s cubic-bezier(.16,1,.3,1),visibility 0s linear 3.8s}
-    #intro.is-out .lune-opening{transform:scale(1.035);filter:blur(3px);transition:transform 3.8s cubic-bezier(.16,1,.3,1),filter 3.8s cubic-bezier(.16,1,.3,1)}
-    #intro.is-out .lune-opening__ambient{opacity:.24;transform:scale(1.055);filter:blur(30px)}
-    #intro.is-out .lune-opening__photo{opacity:.7;visibility:visible;transform:scale(1.025);filter:blur(3px)}
-    #intro.is-out .lune-opening__canvas{opacity:0;transition:opacity 3.3s cubic-bezier(.16,1,.3,1)}
+    #intro.is-out{opacity:0;visibility:hidden;pointer-events:none;transition:opacity 2.85s cubic-bezier(.22,1,.36,1),visibility 0s linear 2.85s}
+    #intro.is-out .lune-opening{transform:scale(1.018);filter:blur(1.4px);transition:transform 2.85s cubic-bezier(.16,1,.3,1),filter 2.35s cubic-bezier(.16,1,.3,1)}
+    #intro.is-out .lune-opening__ambient{opacity:.12;transform:scale(1.025);filter:blur(12px);transition:opacity 2.6s cubic-bezier(.16,1,.3,1),transform 2.85s cubic-bezier(.16,1,.3,1),filter 2.6s cubic-bezier(.16,1,.3,1)}
+    #intro.is-out .lune-opening__photo{opacity:.38;visibility:visible;transform:scale(1.012);filter:blur(1.4px);transition:opacity 2.55s cubic-bezier(.16,1,.3,1),transform 2.85s cubic-bezier(.16,1,.3,1),filter 2.35s cubic-bezier(.16,1,.3,1)}
+    #intro.is-out .lune-opening__canvas{opacity:0;transition:opacity 2.45s cubic-bezier(.16,1,.3,1)}
     @media (prefers-reduced-motion:reduce){#intro{display:none!important}}
   `;
   document.head.appendChild(style);
@@ -279,7 +281,7 @@
       if (intro.parentNode) intro.remove();
       if (style.parentNode) style.remove();
       document.body.classList.remove('intro-site-ready');
-    }, 3250));
+    }, 3050));
   }
 
   function start() {

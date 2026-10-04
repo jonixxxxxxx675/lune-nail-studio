@@ -45,11 +45,12 @@
     accountOverlay.innerHTML = `
       <div class="lm-account-shell">
         <div class="lm-account-head">
-          <div>
-            <p style="font-size:9px;letter-spacing:.32em;color:#a16c63;text-transform:uppercase;margin:0 0 5px">LUNE</p>
+          <button class="lm-account-close" type="button" aria-label="Назад">‹</button>
+          <div class="lm-account-head-title">
+            <p>LUNE</p>
             <h2>Мій аккаунт</h2>
           </div>
-          <button class="lm-account-close" type="button" aria-label="Закрити">×</button>
+          <span class="lm-account-head-spacer" aria-hidden="true"></span>
         </div>
         <div class="lm-account-card" data-account-root></div>
       </div>`;
@@ -103,15 +104,22 @@
       var account = getAccount();
       if (!account) {
         root.innerHTML = `
-          <h3>Вітаємо в LUNE</h3>
-          <p>Створіть аккаунт один раз — після цього зможете бронювати візити, бачити свої записи та мати персональний QR-код.</p>
+          <div class="lm-profile-intro">
+            <div class="lm-avatar-picker lm-avatar-picker--empty" data-register-avatar>
+              <span>+</span>
+              <small>Фото</small>
+              <input name="avatar" type="file" accept="image/*" data-avatar-input>
+            </div>
+            <div>
+              <span class="lm-profile-kicker">ОСОБИСТИЙ ПРОСТІР</span>
+              <h3>Створіть аккаунт</h3>
+              <p>Ваші дані, бронювання та QR-код будуть збережені у профілі LUNE.</p>
+            </div>
+          </div>
           <form class="lm-account-form" data-register-form>
-            <label>Ваше ім’я</label>
-            <input name="name" type="text" autocomplete="name" placeholder="Наприклад, Анна" required>
-            <label>Телефон</label>
-            <input name="phone" type="tel" autocomplete="tel" placeholder="+380 ..." required>
-            <label>Email</label>
-            <input name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+            <label>Ваше ім’я<input name="name" type="text" autocomplete="name" placeholder="Наприклад, Анна" required></label>
+            <label>Телефон<input name="phone" type="tel" autocomplete="tel" placeholder="+380 ..." required></label>
+            <label>Email<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
             <button class="lm-account-submit" type="submit">Створити аккаунт →</button>
           </form>`;
 
@@ -121,8 +129,11 @@
           var name = String(fd.get('name') || '').trim();
           var phone = String(fd.get('phone') || '').trim();
           var email = String(fd.get('email') || '').trim();
+          var file = fd.get('avatar');
           if (!name || !phone || !email) return;
-          setAccount({ id: 'LUNE-' + Date.now().toString(36).toUpperCase(), name: name, phone: phone, email: email, createdAt: new Date().toISOString() });
+          var accountData = { id: 'LUNE-' + Date.now().toString(36).toUpperCase(), name: name, phone: phone, email: email, createdAt: new Date().toISOString() };
+          function finish(avatar) { if (avatar) accountData.avatar = avatar; setAccount(accountData); renderAccount('profile'); syncMainAvatar(); }
+          if (file && file.size) { var reader = new FileReader(); reader.onload = function () { finish(reader.result); }; reader.readAsDataURL(file); } else finish('');
           renderAccount('profile');
           syncMainAvatar();
         });
@@ -131,9 +142,17 @@
 
       var initial = tab || 'profile';
       root.innerHTML = `
-        <div class="lm-profile-row">
-          <div class="lm-profile-avatar">${account.avatar ? `<img src="${escapeHtml(account.avatar)}" alt="">` : escapeHtml(account.name.slice(0, 1).toUpperCase())}</div>
-          <div class="lm-profile-main"><strong>${escapeHtml(account.name)}</strong><small>${escapeHtml(account.phone)} · ${escapeHtml(account.email)}</small></div>
+        <div class="lm-profile-hero">
+          <label class="lm-avatar-picker" title="Змінити аватарку">
+            ${account.avatar ? `<img src="${escapeHtml(account.avatar)}" alt="">` : `<span>${escapeHtml(account.name.slice(0, 1).toUpperCase())}</span>`}
+            <i aria-hidden="true">+</i>
+            <input name="avatar" type="file" accept="image/*" data-avatar-input>
+          </label>
+          <div class="lm-profile-main">
+            <span class="lm-profile-kicker">ОСОБИСТИЙ ПРОСТІР</span>
+            <strong>${escapeHtml(account.name)}</strong>
+            <small>${escapeHtml(account.email)}</small>
+          </div>
         </div>
         <div class="lm-account-tabs">
           <button class="lm-account-tab ${initial === 'profile' ? 'is-active' : ''}" data-tab="profile" type="button">Профіль</button>
@@ -141,12 +160,12 @@
           <button class="lm-account-tab ${initial === 'qr' ? 'is-active' : ''}" data-tab="qr" type="button">Мій QR</button>
         </div>
         <section class="lm-account-pane ${initial === 'profile' ? 'is-active' : ''}" data-pane="profile">
-          <h3>Ваш профіль</h3>
+          <div class="lm-data-heading"><span>ПЕРСОНАЛЬНІ ДАНІ</span><p>Усі дані профілю зібрані в одному місці.</p></div>
           <form class="lm-account-form" data-profile-form>
-            <label>Ім'я</label><input name="name" type="text" value="${escapeHtml(account.name)}" required>
-            <label>Телефон</label><input name="phone" type="tel" value="${escapeHtml(account.phone)}" required>
-            <label>Email</label><input name="email" type="email" value="${escapeHtml(account.email)}" required>
-            <label>Аватарка</label><input name="avatar" type="file" accept="image/*">
+            <label>Ім'я<input name="name" type="text" value="${escapeHtml(account.name)}" required></label>
+            <label>Телефон<input name="phone" type="tel" value="${escapeHtml(account.phone)}" required></label>
+            <label>Email<input name="email" type="email" value="${escapeHtml(account.email)}" required></label>
+            <input name="avatar" type="file" accept="image/*" data-avatar-form-input hidden>
             <button class="lm-account-submit" type="submit">Зберегти зміни →</button>
           </form>
           <button class="lm-account-link" data-account-book type="button">Створити нове бронювання</button>
@@ -176,10 +195,31 @@
         openBooking();
       });
 
+      function bindAvatarPicker() {
+        var picker = root.querySelector('[data-avatar-input]');
+        if (!picker || picker.dataset.bound === '1') return;
+        picker.dataset.bound = '1';
+        picker.addEventListener('change', function () {
+          var file = picker.files && picker.files[0];
+          if (!file) return;
+          var reader = new FileReader();
+          reader.onload = function () {
+            var hero = root.querySelector('.lm-avatar-picker');
+            if (!hero) return;
+            hero.innerHTML = '<img src="' + escapeHtml(reader.result) + '" alt=""><i aria-hidden="true">+</i><input name="avatar" type="file" accept="image/*" data-avatar-input>';
+            bindAvatarPicker();
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+      bindAvatarPicker();
+
       var profileForm = root.querySelector('[data-profile-form]');
       if (profileForm) profileForm.addEventListener('submit', function (e) {
         e.preventDefault();
         var fd = new FormData(profileForm), file = fd.get('avatar');
+        var picker = root.querySelector('[data-avatar-input]');
+        if ((!file || !file.size) && picker && picker.files && picker.files[0]) file = picker.files[0];
         function save(avatar) { var next = { id: account.id, name: String(fd.get('name')||account.name).trim(), phone: String(fd.get('phone')||account.phone).trim(), email: String(fd.get('email')||account.email).trim(), createdAt: account.createdAt }; if (avatar) next.avatar = avatar; else if (account.avatar) next.avatar = account.avatar; setAccount(next); renderAccount('profile'); syncMainAvatar(); showNotice('Зміни збережено'); }
         if (file && file.size) { var reader = new FileReader(); reader.onload = function () { save(reader.result); }; reader.readAsDataURL(file); } else save('');
       });
