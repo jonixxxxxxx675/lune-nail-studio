@@ -86,7 +86,7 @@
       <div class="lm-book-body">
         <div class="lm-steps"><div class="lm-step is-active"><span class="lm-step-dot">✓</span><i class="lm-step-line"></i></div><div class="lm-step is-active"><span class="lm-step-dot">✓</span><i class="lm-step-line"></i></div><div class="lm-step is-active"><span class="lm-step-dot">✓</span><i class="lm-step-line"></i></div><div class="lm-step is-active"><span class="lm-step-dot">4</span></div></div>
         <h2 class="lm-book-title">Оберіть час</h2><p class="lm-date-label">▣ &nbsp; Сб, 17 жовтня 2026</p>
-        <div class="lm-times">${['10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','16:00'].map((t,i)=>`<button class="lm-time lm-3d-card ${i===3?'is-selected':''}" type="button">${t}</button>`).join('')}</div>
+        <div class="lm-times">${Array.from({length:21},(_,i)=>{var h=10+Math.floor(i/2),m=i%2?'30':'00',t=String(h).padStart(2,'0')+':'+m;return `<button class="lm-time lm-3d-card ${t===selectedTime?'is-selected':''}" data-time="${t}" type="button">${t}</button>`}).join('')}</div>
         <button class="lm-next lm-3d" data-confirm type="button">Підтвердити запис <span>→</span></button>
       </div>
     </section>
@@ -182,22 +182,77 @@
   function requireAccount(){if(account)return true;openModal('auth-gate');return false}
   function updateAccount(){var state=app.querySelector('[data-account-state]'),btn=app.querySelector('[data-register]'),avatar=app.querySelector('[data-account-avatar]'),photo=account&&account.photo;if(account){state.textContent='Твій аккаунт активний. Тут зберігатимуться бронювання та QR-код.';btn.innerHTML='Відкрити профіль <span>→</span>';avatar.classList.toggle('has-photo',!!photo);avatar.style.backgroundImage=photo?`url(${photo})`:'';avatar.textContent=photo?'':'L';fillProfile();}else{state.textContent='Зареєструйся, щоб зберігати бронювання та свій QR-код.';btn.innerHTML='Зареєструватися <span>→</span>';avatar.classList.remove('has-photo');avatar.style.backgroundImage='';avatar.textContent='L'}}
   function fillProfile(){if(!account)return;app.querySelector('[data-profile-name]').value=account.name||'';app.querySelector('[data-profile-phone]').value=account.phone||'';app.querySelector('[data-profile-email]').value=account.email||'';var image=app.querySelector('[data-profile-photo-image]');image.classList.toggle('has-photo',!!account.photo);image.style.backgroundImage=account.photo?`url(${account.photo})`:'';image.textContent=account.photo?'':'L';var status=app.querySelector('[data-email-status]');status.className='lm-email-status '+(account.emailConfirmed?'is-confirmed':'');status.textContent=account.emailConfirmed?'✓ E-mail підтверджено':'E-mail не підтверджено';}
-  function renderBookings(){var box=app.querySelector('[data-bookings-list]');if(!bookings.length){box.innerHTML='<div class="lm-empty">Поки що немає бронювань.</div>';return}box.innerHTML=bookings.map((b,i)=>`<div class="lm-booking"><div><b>${b.service}</b><span>${b.date} • ${b.time}</span><small>${b.master}</small></div><button class="lm-cancel-booking lm-3d" type="button" data-cancel-booking="${i}">Скасувати</button></div>`).join('');box.querySelectorAll('[data-cancel-booking]').forEach(btn=>btn.addEventListener('click',()=>{var i=Number(btn.dataset.cancelBooking);bookings.splice(i,1);localStorage.setItem('lune-bookings',JSON.stringify(bookings));renderBookings();msg('Бронювання скасовано')}))}
+  function renderBookings(){var box=app.querySelector('[data-bookings-list]');if(!bookings.length){box.innerHTML='<div class="lm-empty">Поки що немає бронювань.</div>';return}box.innerHTML=bookings.map((b,i)=>`<div class="lm-booking"><div><b>${b.service}</b><span>${b.date} • ${b.time}</span><small>${b.master}</small></div><button class="lm-cancel-booking lm-3d" type="button" data-cancel-booking="${i}">Скасувати</button></div>`).join('');box.querySelectorAll('[data-cancel-booking]').forEach(btn=>btn.addEventListener('click',()=>{var i=Number(btn.dataset.cancelBooking);bookings.splice(i,1);localStorage.setItem('lune-bookings',JSON.stringify(bookings));renderBookings();renderCalendar();renderTimes();msg('Бронювання скасовано')}))}
   function qrSvg(value){var seed=0;for(var i=0;i<value.length;i++)seed=(seed*31+value.charCodeAt(i))>>>0;var cells=21,cell=7,size=cells*cell,rects='';for(var y=0;y<cells;y++)for(var x=0;x<cells;x++){var corner=(x<7&&y<7)||(x>=14&&y<7)||(x<7&&y>=14);var on;if(corner){var ox=x<7?0:14,oy=y<7?0:14,dx=x-ox,dy=y-oy;on=dx===0||dx===6||dy===0||dy===6||(dx>=2&&dx<=4&&dy>=2&&dy<=4)}else{seed=(seed*1664525+1013904223)>>>0;on=(seed&1)===1}if(on)rects+=`<rect x="${x*cell}" y="${y*cell}" width="${cell}" height="${cell}"/>`}return `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="QR-код"><rect width="100%" height="100%" fill="#fff"/>${rects}</svg>`}
 
-  function renderCalendar(){var grid=app.querySelector('[data-calendar]'),label=app.querySelector('[data-month-label]'),names=['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];label.textContent=names[monthDate.getMonth()]+' '+monthDate.getFullYear();var first=(monthDate.getDay()+6)%7,days=new Date(monthDate.getFullYear(),monthDate.getMonth()+1,0).getDate(),html=['Пн','Вт','Ср','Чт','Пт','Сб','Нд'].map(d=>`<span class="cal-week">${d}</span>`).join('');for(var i=0;i<first;i++)html+='<span class="cal-empty"></span>';for(var d=1;d<=days;d++)html+=`<button type="button" class="cal-day lm-3d ${d===selectedDate?'selected':''}">${d}</button>`;grid.innerHTML=html;grid.querySelectorAll('.cal-day').forEach(b=>b.addEventListener('click',()=>{grid.querySelectorAll('.cal-day').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');selectedDate=Number(b.textContent);msg('Дата обрана')}))}
+  function pad2(n){return String(n).padStart(2,'0')}
+  function dateKey(y,m,d){return y+'-'+pad2(m+1)+'-'+pad2(d)}
+  function bookingDateKey(b){
+    if(b&&b.dateKey)return b.dateKey;
+    var match=String(b&&b.date||'').match(/(\d{1,2})\s+([^\s]+)\s+(\d{4})/);
+    if(!match)return '';
+    var names=['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];
+    var m=names.indexOf(match[2]);
+    return m<0?'':dateKey(Number(match[3]),m,Number(match[1]));
+  }
+  function isDateBooked(d){return bookings.some(function(b){return bookingDateKey(b)===dateKey(monthDate.getFullYear(),monthDate.getMonth(),d)})}
+  function isTimeBooked(t){
+    var key=dateKey(monthDate.getFullYear(),monthDate.getMonth(),selectedDate);
+    return bookings.some(function(b){return bookingDateKey(b)===key && String(b.time||'')===t})
+  }
+  function renderCalendar(){
+    var grid=app.querySelector('[data-calendar]'),label=app.querySelector('[data-month-label]'),names=['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];
+    label.textContent=names[monthDate.getMonth()]+' '+monthDate.getFullYear();
+    var first=(monthDate.getDay()+6)%7,days=new Date(monthDate.getFullYear(),monthDate.getMonth()+1,0).getDate();
+    var html=['Пн','Вт','Ср','Чт','Пт','Сб','Нд'].map(d=>`<span class="cal-week">${d}</span>`).join('');
+    for(var i=0;i<first;i++)html+='<span class="cal-empty"></span>';
+    for(var d=1;d<=days;d++){
+      var booked=isDateBooked(d);
+      var selected=d===selectedDate&&!booked;
+      html+=`<button type="button" class="cal-day lm-3d ${selected?'selected ':''}${booked?'booked':''}" ${booked?'disabled aria-disabled="true"':''}>${d}</button>`;
+    }
+    grid.innerHTML=html;
+    grid.querySelectorAll('.cal-day:not(.booked)').forEach(b=>b.addEventListener('click',()=>{
+      grid.querySelectorAll('.cal-day').forEach(x=>x.classList.remove('selected'));
+      b.classList.add('selected');
+      selectedDate=Number(b.textContent);
+      renderTimes();
+      msg('Дата обрана')
+    }));
+    renderTimes();
+  }
+  function renderTimes(){
+    app.querySelectorAll('.lm-time').forEach(function(b){
+      var t=b.dataset.time||b.textContent.trim();
+      var booked=isTimeBooked(t);
+      b.classList.toggle('booked',booked);
+      b.disabled=booked;
+      b.setAttribute('aria-disabled',booked?'true':'false');
+      b.classList.toggle('is-selected',!booked&&t===selectedTime);
+    });
+  }
 
   renderCalendar();updateAccount();renderBookings();
   app.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',back));
   app.querySelectorAll('[data-next]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.next)));
   app.querySelectorAll('.lm-service').forEach(b=>b.addEventListener('click',()=>{app.querySelectorAll('.lm-service').forEach(x=>x.classList.remove('is-selected'));b.classList.add('is-selected');serviceSelected=Number(b.dataset.service);msg('Послугу обрано')}));
   app.querySelectorAll('.lm-master').forEach(b=>b.addEventListener('click',()=>{app.querySelectorAll('.lm-master').forEach(x=>x.classList.remove('is-selected'));b.classList.add('is-selected');msg('Майстра обрано')}));
-  app.querySelectorAll('.lm-time').forEach(b=>b.addEventListener('click',()=>{app.querySelectorAll('.lm-time').forEach(x=>x.classList.remove('is-selected'));b.classList.add('is-selected');selectedTime=b.textContent.trim();msg('Час обрано')}));
+  app.querySelectorAll('.lm-time').forEach(b=>b.addEventListener('click',()=>{if(b.disabled)return;app.querySelectorAll('.lm-time').forEach(x=>x.classList.remove('is-selected'));b.classList.add('is-selected');selectedTime=b.dataset.time||b.textContent.trim();msg('Час обрано')}));
   app.querySelectorAll('.lm-pill').forEach(b=>b.addEventListener('click',()=>{app.querySelectorAll('.lm-pill').forEach(x=>x.classList.remove('active'));b.classList.add('active')}));
-  app.querySelector('[data-month="prev"]').addEventListener('click',()=>{monthDate.setMonth(monthDate.getMonth()-1);renderCalendar()});
-  app.querySelector('[data-month="next"]').addEventListener('click',()=>{monthDate.setMonth(monthDate.getMonth()+1);renderCalendar()});
+  app.querySelector('[data-month="prev"]').addEventListener('click',()=>{monthDate.setMonth(monthDate.getMonth()-1);selectedDate=1;renderCalendar()});
+  app.querySelector('[data-month="next"]').addEventListener('click',()=>{monthDate.setMonth(monthDate.getMonth()+1);selectedDate=1;renderCalendar()});
   app.querySelector('[data-book-start]').addEventListener('click',()=>{if(requireAccount())show('master')});
-  app.querySelector('[data-confirm]').addEventListener('click',()=>{if(!requireAccount())return;var names=['Класичний манікюр','Покриття гель-лаком','Дизайн нігтів','Френч','Зміцнення нігтів'];var masters=app.querySelector('.lm-master.is-selected strong');bookings.unshift({service:names[serviceSelected]||names[0],master:masters?masters.textContent:'Анастасія',date:'17 жовтня 2026',time:selectedTime});localStorage.setItem('lune-bookings',JSON.stringify(bookings));renderBookings();openModal('confirm')});
+  app.querySelector('[data-confirm]').addEventListener('click',()=>{
+    if(!requireAccount())return;
+    if(isTimeBooked(selectedTime)){msg('Цей час уже заброньований');renderTimes();return}
+    var names=['Класичний манікюр','Покриття гель-лаком','Дизайн нігтів','Френч','Зміцнення нігтів'];
+    var masters=app.querySelector('.lm-master.is-selected strong');
+    var monthNames=['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];
+    var dateLabel=selectedDate+' '+monthNames[monthDate.getMonth()]+' '+monthDate.getFullYear();
+    bookings.unshift({service:names[serviceSelected]||names[0],master:masters?masters.textContent:'Анастасія',date:dateLabel,dateKey:dateKey(monthDate.getFullYear(),monthDate.getMonth(),selectedDate),time:selectedTime});
+    localStorage.setItem('lune-bookings',JSON.stringify(bookings));
+    renderBookings();renderCalendar();renderTimes();openModal('confirm')
+  });
   app.querySelector('[data-confirm-ok]').addEventListener('click',()=>{closeModals();history=['home'];show('home',false)});
   app.querySelectorAll('[data-modal-close]').forEach(b=>b.addEventListener('click',closeModals));
   app.querySelector('[data-gate-register]').addEventListener('click',()=>{closeModals();openModal('register')});

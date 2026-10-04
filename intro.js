@@ -45,9 +45,9 @@
   var style = document.createElement('style');
   style.textContent = `
     html.intro-lock,html.intro-lock body{overflow:hidden!important;height:100%!important;overscroll-behavior:none}
-    #intro{position:fixed!important;inset:0!important;z-index:99999!important;width:100%!important;height:100%!important;height:100svh!important;overflow:hidden!important;background:#f4ded9!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;isolation:isolate;transition:opacity 3.2s cubic-bezier(.16,1,.3,1),visibility 0s linear 3.2s}
+    #intro{position:fixed!important;inset:0!important;z-index:99999!important;width:100%!important;height:100%!important;height:100svh!important;overflow:hidden!important;background:#f4ded9!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;isolation:isolate;transform:translate3d(0,0,0);will-change:transform,opacity;transition:transform 1.5s cubic-bezier(.76,0,.24,1),opacity 1.5s cubic-bezier(.76,0,.24,1),visibility 0s linear 1.5s}
     #luneOpening{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at center,#fcf2ec,#f4ded9)}
-    body.intro-site-pending .lune-mobile-app{opacity:0!important;transform:translate3d(0,24px,0) scale(.998)!important;transition:opacity 2.35s cubic-bezier(.16,1,.3,1),transform 2.35s cubic-bezier(.16,1,.3,1)!important}
+    body.intro-site-pending .lune-mobile-app{opacity:0!important;transform:translate3d(0,14px,0) scale(.999)!important;transition:opacity 1.45s cubic-bezier(.22,1,.36,1),transform 1.45s cubic-bezier(.22,1,.36,1)!important}
     body.intro-site-ready .lune-mobile-app{opacity:1!important;transform:translate3d(0,0,0) scale(1)!important}
     .lune-opening__ambient,.lune-opening__photo,.lune-opening__canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
     .lune-opening__ambient{object-fit:cover;filter:blur(30px);opacity:0;transform:scale(1.045);filter:blur(18px);will-change:opacity,transform;transition:opacity 2.8s cubic-bezier(.22,1,.36,1),transform 4.6s cubic-bezier(.16,1,.3,1)}
@@ -56,7 +56,7 @@
     #intro.is-running .lune-opening__ambient{opacity:.58;transform:scale(1)}
     #intro.is-running .lune-opening__photo{opacity:1;transform:scale(1)}
     #intro.is-running .lune-opening__canvas{opacity:1;transition-delay:.75s}
-    #intro.is-out{opacity:0;visibility:hidden;pointer-events:none;transition-duration:3.2s}
+    #intro.is-out{opacity:.98;transform:translate3d(0,100%,0);visibility:hidden;pointer-events:none;transition-duration:1.5s}
     #intro.is-out .lune-opening__ambient{opacity:.12;transform:scale(1.02)}
     #intro.is-out .lune-opening__photo{opacity:.08;transform:scale(1.01)}
     #intro.is-out .lune-opening__canvas{opacity:0}
@@ -237,9 +237,9 @@
 
   function startMobileSite() {
     document.body.classList.add('intro-site-pending');
-    return load('mobile.css?v=20261004-mobile-polish5', 'link')
+    return load('mobile.css?v=20261004-mobile-polish6', 'link')
       .then(function () {
-        return load('mobile.js?v=20261004-mobile-polish5', 'script');
+        return load('mobile.js?v=20261004-mobile-polish6', 'script');
       })
       .then(waitForMobileImages);
   }
