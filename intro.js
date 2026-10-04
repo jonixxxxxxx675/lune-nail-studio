@@ -45,18 +45,18 @@
   var style = document.createElement('style');
   style.textContent = `
     html.intro-lock,html.intro-lock body{overflow:hidden!important;height:100%!important;overscroll-behavior:none}
-    #intro{position:fixed!important;inset:0!important;z-index:99999!important;width:100%!important;height:100%!important;height:100svh!important;overflow:hidden!important;background:#f4ded9!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;isolation:isolate;transform:translate3d(0,0,0);will-change:transform,opacity;transition:transform 1.5s cubic-bezier(.76,0,.24,1),opacity 1.5s cubic-bezier(.76,0,.24,1),visibility 0s linear 1.5s}
-    #luneOpening{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at center,#fcf2ec,#f4ded9)}
-    body.intro-site-pending .lune-mobile-app{opacity:0!important;transform:translate3d(0,14px,0) scale(.999)!important;transition:opacity 1.45s cubic-bezier(.22,1,.36,1),transform 1.45s cubic-bezier(.22,1,.36,1)!important}
-    body.intro-site-ready .lune-mobile-app{opacity:1!important;transform:translate3d(0,0,0) scale(1)!important}
+    #intro{position:fixed!important;inset:0!important;z-index:99999!important;width:100%!important;height:100%!important;height:100svh!important;overflow:hidden!important;background:#f4ded9!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;isolation:isolate;transition:opacity 2.2s cubic-bezier(.22,1,.36,1),visibility 0s linear 2.2s}
+    #luneOpening{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at center,#fcf2ec 0%,#f4ded9 72%,#efd5cd 100%)}
+    body.intro-site-pending .lune-mobile-app{opacity:0!important;transform:translate3d(0,8px,0)!important;transition:opacity 1.55s cubic-bezier(.22,1,.36,1),transform 1.55s cubic-bezier(.22,1,.36,1)!important}
+    body.intro-site-ready .lune-mobile-app{opacity:1!important;transform:none!important}
     .lune-opening__ambient,.lune-opening__photo,.lune-opening__canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
     .lune-opening__ambient{object-fit:cover;filter:blur(30px);opacity:0;transform:scale(1.045);filter:blur(18px);will-change:opacity,transform;transition:opacity 2.8s cubic-bezier(.22,1,.36,1),transform 4.6s cubic-bezier(.16,1,.3,1)}
-    .lune-opening__photo{object-fit:contain;opacity:0;transform:scale(1.028);will-change:opacity,transform;transition:opacity 4.4s cubic-bezier(.22,1,.36,1),transform 6.2s cubic-bezier(.16,1,.3,1)}
+    .lune-opening__photo{object-fit:contain;opacity:0;visibility:hidden;transform:scale(1.028);will-change:opacity,transform;transition:opacity 4.4s cubic-bezier(.22,1,.36,1),transform 6.2s cubic-bezier(.16,1,.3,1)}
     .lune-opening__canvas{pointer-events:none;opacity:0;will-change:opacity;transition:opacity 2.8s cubic-bezier(.22,1,.36,1)}
     #intro.is-running .lune-opening__ambient{opacity:.58;transform:scale(1)}
-    #intro.is-running .lune-opening__photo{opacity:1;transform:scale(1)}
-    #intro.is-running .lune-opening__canvas{opacity:1;transition-delay:.75s}
-    #intro.is-out{opacity:.98;transform:translate3d(0,100%,0);visibility:hidden;pointer-events:none;transition-duration:1.5s}
+    #intro.is-running .lune-opening__photo{opacity:1;visibility:visible;transform:scale(1)}
+    #intro.is-running .lune-opening__canvas{opacity:1;transition-delay:1.05s}
+    #intro.is-out{opacity:0;visibility:hidden;pointer-events:none;transition-duration:2.2s}
     #intro.is-out .lune-opening__ambient{opacity:.12;transform:scale(1.02)}
     #intro.is-out .lune-opening__photo{opacity:.08;transform:scale(1.01)}
     #intro.is-out .lune-opening__canvas{opacity:0}
@@ -141,7 +141,7 @@
     var wind = Math.sin(clock * .38) * 13 + Math.sin(clock * .17) * 7;
     var reveal = Math.min(1, Math.max(0, clock / 1.9));
     reveal = reveal * reveal * (3 - 2 * reveal);
-    var exitProgress = ending ? Math.min(1, Math.max(0, (clock - endingAt) / 2.6)) : 0;
+    var exitProgress = ending ? Math.min(1, Math.max(0, (clock - endingAt) / 2.2)) : 0;
     var exitEase = 1 - (exitProgress * exitProgress * (3 - 2 * exitProgress));
     var exitFade = ending ? exitEase : 1;
     var fit = photo.naturalWidth
@@ -237,9 +237,9 @@
 
   function startMobileSite() {
     document.body.classList.add('intro-site-pending');
-    return load('mobile.css?v=20261004-mobile-polish6', 'link')
+    return load('mobile.css?v=20261003-mobile-smooth4', 'link')
       .then(function () {
-        return load('mobile.js?v=20261004-mobile-polish6', 'script');
+        return load('mobile.js?v=20261003-mobile-smooth4', 'script');
       })
       .then(waitForMobileImages);
   }
@@ -266,7 +266,7 @@
       if (intro.parentNode) intro.remove();
       if (style.parentNode) style.remove();
       document.body.classList.remove('intro-site-ready');
-    }, 3350));
+    }, 2350));
   }
 
   function start() {
@@ -308,12 +308,18 @@
   });
 
   var photoReady = new Promise(function (resolve) {
-    photo.onload = function () {
-      decodeImage(photo).then(resolve);
+    var preload = new Image();
+    preload.decoding = 'async';
+    preload.onload = function () {
+      decodeImage(preload).then(function () {
+        photo.src = BACKGROUND_URL;
+        ambient.src = BACKGROUND_URL;
+        photo.style.visibility = 'visible';
+        resolve(true);
+      });
     };
-    photo.onerror = resolve;
-    photo.src = BACKGROUND_URL;
-    ambient.src = BACKGROUND_URL;
+    preload.onerror = function () { resolve(false); };
+    preload.src = BACKGROUND_URL;
   });
 
   resize();
