@@ -38,6 +38,7 @@
   /* Final mobile booking polish */
   .lm-top{position:sticky;min-height:76px;padding:14px 18px 10px;grid-template-columns:46px 1fr 46px}
   .lm-top .lm-logo{position:absolute;left:50%;top:12px;transform:translateX(-50%);margin:0;width:max-content;z-index:1}
+  .lm-top>.lm-menu{grid-column:1;grid-row:1;justify-self:start}
   .lm-top .lm-logo b{font-size:36px}
   .lm-screen.is-active{animation:lmPageIn .72s cubic-bezier(.22,1,.36,1) both}
   @keyframes lmPageIn{0%{opacity:0;transform:translate3d(0,8px,0)}55%{opacity:1;transform:translate3d(0,1px,0)}100%{opacity:1;transform:none}}
