@@ -50,7 +50,7 @@
         <article class="lm-review"><div class="lm-review-top"><img class="lm-avatar" src="assets/images/avatar-2.jpg" alt="Марія"><div><b>Марія</b><div class="lm-stars">★★★★★</div></div></div><p>“Найкращий манікюр у місті! Все стерильно, комфортно і красиво.”</p></article>
       </div>
       <div class="lm-section-title"><small>INSTAGRAM</small><h2>Наші роботи</h2></div>
-      <div class="lm-gallery">${Array.from({length:9},(_,i)=>`<img src="assets/intro/scene-4.webp" alt="Робота ${i+1}">`).join('')}</div>
+      <div class="lm-gallery">${[1,2,3,4,5,6].map(i=>`<img src="assets/mobile-gallery-${i}.png" alt="Робота ${i}" loading="lazy" decoding="async">`).join('')}</div>
       <button class="lm-instagram lm-3d" type="button">◎ &nbsp; Дивитися більше в Instagram →</button>
       <footer class="lm-footer">
         <div class="lm-footer-grid">
