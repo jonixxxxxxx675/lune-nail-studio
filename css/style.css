@@ -1699,7 +1699,4 @@ body.is-locked { overflow: hidden; }
     transition: opacity 420ms ease;
   }
 
-  .hero__steps li:nth-child(4) {
-    display: none;
-  }
 }
