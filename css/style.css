@@ -1692,3 +1692,14 @@ body.is-locked { overflow: hidden; }
   .works__track li:nth-child(5) img { content: url("../assets/mobile-gallery-5.png"); }
   .works .round-btn { width: 30px; height: 30px; font-size: 15px; }
 }
+
+/* Desktop hero slider — isolated from mobile */
+@media (min-width: 769px) {
+  .hero__bg img {
+    transition: opacity 420ms ease;
+  }
+
+  .hero__steps li:nth-child(4) {
+    display: none;
+  }
+}
