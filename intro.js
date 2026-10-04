@@ -25,6 +25,8 @@
   var endingAt = 0;
   var siteReadyPromise = Promise.resolve();
   var revealStart = 0;
+  var photoWidth = 0;
+  var photoHeight = 0;
   var INTRO_DURATION = 8200;
   var EXIT_START = 6200;
   var TARGET_PARTICLES = 0;
@@ -45,18 +47,18 @@
   var style = document.createElement('style');
   style.textContent = `
     html.intro-lock,html.intro-lock body{overflow:hidden!important;height:100%!important;overscroll-behavior:none}
-    #intro{position:fixed!important;inset:0!important;z-index:99999!important;width:100%!important;height:100%!important;height:100svh!important;overflow:hidden!important;background:#f4ded9!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;isolation:isolate;transition:opacity 2.8s cubic-bezier(.22,1,.36,1),visibility 0s linear 2.8s}
+    #intro{position:fixed!important;inset:0!important;z-index:99999!important;width:100%!important;height:100%!important;height:100svh!important;overflow:hidden!important;background:#f4ded9!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;isolation:isolate;transition:opacity 2.9s cubic-bezier(.22,1,.36,1),visibility 0s linear 2.9s}
     #luneOpening{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at center,#fcf2ec 0%,#f4ded9 72%,#efd5cd 100%)}
-    body.intro-site-pending .lune-mobile-app{opacity:0!important;transform:translate3d(0,0,0)!important;transition:opacity 2.8s cubic-bezier(.22,1,.36,1),transform 2.8s cubic-bezier(.22,1,.36,1)!important}
-    body.intro-site-ready .lune-mobile-app{opacity:1!important;transform:none!important}
+    body.intro-site-pending .lune-mobile-app{opacity:0!important;transform:translate3d(0,10px,0) scale(.998)!important;transition:opacity 2.9s cubic-bezier(.22,1,.36,1),transform 2.9s cubic-bezier(.16,1,.3,1)!important}
+    body.intro-site-ready .lune-mobile-app{opacity:1!important;transform:translate3d(0,0,0) scale(1)!important}
     .lune-opening__ambient,.lune-opening__photo,.lune-opening__canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-    .lune-opening__ambient{object-fit:cover;filter:blur(30px);opacity:0;transform:scale(1.045);filter:blur(18px);will-change:opacity,transform;transition:opacity 2.8s cubic-bezier(.22,1,.36,1),transform 4.6s cubic-bezier(.16,1,.3,1)}
-    .lune-opening__photo{object-fit:contain;opacity:0;visibility:hidden;transform:scale(1.028);will-change:opacity,transform;transition:opacity 4.4s cubic-bezier(.22,1,.36,1),transform 6.2s cubic-bezier(.16,1,.3,1)}
+    .lune-opening__ambient{background-position:center;background-size:cover;background-repeat:no-repeat;filter:blur(18px);opacity:0;transform:scale(1.045);will-change:opacity,transform;transition:opacity 2.9s cubic-bezier(.22,1,.36,1),transform 4.8s cubic-bezier(.16,1,.3,1)}
+    .lune-opening__photo{background-position:center;background-size:contain;background-repeat:no-repeat;opacity:0;visibility:hidden;transform:scale(1.028);will-change:opacity,transform;transition:opacity 4.6s cubic-bezier(.22,1,.36,1),transform 6.2s cubic-bezier(.16,1,.3,1)}
     .lune-opening__canvas{pointer-events:none;opacity:0;will-change:opacity;transition:opacity 2.8s cubic-bezier(.22,1,.36,1)}
     #intro.is-running .lune-opening__ambient{opacity:.58;transform:scale(1)}
     #intro.is-running .lune-opening__photo{opacity:1;visibility:visible;transform:scale(1)}
     #intro.is-running .lune-opening__canvas{opacity:1;transition-delay:1.05s}
-    #intro.is-out{opacity:0;visibility:hidden;pointer-events:none;transition-duration:2.8s}
+    #intro.is-out{opacity:0;visibility:hidden;pointer-events:none;transition-duration:2.9s}
     #intro.is-out .lune-opening__ambient{opacity:.58;transform:scale(1)}
     #intro.is-out .lune-opening__photo{opacity:1;visibility:visible;transform:scale(1)}
     #intro.is-out .lune-opening__canvas{opacity:.16;transition:opacity 2.8s cubic-bezier(.22,1,.36,1)}
@@ -144,11 +146,11 @@
     var exitProgress = ending ? Math.min(1, Math.max(0, (clock - endingAt) / 2.2)) : 0;
     var exitEase = 1 - (exitProgress * exitProgress * (3 - 2 * exitProgress));
     var exitFade = ending ? exitEase : 1;
-    var fit = photo.naturalWidth
-      ? Math.min(w / photo.naturalWidth, h / photo.naturalHeight)
+    var fit = photoWidth
+      ? Math.min(w / photoWidth, h / photoHeight)
       : 1;
-    var imageW = photo.naturalWidth * fit;
-    var imageH = photo.naturalHeight * fit;
+    var imageW = photoWidth * fit;
+    var imageH = photoHeight * fit;
 
     for (var i = particles.length - 1; i >= 0; i--) {
       var p = particles[i];
@@ -318,8 +320,11 @@
     preload.decoding = 'async';
     preload.onload = function () {
       decodeImage(preload).then(function () {
-        photo.src = BACKGROUND_URL;
-        ambient.src = BACKGROUND_URL;
+        photoWidth = preload.naturalWidth;
+        photoHeight = preload.naturalHeight;
+        var imageUrl = 'url(\"' + BACKGROUND_URL + '\")';
+        photo.style.backgroundImage = imageUrl;
+        ambient.style.backgroundImage = imageUrl;
         photo.style.visibility = 'visible';
         resolve(true);
       });
@@ -330,7 +335,7 @@
 
   resize();
   Promise.all([photoReady, Promise.all(petalLoads)]).then(function () {
-    if (!sprites.length || !photo.naturalWidth) {
+    if (!sprites.length || !photo.style.backgroundImage || !photoWidth || !photoHeight) {
       return;
     }
 
