@@ -51,7 +51,7 @@
   .lm-calendar{overflow:hidden}
   .lm-menu-panel{transform:translate3d(0,-8px,0);transition:opacity .58s cubic-bezier(.22,1,.36,1),transform .68s cubic-bezier(.22,1,.36,1),visibility 0s linear .68s}
   .lm-menu-panel.is-open{transform:none}
-  .lm-language{width:calc(100% - 34px);margin:18px auto 0;padding:9px 12px;border-radius:15px;min-height:42px;opacity:.9}
+  .lm-language{width:calc(100% - 34px);margin:18px auto 0;padding:9px 12px;border-radius:15px;min-height:42px;opacity:.9;transform:translateY(100px)}
   .lm-language span{font-size:17px}.lm-language b{font-size:9px}.lm-language i{font-size:14px}
   .lm-menu-back{transition:transform .22s ease,box-shadow .22s ease}
   @media (prefers-reduced-motion:reduce){.lm-screen.is-active,.lm-menu-panel,.lm-modal-box{animation:none;transition:none}.lm-3d,.lm-next,.lm-service,.lm-master{transition:none}}
