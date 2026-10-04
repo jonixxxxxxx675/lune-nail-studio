@@ -146,52 +146,6 @@
     });
   }
 
-  /* ---------- Desktop hero auto slider ---------- */
-  if (window.matchMedia('(min-width: 769px)').matches) {
-    var desktopHeroImage = $('.hero__bg img');
-    var desktopHeroSteps = $('#heroSteps');
-    var desktopHeroSlides = [
-      'assets/images/lune-hero-1.png',
-      'assets/images/lune-hero-2.png',
-      'assets/images/lune-hero-3.png'
-    ];
-    var desktopHeroIndex = 0;
-    var desktopHeroTimer;
-
-    function setDesktopHeroSlide(index, restartTimer) {
-      if (!desktopHeroImage || !desktopHeroSteps) return;
-      desktopHeroIndex = (index + desktopHeroSlides.length) % desktopHeroSlides.length;
-
-      desktopHeroImage.style.opacity = '0';
-      window.setTimeout(function () {
-        desktopHeroImage.src = desktopHeroSlides[desktopHeroIndex];
-        desktopHeroImage.style.opacity = '1';
-      }, 220);
-
-      $$('li', desktopHeroSteps).forEach(function (li, i) {
-        li.classList.toggle('is-active', i === desktopHeroIndex);
-      });
-
-      if (restartTimer) {
-        window.clearInterval(desktopHeroTimer);
-        desktopHeroTimer = window.setInterval(function () {
-          setDesktopHeroSlide(desktopHeroIndex + 1, false);
-        }, 6000);
-      }
-    }
-
-    $$('button[data-slide]', desktopHeroSteps).forEach(function (button) {
-      button.addEventListener('click', function () {
-        setDesktopHeroSlide(Number(button.getAttribute('data-slide')), true);
-      });
-    });
-
-    setDesktopHeroSlide(0, false);
-    desktopHeroTimer = window.setInterval(function () {
-      setDesktopHeroSlide(desktopHeroIndex + 1, false);
-    }, 6000);
-  }
-
   /* ---------- Open / close events ---------- */
   document.addEventListener('click', function (e) {
     var openBooking = e.target.closest('[data-open-booking]');
