@@ -1694,9 +1694,73 @@ body.is-locked { overflow: hidden; }
 }
 
 /* Desktop hero slider — isolated from mobile */
-@media (min-width: 769px) {
-  .hero__bg img {
-    transition: opacity 420ms ease;
+.hero__desktop-slides { display: none; }
+
+@media (min-width: 900px) {
+  .hero__bg > img {
+    visibility: hidden;
   }
 
+  .hero__desktop-slides {
+    position: absolute;
+    inset: 0;
+    display: block;
+    overflow: hidden;
+  }
+
+  .hero__desktop-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* CSS fallback: the hero still rotates even if JavaScript is blocked. */
+  .hero__desktop-slide--1 {
+    opacity: 1;
+    animation: luneHeroSlide1 18s infinite;
+  }
+  .hero__desktop-slide--2 {
+    animation: luneHeroSlide2 18s infinite;
+  }
+  .hero__desktop-slide--3 {
+    animation: luneHeroSlide3 18s infinite;
+  }
+
+  /* When JS is active, it owns the state and the CSS fallback pauses. */
+  .hero.desktop-slider-js .hero__desktop-slide {
+    animation: none;
+    transition: opacity 700ms ease;
+  }
+
+  .hero.desktop-slider-js .hero__desktop-slide.is-active {
+    opacity: 1;
+  }
+}
+
+@keyframes luneHeroSlide1 {
+  0%, 30% { opacity: 1; }
+  34%, 96% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes luneHeroSlide2 {
+  0%, 30% { opacity: 0; }
+  34%, 63% { opacity: 1; }
+  67%, 100% { opacity: 0; }
+}
+
+@keyframes luneHeroSlide3 {
+  0%, 63% { opacity: 0; }
+  67%, 96% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) and (min-width: 900px) {
+  .hero__desktop-slide { animation: none !important; }
+  .hero__desktop-slide--1 { opacity: 1 !important; }
 }
