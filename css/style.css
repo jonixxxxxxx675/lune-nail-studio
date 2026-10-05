@@ -1986,6 +1986,18 @@ body.is-locked { overflow: hidden; }
   }
 }
 
+/* LUNE DESKTOP — current hero and booking removal
+   Desktop only. Mobile is intentionally untouched. */
+@media (min-width: 900px) {
+  #header .only-desktop-header-booking {
+    display: none !important;
+  }
+  #hero [data-open-booking],
+  #services [data-open-booking] {
+    pointer-events: none !important;
+  }
+}
+
 /* LUNE DESKTOP HERO — DIRECT STATIC IMAGE
    Desktop only. Mobile styles and markup behavior are untouched. */
 @media (min-width: 900px) {
