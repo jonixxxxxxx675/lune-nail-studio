@@ -5,3 +5,6 @@
 - Desktop booking controls are hidden/disabled. Mobile booking markup is unchanged.
 - Desktop `Про нас` navigation and the About CTA open `about.html`.
 - No mobile CSS/JS behavior was intentionally changed.
+
+
+Current desktop hero implementation: a single direct image at assets/images/hero-desktop-current.jpg. Desktop slider is intentionally disabled. Mobile behavior remains unchanged.
