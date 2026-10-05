@@ -1953,35 +1953,3 @@ body.is-locked { overflow: hidden; }
   #hero .hero__content,
   #hero .hero__rail { position: relative; z-index: 2; }
 }
-
-/* LUNE DESKTOP HERO — STATIC FALLBACK
-   Desktop only. Mobile is intentionally untouched. */
-@media (min-width: 900px) {
-  /* Use one real hero image directly. No slider/background layer. */
-  #hero .hero__desktop-slides {
-    display: none !important;
-  }
-
-  #hero .hero__bg > img {
-    visibility: visible !important;
-    opacity: 1 !important;
-    display: block !important;
-    content: url("../assets/images/hero-desktop-01-real.png") !important;
-    object-fit: cover !important;
-    object-position: center center !important;
-    z-index: 0 !important;
-  }
-
-  /* Remove the old Hero controls for now. */
-  #hero .hero__rail,
-  #hero .hero__video,
-  #hero .hero__content .btn-pill,
-  #hero .hero__proof {
-    display: none !important;
-  }
-
-  /* Show the photo without the old dark slider overlay. */
-  #hero .hero__shade {
-    display: none !important;
-  }
-}
