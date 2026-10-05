@@ -610,6 +610,7 @@
   </div>
 
   <script src="js/main.js?v=20261004-desktop-slider-fix" defer></script>
+  <script src="js/desktop-hero-slider.js?v=20261005-13" defer></script>
   <script src="js/booking.js?v=20261003" defer></script>
   <script src="intro.js?v=20261004-mobile-polish1" defer></script>
 </body>
