@@ -1985,3 +1985,56 @@ body.is-locked { overflow: hidden; }
     display: none !important;
   }
 }
+
+/* LUNE DESKTOP HERO — DIRECT STATIC IMAGE
+   Desktop only. Mobile styles and markup behavior are untouched. */
+@media (min-width: 900px) {
+  #hero .hero__desktop-static {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+    content: normal !important;
+    filter: none !important;
+  }
+
+  #hero .hero__desktop-slides {
+    display: none !important;
+  }
+
+  #hero .hero__bg > img:not(.hero__desktop-static):not(.hero__desktop-slide) {
+    display: none !important;
+  }
+
+  #hero .hero__shade {
+    display: none !important;
+  }
+
+  #hero .hero__content {
+    position: relative !important;
+    z-index: 2 !important;
+  }
+
+  #hero .hero__rail,
+  #hero .hero__video,
+  #hero .hero__content .btn-pill,
+  #hero .hero__proof {
+    display: none !important;
+  }
+}
+
+@media (max-width: 899px) {
+  #hero .hero__desktop-static {
+    display: none !important;
+  }
+}
