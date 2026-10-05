@@ -1,19 +1,53 @@
 (function () {
   'use strict';
 
-  // Desktop only. Mobile hero is intentionally untouched.
-  if (!window.matchMedia('(min-width: 769px)').matches) return;
+  // Desktop only. Mobile hero remains untouched.
+  if (!window.matchMedia || !window.matchMedia('(min-width: 900px)').matches) return;
 
-  var image = document.querySelector('.hero__bg img');
+  var hero = document.getElementById('hero');
   var steps = document.getElementById('heroSteps');
-  if (!image || !steps) return;
+  if (!hero || !steps) return;
 
-  // Exactly three desktop hero slides.
   var slides = [
     'assets/images/lune-hero-1.png',
     'assets/images/lune-hero-2.png',
     'assets/images/lune-hero-3.png'
   ];
+
+  var index = 0;
+  var timer = null;
+  var intervalMs = 6000;
+
+  // Build an isolated desktop-only layer stack. This avoids replacing the
+  // mobile hero image and avoids depending on <img>.onload timing.
+  var bg = hero.querySelector('.hero__bg');
+  if (!bg) return;
+
+  var stack = bg.querySelector('.hero__desktop-slides');
+  if (!stack) {
+    stack = document.createElement('div');
+    stack.className = 'hero__desktop-slides';
+    stack.setAttribute('aria-hidden', 'true');
+
+    slides.forEach(function (src, i) {
+      var img = document.createElement('img');
+      img.className = 'hero__desktop-slide' + (i === 0 ? ' is-active' : '');
+      img.src = src;
+      img.alt = '';
+      img.decoding = 'async';
+      img.loading = i === 0 ? 'eager' : 'lazy';
+      stack.appendChild(img);
+    });
+
+    bg.insertBefore(stack, bg.firstChild);
+  }
+
+  hero.classList.add('desktop-slider-js');
+
+  var layers = Array.prototype.slice.call(
+    stack.querySelectorAll('.hero__desktop-slide')
+  );
+  if (layers.length !== slides.length) return;
 
   var buttons = Array.prototype.slice.call(
     steps.querySelectorAll('button[data-slide]')
@@ -21,25 +55,6 @@
     var value = Number(button.getAttribute('data-slide'));
     return Number.isInteger(value) && value >= 0 && value < slides.length;
   });
-
-  // Keep the desktop indicator strictly synchronized with the 3 slides.
-  Array.prototype.forEach.call(steps.querySelectorAll('li'), function (li) {
-    var button = li.querySelector('button[data-slide]');
-    if (!button || buttons.indexOf(button) === -1) li.remove();
-  });
-
-  var index = 0;
-  var timer = null;
-  var fadeMs = 420;
-  var intervalMs = 6000;
-  var swapToken = 0;
-
-  function preload(src) {
-    var img = new Image();
-    img.src = src;
-  }
-
-  slides.forEach(preload);
 
   function updateSteps() {
     Array.prototype.forEach.call(steps.querySelectorAll('li'), function (li) {
@@ -52,31 +67,13 @@
   }
 
   function show(nextIndex) {
-    if (!Number.isInteger(nextIndex)) return;
-
     index = ((nextIndex % slides.length) + slides.length) % slides.length;
-    var token = ++swapToken;
-    var nextSrc = slides[index];
+
+    layers.forEach(function (layer, i) {
+      layer.classList.toggle('is-active', i === index);
+    });
 
     updateSteps();
-    image.style.opacity = '0';
-
-    window.setTimeout(function () {
-      if (token !== swapToken) return;
-
-      image.onload = function () {
-        if (token === swapToken) image.style.opacity = '1';
-      };
-      image.onerror = function () {
-        if (token === swapToken) image.style.opacity = '1';
-        console.error('[LUNE desktop hero] Failed to load:', nextSrc);
-      };
-      image.src = nextSrc;
-
-      if (image.complete && image.naturalWidth > 0) {
-        image.style.opacity = '1';
-      }
-    }, fadeMs);
   }
 
   function restart() {
@@ -93,7 +90,6 @@
     });
   });
 
-  // Initialize slide 1 and start the automatic 1 → 2 → 3 → 1 loop.
   show(0);
   restart();
 }());
