@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  /* Desktop hero only. Do not touch the mobile hero. */
+  /* Desktop hero only. Mobile is intentionally untouched. */
   function initDesktopHeroSlider() {
     if (!window.matchMedia || !window.matchMedia('(min-width: 900px)').matches) return;
 
@@ -11,7 +11,7 @@
     var bg = hero.querySelector('.hero__bg');
     var stack = bg && bg.querySelector('.hero__desktop-slides');
     var steps = document.getElementById('heroSteps');
-    if (!bg || !stack) return;
+    if (!stack) return;
 
     var layers = Array.prototype.slice.call(
       stack.querySelectorAll('.hero__desktop-slide')
@@ -22,16 +22,18 @@
     var timer = null;
     var duration = 6000;
 
-    /* Make the JS state authoritative, including when the browser has
-       prefers-reduced-motion enabled. The user explicitly requested auto-play. */
     hero.classList.add('desktop-slider-js');
     stack.style.display = 'block';
 
+    /* JS owns opacity. Use inline !important so no theme/media rule can
+       pin slide 1 and prevent the desktop slider from moving. */
     layers.forEach(function (layer, i) {
+      layer.style.setProperty('animation', 'none', 'important');
       layer.style.setProperty('opacity', i === 0 ? '1' : '0', 'important');
-      layer.style.transition = 'opacity 700ms ease';
+      layer.style.setProperty('visibility', i === 0 ? 'visible' : 'hidden', 'important');
+      layer.style.setProperty('transition', 'opacity 700ms ease', 'important');
       layer.style.pointerEvents = 'none';
-      layer.setAttribute('aria-hidden', 'true');
+      layer.setAttribute('aria-hidden', i === 0 ? 'false' : 'true');
     });
 
     function updateSteps() {
@@ -47,9 +49,14 @@
 
     function show(nextIndex) {
       index = ((nextIndex % layers.length) + layers.length) % layers.length;
+
       layers.forEach(function (layer, i) {
-        layer.style.setProperty('opacity', i === index ? '1' : '0', 'important');
+        var active = i === index;
+        layer.style.setProperty('opacity', active ? '1' : '0', 'important');
+        layer.style.setProperty('visibility', active ? 'visible' : 'hidden', 'important');
+        layer.setAttribute('aria-hidden', active ? 'false' : 'true');
       });
+
       updateSteps();
     }
 
@@ -73,7 +80,7 @@
       );
     }
 
-    /* Preload all desktop hero images so the first transition cannot stall. */
+    /* Preload all three desktop hero images. */
     layers.forEach(function (layer) {
       var src = layer.getAttribute('src');
       if (src) {
