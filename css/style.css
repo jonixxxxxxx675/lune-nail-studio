@@ -1764,3 +1764,25 @@ body.is-locked { overflow: hidden; }
   .hero__desktop-slide { animation: none !important; }
   .hero__desktop-slide--1 { opacity: 1 !important; }
 }
+
+/* Desktop hero slider v7 — JS-controlled opacity, mobile untouched. */
+@media (min-width: 900px) {
+  .hero.desktop-slider-js .hero__desktop-slides {
+    position: absolute;
+    inset: 0;
+    display: block;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .hero.desktop-slider-js .hero__desktop-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    pointer-events: none;
+    transition: opacity 700ms ease;
+  }
+}
