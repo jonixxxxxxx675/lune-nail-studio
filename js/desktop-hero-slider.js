@@ -1,95 +1,94 @@
 (function () {
   'use strict';
 
-  // Desktop only. Mobile hero remains untouched.
-  if (!window.matchMedia || !window.matchMedia('(min-width: 900px)').matches) return;
+  /* Desktop hero only. Do not touch the mobile hero. */
+  function initDesktopHeroSlider() {
+    if (!window.matchMedia || !window.matchMedia('(min-width: 900px)').matches) return;
 
-  var hero = document.getElementById('hero');
-  var steps = document.getElementById('heroSteps');
-  if (!hero || !steps) return;
+    var hero = document.getElementById('hero');
+    if (!hero) return;
 
-  var slides = [
-    'assets/images/lune-hero-1.png',
-    'assets/images/lune-hero-2.png',
-    'assets/images/lune-hero-3.png'
-  ];
+    var bg = hero.querySelector('.hero__bg');
+    var stack = bg && bg.querySelector('.hero__desktop-slides');
+    var steps = document.getElementById('heroSteps');
+    if (!bg || !stack) return;
 
-  var index = 0;
-  var timer = null;
-  var intervalMs = 6000;
+    var layers = Array.prototype.slice.call(
+      stack.querySelectorAll('.hero__desktop-slide')
+    );
+    if (layers.length !== 3) return;
 
-  // Build an isolated desktop-only layer stack. This avoids replacing the
-  // mobile hero image and avoids depending on <img>.onload timing.
-  var bg = hero.querySelector('.hero__bg');
-  if (!bg) return;
+    var index = 0;
+    var timer = null;
+    var duration = 6000;
 
-  var stack = bg.querySelector('.hero__desktop-slides');
-  if (!stack) {
-    stack = document.createElement('div');
-    stack.className = 'hero__desktop-slides';
-    stack.setAttribute('aria-hidden', 'true');
-
-    slides.forEach(function (src, i) {
-      var img = document.createElement('img');
-      img.className = 'hero__desktop-slide' + (i === 0 ? ' is-active' : '');
-      img.src = src;
-      img.alt = '';
-      img.decoding = 'async';
-      img.loading = i === 0 ? 'eager' : 'lazy';
-      stack.appendChild(img);
-    });
-
-    bg.insertBefore(stack, bg.firstChild);
-  }
-
-  hero.classList.add('desktop-slider-js');
-
-  var layers = Array.prototype.slice.call(
-    stack.querySelectorAll('.hero__desktop-slide')
-  );
-  if (layers.length !== slides.length) return;
-
-  var buttons = Array.prototype.slice.call(
-    steps.querySelectorAll('button[data-slide]')
-  ).filter(function (button) {
-    var value = Number(button.getAttribute('data-slide'));
-    return Number.isInteger(value) && value >= 0 && value < slides.length;
-  });
-
-  function updateSteps() {
-    Array.prototype.forEach.call(steps.querySelectorAll('li'), function (li) {
-      var button = li.querySelector('button[data-slide]');
-      if (!button) return;
-      var active = Number(button.getAttribute('data-slide')) === index;
-      li.classList.toggle('is-active', active);
-      button.setAttribute('aria-current', active ? 'true' : 'false');
-    });
-  }
-
-  function show(nextIndex) {
-    index = ((nextIndex % slides.length) + slides.length) % slides.length;
+    /* Make the JS state authoritative, including when the browser has
+       prefers-reduced-motion enabled. The user explicitly requested auto-play. */
+    hero.classList.add('desktop-slider-js');
+    stack.style.display = 'block';
 
     layers.forEach(function (layer, i) {
-      layer.classList.toggle('is-active', i === index);
+      layer.style.setProperty('opacity', i === 0 ? '1' : '0', 'important');
+      layer.style.transition = 'opacity 700ms ease';
+      layer.style.pointerEvents = 'none';
+      layer.setAttribute('aria-hidden', 'true');
     });
 
-    updateSteps();
-  }
+    function updateSteps() {
+      if (!steps) return;
+      Array.prototype.forEach.call(steps.querySelectorAll('li'), function (li) {
+        var button = li.querySelector('button[data-slide]');
+        if (!button) return;
+        var active = Number(button.getAttribute('data-slide')) === index;
+        li.classList.toggle('is-active', active);
+        button.setAttribute('aria-current', active ? 'true' : 'false');
+      });
+    }
 
-  function restart() {
-    window.clearInterval(timer);
-    timer = window.setInterval(function () {
-      show(index + 1);
-    }, intervalMs);
-  }
+    function show(nextIndex) {
+      index = ((nextIndex % layers.length) + layers.length) % layers.length;
+      layers.forEach(function (layer, i) {
+        layer.style.setProperty('opacity', i === index ? '1' : '0', 'important');
+      });
+      updateSteps();
+    }
 
-  buttons.forEach(function (button) {
-    button.addEventListener('click', function () {
-      show(Number(button.getAttribute('data-slide')));
-      restart();
+    function schedule() {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(function () {
+        show(index + 1);
+        schedule();
+      }, duration);
+    }
+
+    if (steps) {
+      Array.prototype.forEach.call(
+        steps.querySelectorAll('button[data-slide]'),
+        function (button) {
+          button.addEventListener('click', function () {
+            show(Number(button.getAttribute('data-slide')) || 0);
+            schedule();
+          });
+        }
+      );
+    }
+
+    /* Preload all desktop hero images so the first transition cannot stall. */
+    layers.forEach(function (layer) {
+      var src = layer.getAttribute('src');
+      if (src) {
+        var preload = new Image();
+        preload.src = src;
+      }
     });
-  });
 
-  show(0);
-  restart();
+    show(0);
+    schedule();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDesktopHeroSlider, { once: true });
+  } else {
+    initDesktopHeroSlider();
+  }
 }());
