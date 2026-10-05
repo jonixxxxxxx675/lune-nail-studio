@@ -1717,6 +1717,9 @@ body.is-locked { overflow: hidden; }
     object-position: center;
     opacity: 0;
     pointer-events: none;
+    /* Override the generic .hero__bg img mobile rule. */
+    content: normal !important;
+    filter: none !important;
   }
 
   /* CSS fallback: the hero still rotates even if JavaScript is blocked. */
@@ -1779,5 +1782,31 @@ body.is-locked { overflow: hidden; }
     object-position: center;
     pointer-events: none;
     transition: opacity 700ms ease;
+  }
+}
+
+
+/* Desktop hero image source/visibility hard override.
+   This must come after the generic .hero__bg img mobile styling. */
+@media (min-width: 900px) {
+  .hero__bg > img:not(.hero__desktop-slide) {
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+
+  .hero__desktop-slides {
+    z-index: 0 !important;
+  }
+
+  .hero__desktop-slide {
+    display: block !important;
+    content: normal !important;
+    filter: none !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+
+  .hero__shade {
+    z-index: 1 !important;
   }
 }
