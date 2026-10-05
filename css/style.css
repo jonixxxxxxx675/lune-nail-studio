@@ -1908,3 +1908,48 @@ body.is-locked { overflow: hidden; }
     visibility: visible !important;
   }
 }
+
+
+/* Desktop hero slider v13 — direct image elements; desktop only. Mobile untouched. */
+@media (min-width: 900px) {
+  #hero .hero__desktop-slides {
+    position: absolute !important;
+    inset: 0 !important;
+    display: block !important;
+    overflow: hidden !important;
+    z-index: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  #hero .hero__desktop-slide {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    animation: none !important;
+    content: normal !important;
+    filter: none !important;
+    transition: opacity 700ms ease !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+  }
+
+  #hero .hero__desktop-slide.is-active {
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 0 !important;
+  }
+
+  #hero .hero__shade { z-index: 1 !important; }
+  #hero .hero__content,
+  #hero .hero__rail { position: relative; z-index: 2; }
+}
