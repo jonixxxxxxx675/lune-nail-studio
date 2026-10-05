@@ -29,6 +29,8 @@
        pin slide 1 and prevent the desktop slider from moving. */
     layers.forEach(function (layer, i) {
       layer.style.setProperty('animation', 'none', 'important');
+      layer.style.setProperty('content', 'normal', 'important');
+      layer.style.setProperty('display', 'block', 'important');
       layer.style.setProperty('opacity', i === 0 ? '1' : '0', 'important');
       layer.style.setProperty('visibility', i === 0 ? 'visible' : 'hidden', 'important');
       layer.style.setProperty('transition', 'opacity 700ms ease', 'important');
