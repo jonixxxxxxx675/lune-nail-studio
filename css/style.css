@@ -1760,12 +1760,7 @@ body.is-locked { overflow: hidden; }
   100% { opacity: 0; }
 }
 
-@media (prefers-reduced-motion: reduce) and (min-width: 900px) {
-  .hero__desktop-slide { animation: none !important; }
-  .hero__desktop-slide--1 { opacity: 1 !important; }
-}
-
-/* Desktop hero slider v7 — JS-controlled opacity, mobile untouched. */
+/* Desktop hero slider v8 — desktop only; reduced-motion does not pin slide 1. */
 @media (min-width: 900px) {
   .hero.desktop-slider-js .hero__desktop-slides {
     position: absolute;
