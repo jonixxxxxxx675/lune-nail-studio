@@ -1819,3 +1819,92 @@ body.is-locked { overflow: hidden; }
   #hero .hero__shade { z-index: 1 !important; pointer-events: none; }
   #hero .hero__content, #hero .hero__rail { position: relative; z-index: 2; }
 }
+
+/* Desktop hero image renderer v12 — uses background layers to bypass all
+   legacy <img> content/src overrides. Desktop only. Mobile untouched. */
+@media (min-width: 900px) {
+  #hero .hero__desktop-slides {
+    position: absolute !important;
+    inset: 0 !important;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 0 !important;
+    overflow: hidden !important;
+  }
+
+  #hero .hero__desktop-slide {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    background-repeat: no-repeat !important;
+    background-position: center center !important;
+    background-size: cover !important;
+    background-color: #f3e4df !important;
+    object-fit: unset !important;
+    content: none !important;
+    filter: none !important;
+    transition: opacity 700ms ease !important;
+    pointer-events: none !important;
+  }
+
+  #hero .hero__desktop-slide--1 { background-image: url("../assets/images/hero-desktop-01-real.png") !important; }
+  #hero .hero__desktop-slide--2 { background-image: url("../assets/images/hero-desktop-02-real.png") !important; }
+  #hero .hero__desktop-slide--3 { background-image: url("../assets/images/hero-desktop-03-real.png") !important; }
+
+  #hero .hero__desktop-slide:not(.is-active) {
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+
+  #hero .hero__desktop-slide.is-active {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
+
+/* Desktop hero image renderer v12 — background layers bypass legacy <img>
+   content/src overrides. Desktop only. Mobile untouched. */
+@media (min-width: 900px) {
+  #hero .hero__desktop-slides {
+    position: absolute !important;
+    inset: 0 !important;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 0 !important;
+    overflow: hidden !important;
+  }
+
+  #hero .hero__desktop-slide {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    background-repeat: no-repeat !important;
+    background-position: center center !important;
+    background-size: cover !important;
+    background-color: #f3e4df !important;
+    content: none !important;
+    filter: none !important;
+    transition: opacity 700ms ease !important;
+    pointer-events: none !important;
+  }
+
+  #hero .hero__desktop-slide--1 { background-image: url("../assets/images/hero-desktop-01-real.png") !important; }
+  #hero .hero__desktop-slide--2 { background-image: url("../assets/images/hero-desktop-02-real.png") !important; }
+  #hero .hero__desktop-slide--3 { background-image: url("../assets/images/hero-desktop-03-real.png") !important; }
+
+  #hero .hero__desktop-slide:not(.is-active) {
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+
+  #hero .hero__desktop-slide.is-active {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
