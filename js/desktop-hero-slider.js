@@ -25,17 +25,21 @@
     hero.classList.add('desktop-slider-js');
     stack.style.display = 'block';
 
-    /* JS owns opacity. Use inline !important so no theme/media rule can
-       pin slide 1 and prevent the desktop slider from moving. */
+    /* Desktop owns the three real <img> elements directly. No CSS background
+       image or pseudo-element is used for the hero slides. */
     layers.forEach(function (layer, i) {
       layer.style.setProperty('animation', 'none', 'important');
-      layer.style.setProperty('content', 'normal', 'important');
       layer.style.setProperty('display', 'block', 'important');
       layer.style.setProperty('opacity', i === 0 ? '1' : '0', 'important');
       layer.style.setProperty('visibility', i === 0 ? 'visible' : 'hidden', 'important');
       layer.style.setProperty('transition', 'opacity 700ms ease', 'important');
       layer.style.pointerEvents = 'none';
+      layer.classList.toggle('is-active', i === 0);
       layer.setAttribute('aria-hidden', i === 0 ? 'false' : 'true');
+
+      /* Force eager loading of every desktop slide. */
+      layer.loading = 'eager';
+      layer.decoding = 'async';
     });
 
     function updateSteps() {
@@ -56,6 +60,7 @@
         var active = i === index;
         layer.style.setProperty('opacity', active ? '1' : '0', 'important');
         layer.style.setProperty('visibility', active ? 'visible' : 'hidden', 'important');
+        layer.classList.toggle('is-active', active);
         layer.setAttribute('aria-hidden', active ? 'false' : 'true');
       });
 
@@ -81,17 +86,6 @@
         }
       );
     }
-
-    /* Preload all three desktop hero images. */
-    layers.forEach(function (layer) {
-      var src = layer.getAttribute('data-hero-image');
-      if (src) {
-        layer.style.backgroundImage = 'url("' + src + '")';
-        var preload = new Image();
-        preload.decoding = 'async';
-        preload.src = src;
-      }
-    });
 
     show(0);
     schedule();
