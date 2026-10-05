@@ -1810,3 +1810,12 @@ body.is-locked { overflow: hidden; }
     z-index: 1 !important;
   }
 }
+
+/* Desktop hero v11: real PNG assets + explicit stacking. Mobile untouched. */
+@media (min-width: 900px) {
+  #hero .hero__bg { z-index: 0; }
+  #hero .hero__desktop-slides { z-index: 0 !important; opacity: 1 !important; visibility: visible !important; }
+  #hero .hero__desktop-slide { z-index: 0; }
+  #hero .hero__shade { z-index: 1 !important; pointer-events: none; }
+  #hero .hero__content, #hero .hero__rail { position: relative; z-index: 2; }
+}
