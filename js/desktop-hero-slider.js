@@ -84,9 +84,11 @@
 
     /* Preload all three desktop hero images. */
     layers.forEach(function (layer) {
-      var src = layer.getAttribute('src');
+      var src = layer.getAttribute('data-hero-image');
       if (src) {
+        layer.style.backgroundImage = 'url("' + src + '")';
         var preload = new Image();
+        preload.decoding = 'async';
         preload.src = src;
       }
     });
