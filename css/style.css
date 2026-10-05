@@ -2050,3 +2050,48 @@ body.is-locked { overflow: hidden; }
     display: none !important;
   }
 }
+
+/* LUNE DESKTOP HERO — FINAL STATIC IMAGE FIX
+   Desktop only. Do not alter mobile rendering. */
+@media (min-width: 900px) {
+  #hero .hero__bg {
+    background: url("../assets/images/lune-hero-desktop-current.png") center center / cover no-repeat !important;
+    z-index: 0 !important;
+  }
+
+  /* Remove every legacy desktop hero image layer.
+     The hero is rendered by the container background above. */
+  #hero .hero__bg > img,
+  #hero .hero__desktop-slides,
+  #hero .hero__desktop-static {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+
+  /* No dark overlay on the new light hero image. */
+  #hero .hero__shade {
+    display: none !important;
+  }
+
+  /* Desktop booking/video controls stay removed. */
+  #hero .hero__rail,
+  #hero .hero__video,
+  #hero .hero__content .btn-pill,
+  #hero .hero__proof {
+    display: none !important;
+  }
+
+  /* Text is readable on the light hero image. */
+  #hero .hero__content {
+    position: relative !important;
+    z-index: 2 !important;
+    color: #2f2523 !important;
+  }
+
+  #hero .hero__content .eyebrow,
+  #hero .hero__content .hero__title,
+  #hero .hero__content .hero__lead {
+    color: #2f2523 !important;
+  }
+}
