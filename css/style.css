@@ -1709,3 +1709,40 @@ body.is-locked { overflow: hidden; }
 }
 @media (max-width: 899px) {
 }
+
+/* LUNE DESKTOP — TARGET RESTORATION
+   Desktop only. No mobile rules are changed.
+*/
+@media (min-width: 900px) {
+  #hero {
+    height: 500px !important;
+    min-height: 500px !important;
+  }
+  #hero .hero__image {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  #hero .hero__content {
+    width: min(430px, 46vw) !important;
+    padding: 150px 0 0 30px !important;
+  }
+  #hero .hero__title {
+    font-size: clamp(58px, 5.2vw, 84px) !important;
+  }
+  #services {
+    min-height: 260px !important;
+    height: 260px !important;
+  }
+  #about {
+    height: 390px !important;
+    min-height: 390px !important;
+  }
+  #works {
+    min-height: 360px !important;
+  }
+}
