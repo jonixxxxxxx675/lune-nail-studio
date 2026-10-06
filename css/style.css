@@ -2055,7 +2055,7 @@ body.is-locked { overflow: hidden; }
    Desktop only. Do not alter mobile rendering. */
 @media (min-width: 900px) {
   #hero .hero__bg {
-    background: url("../assets/images/lune-hero-desktop-current.png") center center / cover no-repeat !important;
+    background: #f3e4df !important;
     z-index: 0 !important;
   }
 
