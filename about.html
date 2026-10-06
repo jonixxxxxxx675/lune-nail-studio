@@ -17,11 +17,13 @@
 
     /* Desktop only: team image first, then the story at full content width. */
     .about-page__team {
-      width:100%;
-      display:block;
-      aspect-ratio:3 / 2;
-      object-fit:cover;
-      object-position:center;
+      width:100% !important;
+      height:auto !important;
+      max-height:none !important;
+      aspect-ratio:auto !important;
+      display:block !important;
+      object-fit:contain !important;
+      object-position:center !important;
       border-radius:28px;
       margin-bottom:76px;
     }
