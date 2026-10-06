@@ -12,21 +12,62 @@
   <style>
     body { background:#f4e7e2; color:#201816; }
     .about-page { min-height:100vh; padding:42px 6vw 90px; }
-    .about-page__nav { display:flex; justify-content:space-between; align-items:center; margin-bottom:72px; }
+    .about-page__nav { display:flex; justify-content:space-between; align-items:center; margin-bottom:56px; }
     .about-page__back { color:#201816; font-size:13px; }
-    .about-page__grid { display:grid; grid-template-columns:minmax(300px,.72fr) minmax(520px,1.28fr); gap:7vw; align-items:stretch; min-height:calc(100vh - 180px); }
-    .about-page__visual { min-height:680px; border:1px solid rgba(32,24,22,.12); background:linear-gradient(145deg,#f0ddd7,#f8eee9); position:relative; overflow:hidden; display:flex; align-items:flex-end; padding:38px; }
-    .about-page__visual::before { content:"LUNE"; font-family:var(--ff-head,Georgia,serif); font-size:clamp(70px,9vw,150px); letter-spacing:.18em; opacity:.10; line-height:1; }
-    .about-page__visual::after { content:"NAIL STUDIO"; position:absolute; left:42px; bottom:28px; font-size:8px; letter-spacing:.38em; opacity:.42; }
-    .about-page__copy { padding:28px 0 80px; display:flex; flex-direction:column; justify-content:center; max-width:900px; }
+
+    /* Desktop only: team image first, then the story at full content width. */
+    .about-page__team {
+      width:100%;
+      display:block;
+      aspect-ratio:3 / 2;
+      object-fit:cover;
+      object-position:center;
+      border-radius:28px;
+      margin-bottom:76px;
+    }
+
+    .about-page__copy {
+      width:100%;
+      max-width:none;
+      padding:0 2vw 40px;
+      display:block;
+    }
     .about-page__copy .eyebrow { color:#8c7168; }
-    .about-page__title { font-family:var(--ff-head); font-weight:400; font-size:clamp(58px,6.4vw,112px); line-height:.92; text-transform:uppercase; margin:24px 0 38px; max-width:820px; }
-    .about-page__story { max-width:820px; color:#5f514c; font-size:clamp(17px,1.35vw,21px); line-height:1.9; }
-    .about-page__story p { margin:0 0 28px; }
-    .about-page__story p:first-child { color:#332824; font-size:clamp(20px,1.55vw,25px); line-height:1.65; }
-    .about-page__facts { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-top:38px; padding-top:26px; border-top:1px solid rgba(32,24,22,.13); }
+    .about-page__title {
+      font-family:var(--ff-head);
+      font-weight:400;
+      font-size:clamp(58px,6.4vw,112px);
+      line-height:.92;
+      text-transform:uppercase;
+      margin:24px 0 46px;
+      max-width:none;
+    }
+    .about-page__story {
+      width:100%;
+      max-width:none;
+      color:#5f514c;
+      font-size:clamp(17px,1.35vw,21px);
+      line-height:1.9;
+    }
+    .about-page__story p { margin:0 0 30px; max-width:none; }
+    .about-page__story p:first-child {
+      color:#332824;
+      font-size:clamp(20px,1.55vw,25px);
+      line-height:1.65;
+    }
+    .about-page__facts {
+      width:100%;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:28px;
+      margin-top:44px;
+      padding-top:28px;
+      border-top:1px solid rgba(32,24,22,.13);
+    }
     .about-page__fact strong { display:block; font-family:var(--ff-head,Georgia,serif); font-size:31px; font-weight:400; }
     .about-page__fact span { display:block; margin-top:7px; font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:#8c7168; }
+
+    /* Mobile remains exactly excluded from this desktop layout. */
     @media (max-width: 899px) { .about-page { display:none; } }
   </style>
 </head>
@@ -40,25 +81,29 @@
       <a href="index.html#hero" class="about-page__back">← На головну</a>
     </div>
 
-    <div class="about-page__grid">
-      <div class="about-page__visual" aria-label="Місце для майбутнього фото команди LUNE"></div>
+    <img class="about-page__team"
+         src="assets/desktop/about-team.jpg"
+         alt="Команда LUNE Nail Studio"
+         width="1536"
+         height="1024"
+         fetchpriority="high"
+         decoding="async">
 
-      <article class="about-page__copy">
-        <p class="eyebrow eyebrow--dark">ПРО НАС</p>
-        <h1 class="about-page__title">АТМОСФЕРА,<br>В ЯКУ ХОЧЕТЬСЯ<br>ПОВЕРТАТИСЬ</h1>
-        <div class="about-page__story">
-          <p>LUNE Nail Studio — це простір, у якому манікюр стає частиною особистого ритуалу турботи про себе. Ми створили студію для тих моментів, коли хочеться зупинитися, видихнути й довірити красу своїх рук професійному майстру.</p>
-          <p>Історія LUNE почалася з простого бажання: поєднати точну професійну роботу, сучасну естетику та атмосферу, у якій комфортно залишатися собою. Для нас важливі не тільки форма, покриття чи дизайн. Важливий увесь досвід — від першої зустрічі до останньої деталі готового образу.</p>
-          <p>Ми уважно працюємо з кожною клієнткою, підбираємо техніку та дизайн відповідно до її стилю, дбаємо про акуратність і чистоту процесу. LUNE розвивається разом із нашими клієнтками, зберігаючи головне — спокій, якість і любов до деталей.</p>
-          <p>Попереду — нові образи, нові ідеї та команда, яку ми поступово покажемо на цій сторінці. А поки ця історія залишається відкритою: її наступна сторінка починається з твого візиту до LUNE.</p>
-        </div>
-        <div class="about-page__facts" aria-label="LUNE Nail Studio">
-          <div class="about-page__fact"><strong>LUNE</strong><span>Nail studio</span></div>
-          <div class="about-page__fact"><strong>01</strong><span>Увага до деталей</span></div>
-          <div class="about-page__fact"><strong>∞</strong><span>Ідей для образу</span></div>
-        </div>
-      </article>
-    </div>
+    <article class="about-page__copy">
+      <p class="eyebrow eyebrow--dark">ПРО НАС</p>
+      <h1 class="about-page__title">АТМОСФЕРА,<br>В ЯКУ ХОЧЕТЬСЯ<br>ПОВЕРТАТИСЬ</h1>
+      <div class="about-page__story">
+        <p>LUNE Nail Studio — це простір, у якому манікюр стає частиною особистого ритуалу турботи про себе. Ми створили студію для тих моментів, коли хочеться зупинитися, видихнути й довірити красу своїх рук професійному майстру.</p>
+        <p>Історія LUNE почалася з простого бажання: поєднати точну професійну роботу, сучасну естетику та атмосферу, у якій комфортно залишатися собою. Для нас важливі не тільки форма, покриття чи дизайн. Важливий увесь досвід — від першої зустрічі до останньої деталі готового образу.</p>
+        <p>Ми уважно працюємо з кожною клієнткою, підбираємо техніку та дизайн відповідно до її стилю, дбаємо про акуратність і чистоту процесу. LUNE розвивається разом із нашими клієнтками, зберігаючи головне — спокій, якість і любов до деталей.</p>
+        <p>Попереду — нові образи, нові ідеї та команда, яку ми поступово покажемо на цій сторінці. А поки ця історія залишається відкритою: її наступна сторінка починається з твого візиту до LUNE.</p>
+      </div>
+      <div class="about-page__facts" aria-label="LUNE Nail Studio">
+        <div class="about-page__fact"><strong>LUNE</strong><span>Nail studio</span></div>
+        <div class="about-page__fact"><strong>01</strong><span>Увага до деталей</span></div>
+        <div class="about-page__fact"><strong>∞</strong><span>Ідей для образу</span></div>
+      </div>
+    </article>
   </main>
 </body>
 </html>
