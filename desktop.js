@@ -1,4 +1,4 @@
-/* LUNE DESKTOP v26 — desktop-only behavior. */
+/* LUNE DESKTOP v28 — desktop-only behavior. */
 (function () {
   'use strict';
   if (!window.matchMedia('(min-width: 768px)').matches) return;
