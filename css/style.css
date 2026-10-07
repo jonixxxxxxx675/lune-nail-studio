@@ -1846,3 +1846,37 @@ body.is-locked { overflow: hidden; }
   .insta__grid li:nth-child(n+6) { display: none; }
   .insta__grid { grid-template-columns: repeat(5, 1fr); }
 }
+
+/* LUNE — desktop-only image recovery + reviews logo position. Mobile untouched. */
+@media (min-width: 900px) {
+  /* Recover the visibly broken desktop service images without changing mobile sources. */
+  .services .svc-card--2 img {
+    content: url("../assets/desktop/restored-service-design.png");
+  }
+  .services .svc-card--3 img {
+    content: url("../assets/desktop/restored-service-gel.png");
+  }
+  .services .svc-card--4 img {
+    content: url("../assets/desktop/restored-service-strengthening.png");
+  }
+
+  /* Recover work 4–5 in both desktop work strips. */
+  #works .works__track li:nth-child(4) img,
+  #instagram .insta__grid li:nth-child(4) img {
+    content: url("../assets/desktop/restored-work-04.jpg");
+  }
+  #works .works__track li:nth-child(5) img,
+  #instagram .insta__grid li:nth-child(5) img {
+    content: url("../assets/desktop/restored-work-05.jpg");
+  }
+
+  /* Keep the LUNE mark directly under the clients heading instead of at the bottom. */
+  .reviews__brand {
+    left: max(48px, calc((100vw - 1280px) / 2));
+    top: 260px;
+    bottom: auto;
+    width: 34%;
+    align-items: center;
+    text-align: center;
+  }
+}
