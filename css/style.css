@@ -1746,3 +1746,103 @@ body.is-locked { overflow: hidden; }
     min-height: 360px !important;
   }
 }
+
+
+/* LUNE — desktop-only reviews + five-work layout. Mobile remains untouched. */
+@media (min-width: 900px) {
+  .reviews {
+    position: relative;
+    background: #1a1110;
+    color: #f5e9e3;
+    min-height: 560px;
+    padding: 78px max(48px, calc((100vw - 1280px) / 2));
+  }
+  .reviews .sec-head {
+    width: 34%;
+    margin: 0;
+    display: block;
+    position: absolute;
+    left: max(48px, calc((100vw - 1280px) / 2));
+    top: 78px;
+  }
+  .reviews .eyebrow--dark { color: #c9a69c; }
+  .reviews .sec-title {
+    color: #f5e9e3;
+    font-size: clamp(48px, 4vw, 64px);
+    line-height: .9;
+    margin-top: 24px;
+  }
+  .reviews .sec-head__nav {
+    position: absolute;
+    left: 66%;
+    top: 0;
+  }
+  .reviews__brand {
+    position: absolute;
+    left: max(48px, calc((100vw - 1280px) / 2));
+    bottom: 54px;
+    display: flex;
+    flex-direction: column;
+    color: #f5e9e3;
+  }
+  .reviews__brand-word {
+    font-family: var(--ff-head);
+    font-size: 38px;
+    line-height: .9;
+    letter-spacing: .24em;
+  }
+  .reviews__brand-sub {
+    margin-top: 8px;
+    font-size: 8px;
+    letter-spacing: .38em;
+    color: #c9aaa2;
+  }
+  .reviews__viewport {
+    width: 66%;
+    margin-left: 34%;
+    overflow: hidden;
+  }
+  .reviews__track {
+    display: block;
+  }
+  .review {
+    width: 100%;
+    display: block;
+    background: transparent;
+    border-radius: 0;
+    padding: 0 0 30px;
+    box-shadow: none;
+    border-bottom: 1px solid rgba(255,255,255,.14);
+    color: #f5e9e3;
+  }
+  .review + .review { margin-top: 34px; }
+  .review__avatar { display: none; }
+  .review__body { display: block; }
+  .review__body h3 {
+    margin: 16px 0 0;
+    font-family: var(--ff-body);
+    font-size: 10px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #c9aaa2;
+  }
+  .review .stars {
+    margin-bottom: 18px;
+    color: #d7aba0;
+    letter-spacing: .16em;
+    font-size: 12px;
+  }
+  .review blockquote {
+    margin: 0;
+    max-width: 760px;
+    font-family: var(--ff-head);
+    font-size: clamp(25px, 2.1vw, 34px);
+    line-height: 1.28;
+    color: #f5e9e3;
+  }
+  .review__date { display: none; }
+  .reviews .dots { display: none; }
+
+  .insta__grid li:nth-child(n+6) { display: none; }
+  .insta__grid { grid-template-columns: repeat(5, 1fr); }
+}
